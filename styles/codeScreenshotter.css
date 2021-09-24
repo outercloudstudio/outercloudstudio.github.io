@@ -1,0 +1,96 @@
+*{
+margin: 0;
+padding: 0;
+}
+
+:root{
+--window-padding: 1rem;
+--window-radius:1rem;
+--dark: #001233;
+--medium: #17305c;
+--light: white;
+--s: #06b500;
+--w: #ffb703;
+--f: #fb8500;
+--dark-glass: rgba(255, 255, 255,.4);
+--medium-glass: #1f8ed8;
+--light-glass: white;
+--s-glass: #06b500;
+--w-glass: #ffb703;
+--f-glass: #fb8500;
+}
+
+.code{
+background: var(--medium);
+display: inline-block;
+padding: 3rem;
+}
+
+.code.glass{
+background: var(--medium-glass)
+}
+
+.code-window{
+background: var(--dark);
+display: inline-block;
+padding: var(--window-padding);
+border-radius: var(--window-radius);
+}
+
+.code-window.glass{
+background: rgba( 255, 255, 255, 0.25 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.code-window-header{
+background: var(--dark);
+height: 2rem;
+width: calc(100% + var(--window-padding) * 2);
+position: relative;
+left: calc(var(--window-padding) * -1);
+top: calc(var(--window-padding) * -1);
+border-top-left-radius: var(--window-radius);
+border-top-right-radius: var(--window-radius);
+}
+
+.code-window-header.glass{
+background: var(--dark-glass);
+}
+
+.code-window-header-buttons{
+display: flex;
+height: 100%;
+width: 4rem;
+justify-content: space-between;
+align-items: center;
+margin-left: .5rem;
+}
+
+p{
+font-family: 'Fira Code', monospace;
+color:var(--light);
+}
+
+p.glass{
+color:var(--light-glass);
+}
+
+.circle{
+border-radius: 50%;
+width: .9rem;
+height: .9rem;
+}
+
+.b-f{
+background: var(--f);
+}
+
+.b-w{
+background: var(--w);
+}
+
+.b-s{
+background: var(--s);
+}
