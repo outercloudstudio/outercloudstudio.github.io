@@ -6,18 +6,15 @@ padding: 0;
 :root{
 --window-padding: 1rem;
 --window-radius:1rem;
---dark: #001233;
---medium: #17305c;
+--dark: #0b101e;
+--medium: #162438;
 --light: white;
---s: #06b500;
---w: #ffb703;
---f: #fb8500;
+--s: #00c851;
+--w: #efb425;
+--f: #ef3e25;
 --dark-glass: rgba(255, 255, 255,.4);
 --medium-glass: #1f8ed8;
 --light-glass: white;
---s-glass: #06b500;
---w-glass: #ffb703;
---f-glass: #fb8500;
 }
 
 .code{
@@ -93,4 +90,16 @@ background: var(--w);
 
 .b-s{
 background: var(--s);
+}
+
+.s{
+    color: var(--s);
+}
+
+.w{
+    color: var(--w)
+}
+
+.f{
+    color: var(--f)
 }
