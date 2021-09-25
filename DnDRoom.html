@@ -11,11 +11,59 @@
         <script src="https://kit.fontawesome.com/c5ed9bd98e.js" crossorigin="anonymous"></script>
         <script src="https://threejs.org/build/three.js"></script>
         <script src="https://cdn.socket.io/socket.io-3.0.0.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     </head>
 
     <body>
-      <div id="viewport">
+      <div id="joining-room">
+        <p>Joining Room...</p>
+      </div>
 
+      <div class="hidden">
+        <li id="inventory-item-template"><input class="inventory-item-name"><input class="inventory-item-notes"><button class="inventory-item-delete"><img src="icons/delete.png"></button></li>
+      </div>
+
+
+      <main>
+        <div id="viewport">
+          
+        </div>
+
+        <div id="menu-bar">
+          <button class="menu-bar-button" id="inventory-button"><img src="icons/treasure-chest.png"></button>
+          <button class="menu-bar-button" id="stats-button"><img src="icons/sword-cross.png"></button>
+          <button class="menu-bar-button" id="general-info-button"><img src="icons/script-text.png"></button>
+          <button class="menu-bar-button" id="spell-button"><img src="icons/magic-staff.png"></button>
+          <button class="menu-bar-button" id="spell-button"><img src="icons/account-multiple.png"></button>
+        </div>
+      </main>
+
+      <div id="inventory">
+        <ul id="inventory-list">
+        </ul>
+        <button id="inventory-add-button" class="inventory-add"><img src="icons/plus.png"></button>
+      </div>
+
+      <div id="stats">
+        <div id="str" class="label-input">
+          <p>Strength</p>
+          <p id="str-modifier" class="ml-1">+0</p>
+          <input id="str-value">
+        </div>
+
+        <div id="dex" class="label-input">
+          <p>Dexterity</p>
+          <p id="dex-modifier" class="ml-1">+0</p>
+          <input id="dex-value">
+        </div>
+      </div>
+
+      <div id="general-info">
+        
+      </div>
+
+      <div id="spells">
+        
       </div>
     </body>
     <script src="js/DnDRoom.js"></script>
