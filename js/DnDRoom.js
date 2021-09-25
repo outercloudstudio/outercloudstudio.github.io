@@ -107,6 +107,18 @@ class Remote3DObject{
             this.object3D.scale.set(this.sx, this.sy, this.sz);
         }
     }
+
+    updateValues(){
+        this.x = this.object3D.position.x;
+        this.y = this.object3D.position.y;
+        this.z = this.object3D.position.z;
+        this.rx = this.object3D.rotation.x;
+        this.ry = this.object3D.rotation.y;
+        this.rz = this.object3D.rotation.z;
+        this.sx = this.object3D.scale.x;
+        this.sy = this.object3D.scale.y;
+        this.sz = this.object3D.scale.z;
+    }
 }
 
 const socket = io('ws://localhost:8080')
@@ -137,7 +149,7 @@ let remote3DObjects = []
 
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
-  }
+}
 
 function updatePlayerData(){
     let inventory = []
@@ -292,13 +304,19 @@ camera.rotation.x = -Math.PI / 2
 
 let mouseX = 0
 let mouseY = 0
+let mouseAbsX = 0
+let mouseAbsY = 0
 let mouseDown = false
 let mouseScroll = 0
+let selectedObject = null
 
 //Setup input
 viewport.addEventListener('mousemove', event => {
     mouseX += event.movementX
     mouseY += event.movementY
+
+    mouseAbsX = event.clientX
+    mouseAbsY = event.clientY
 })
 
 viewport.addEventListener('mousedown', event => {
@@ -309,15 +327,21 @@ viewport.addEventListener('mouseup', event => {
     mouseDown = false
 })
 
-viewport.addEventListener("wheel", event => {
+viewport.addEventListener('wheel', event => {
     mouseScroll = event.deltaY
 });
+
+viewport.addEventListener('contextmenu', event => {
+    event.preventDefault()
+
+    selectedObject = null
+})
 
 function resetInput(){
     mouseX = 0
     mouseY = 0
     mouseScroll = 0
-}  
+}
 
 //Render Loop
 function render() {
@@ -339,8 +363,39 @@ function render() {
     }
 
     if(mouseDown){
-        camera.position.x += -mouseX * delta * camera.position.y / viewport.offsetWidth * 192
-        camera.position.z += -mouseY * delta * camera.position.y / viewport.offsetHeight * 108
+
+        if(selectedObject == null){
+            const raycaster = new THREE.Raycaster()
+            const mouse = new THREE.Vector2()
+
+            mouse.x = (mouseAbsX / viewport.offsetWidth ) * 2 - 1
+            mouse.y = -(mouseAbsY / viewport.offsetHeight ) * 2 + 1
+
+            raycaster.setFromCamera( mouse, camera )
+
+            const intersects = raycaster.intersectObjects( scene.children )
+            
+            if(intersects.length > 0){
+                selectedObject = intersects[0].object
+            }else{
+                camera.position.x += -mouseX * delta * camera.position.y / 7
+                camera.position.z += -mouseY * delta * camera.position.y / 7
+            }
+        }else{
+            camera.position.x += -mouseX * delta * camera.position.y / 7
+            camera.position.z += -mouseY * delta * camera.position.y / 7
+        }
+    }
+
+    if(selectedObject != null){
+        selectedObject.position.set(camera.position.x, 0, camera.position.z)
+
+        let remote = remote3DObjects.find(remote => remote.object3D == selectedObject)
+
+        if(remote != null){
+            remote.updateValues()
+            socket.emit('update-remote', remote.toObject())
+        }
     }
 
     //if(remote3DObjects.length > 0){
@@ -436,7 +491,6 @@ socket.on('joined-room', roomData => {
 });
 
 socket.on('create-remote-3D-object', object => {
-    console.log(object)
     console.log('Creating 3D object with builder: ' + object.builder)
 
     remote3DObjects.push(new Remote3DObject(object))
