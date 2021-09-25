@@ -121,7 +121,8 @@ class Remote3DObject{
     }
 }
 
-const socket = io('ws://localhost:8080')
+const socket = io('ws://192.168.1.101:25566')
+//const socket = io('ws://localhost:25566')
 
 const joiningRoomElement = document.getElementById('joining-room')
 
@@ -185,12 +186,14 @@ function updateInventory(){
             currentData.player.inventory[i].name = event.target.parentNode.children[0].value
             
             updatePlayerData()
+            updateUI()
         })
     
         newElement.children[1].addEventListener('change', event => {
             currentData.player.inventory[i].note = event.target.parentNode.children[1].value
             
             updatePlayerData()
+            updateUI()
         })
 
         newElement.children[2].addEventListener('click', event => {
@@ -202,6 +205,7 @@ function updateInventory(){
 
             updatePlayerData()
             updateInventory()
+            updateUI()
         })
 
         newElement.children[0].value = currentData.player.inventory[i].name
@@ -269,16 +273,21 @@ inventoryAddButton.addEventListener('click', () => {
     })
 
     updateInventory()
+    updateUI()
 })
 
 strValue.addEventListener('change', event => {
+    currentData.player.stats.str = event.target.value
+
     updatePlayerData()
-    updateModifiers()
+    updateUI()
 })
 
 dexValue.addEventListener('change', event => {
+    currentData.player.stats.dex = event.target.value
+
     updatePlayerData()
-    updateModifiers()
+    updateUI()
 })
 
 //Init Scene
@@ -405,8 +414,6 @@ function render() {
     //}
 
     input = resetInput()
-
-    updateUI()
 }
 
 socket.on('request-auth', authID => {
@@ -488,6 +495,7 @@ socket.on('joined-room', roomData => {
     }
 
     updateInventory()
+    updateUI()
 });
 
 socket.on('create-remote-3D-object', object => {
