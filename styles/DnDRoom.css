@@ -159,6 +159,10 @@ input{
     margin: .5rem;
 }
 
+h2{
+    margin-bottom: 1rem;
+}
+
 .menu-bar-button{
     margin: 1rem;
     flex-grow: 1;
@@ -335,4 +339,25 @@ input{
 
 .ml-1{
     margin-left: 1rem;
+}
+
+.checkbox{
+    width: 1rem;
+    height: 1rem;
+    flex-grow: 0 !important;
+
+    outline: none;
+    border: none;
+
+    border-radius: 50%;
+    background: var(--dark);
+    border: .1rem solid var(--medium);
+
+    margin-left: 1rem;
+
+    transition: background-color .2s ease;
+}
+
+.checkbox.checked{
+    background: var(--medium) !important;
 }

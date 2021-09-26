@@ -21,30 +21,32 @@ addToScene(scene){
 
 class Remote3DObject{
     constructor(object, builder, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1){
+        this.dirty = false
+
         if(object != null){
-            this.builder = object.builder;
-            this.x = object.x;
-            this.y = object.y;
-            this.z = object.z;
-            this.rx = object.rx;
-            this.ry = object.ry;
-            this.rz = object.rz;
-            this.sx = object.sx;
-            this.sy = object.sy;
-            this.sz = object.sz;
-            this.ID = object.ID;
+            this.builder = object.builder
+            this.x = object.x
+            this.y = object.y
+            this.z = object.z
+            this.rx = object.rx
+            this.ry = object.ry
+            this.rz = object.rz
+            this.sx = object.sx
+            this.sy = object.sy
+            this.sz = object.sz
+            this.ID = object.ID
         }else{
-            this.builder = builder;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.rx = rx;
-            this.ry = ry;
-            this.rz = rz;
-            this.sx = sx;
-            this.sy = sy;
-            this.sz = sz;
-            this.ID = uuidv4();
+            this.builder = builder
+            this.x = x
+            this.y = y
+            this.z = z
+            this.rx = rx
+            this.ry = ry
+            this.rz = rz
+            this.sx = sx
+            this.sy = sy
+            this.sz = sz
+            this.ID = uuidv4()
         }
     }
 
@@ -71,7 +73,7 @@ class Remote3DObject{
             this.object3D = null
 
             if(this.builder == "cube"){
-                geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz);
+                geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
 
                 material = new THREE.MeshPhongMaterial({
                     color: 0xFFFFFF,
@@ -83,12 +85,12 @@ class Remote3DObject{
 				loader.load('./models/Human_Female_Barbarian.fbx', object =>{
                     this.object3D = object
 
-                    this.object3D.position.set(0, 0, 0);
-                    this.object3D.rotation.set(0, 0, 0);
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
 
 
-                    this.object3D.position.set(this.x, this.y, this.z);
-                    this.object3D.rotation.set(this.rx, this.ry, this.rz);
+                    this.object3D.position.set(this.x, this.y, this.z)
+                    this.object3D.rotation.set(this.rx, this.ry, this.rz)
 
                     scene.add(this.object3D)
                 })
@@ -98,40 +100,42 @@ class Remote3DObject{
 
     update(object){
         if(object != null){
-            this.x = object.x;
-            this.y = object.y;
-            this.z = object.z;
-            this.rx = object.rx;
-            this.ry = object.ry;
-            this.rz = object.rz;
-            this.sx = object.sx;
-            this.sy = object.sy;
-            this.sz = object.sz;
+            this.x = object.x
+            this.y = object.y
+            this.z = object.z
+            this.rx = object.rx
+            this.ry = object.ry
+            this.rz = object.rz
+            this.sx = object.sx
+            this.sy = object.sy
+            this.sz = object.sz
         }
 
         if(this.object3D != null){
-            this.object3D.position.set(this.x, this.y, this.z);
-            this.object3D.rotation.set(this.rx, this.ry, this.rz);
-            this.object3D.scale.set(this.sx, this.sy, this.sz);
+            this.object3D.position.set(this.x, this.y, this.z)
+            this.object3D.rotation.set(this.rx, this.ry, this.rz)
+            this.object3D.scale.set(this.sx, this.sy, this.sz)
         }
     }
 
     updateValues(){
-        this.x = this.object3D.position.x;
-        this.y = this.object3D.position.y;
-        this.z = this.object3D.position.z;
-        this.rx = this.object3D.rotation.x;
-        this.ry = this.object3D.rotation.y;
-        this.rz = this.object3D.rotation.z;
-        this.sx = this.object3D.scale.x;
-        this.sy = this.object3D.scale.y;
-        this.sz = this.object3D.scale.z;
+        this.x = this.object3D.position.x
+        this.y = this.object3D.position.y
+        this.z = this.object3D.position.z
+        this.rx = this.object3D.rotation.x
+        this.ry = this.object3D.rotation.y
+        this.rz = this.object3D.rotation.z
+        this.sx = this.object3D.scale.x
+        this.sy = this.object3D.scale.y
+        this.sz = this.object3D.scale.z
+
+        this.dirty = true
     }
 }
 
-const socket = io('ws://76.86.240.158:25566')
+//const socket = io('ws://76.86.240.158:25566')
 //const socket = io('ws://192.168.1.101:25566')
-//const socket = io('ws://localhost:25566')
+const socket = io('ws://localhost:25566')
 const loader = new THREE.FBXLoader();
 
 const joiningRoomElement = document.getElementById('joining-room')
@@ -148,9 +152,17 @@ const stats = document.getElementById('stats')
 
 const strValue = document.getElementById('str-value')
 const dexValue = document.getElementById('dex-value')
+const conValue = document.getElementById('con-value')
+const intValue = document.getElementById('int-value')
+const wisValue = document.getElementById('wis-value')
+const chaValue = document.getElementById('cha-value')
 
 const strModifier = document.getElementById('str-modifier')
 const dexModifier = document.getElementById('dex-modifier')
+const conModifier = document.getElementById('con-modifier')
+const intModifier = document.getElementById('int-modifier')
+const wisModifier = document.getElementById('wis-modifier')
+const chaModifier = document.getElementById('cha-modifier')
 
 let currentData = null
 
@@ -177,8 +189,14 @@ function updatePlayerData(){
         stats: {
             str: strValue.value,
             dex: dexValue.value,
+            con: conValue.value,
+            int: intValue.value,
+            wis: wisValue.value,
+            cha: chaValue.value,
         }
     }
+
+    console.log(data)
 
     socket.emit('update-player-data', data)
 }
@@ -241,8 +259,40 @@ function updateUI(){
             dexModifier.innerHTML = '+' + dexMod.toString()
         }
 
+        let conMod = Math.floor((conValue.value - 10) / 2)
+        conModifier.innerHTML = conMod
+
+        if(conMod >= 0){
+            conModifier.innerHTML = '+' + conMod.toString()
+        }
+
+        let intMod = Math.floor((intValue.value - 10) / 2)
+        intModifier.innerHTML = intMod
+
+        if(intMod >= 0){
+            intModifier.innerHTML = '+' + intMod.toString()
+        }
+
+        let wisMod = Math.floor((wisValue.value - 10) / 2)
+        wisModifier.innerHTML = wisMod
+
+        if(wisMod >= 0){
+            wisModifier.innerHTML = '+' + wisMod.toString()
+        }
+
+        let chaMod = Math.floor((chaValue.value - 10) / 2)
+        chaModifier.innerHTML = chaMod
+
+        if(chaMod >= 0){
+            chaModifier.innerHTML = '+' + chaMod.toString()
+        }
+
         strValue.value = currentData.player.stats.str
         dexValue.value = currentData.player.stats.dex
+        conValue.value = currentData.player.stats.con
+        intValue.value = currentData.player.stats.int
+        wisValue.value = currentData.player.stats.wis
+        chaValue.value = currentData.player.stats.cha
     }
 }
 
@@ -300,6 +350,34 @@ dexValue.addEventListener('change', event => {
     updateUI()
 })
 
+conValue.addEventListener('change', event => {
+    currentData.player.stats.con = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+intValue.addEventListener('change', event => {
+    currentData.player.stats.int = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+wisValue.addEventListener('change', event => {
+    currentData.player.stats.wis = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+chaValue.addEventListener('change', event => {
+    currentData.player.stats.cha = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
 //Init Scene
 const viewport = document.getElementById('viewport')
 const scene = new THREE.Scene()
@@ -320,6 +398,9 @@ scene.add( pointLight )
 //Set Camera Position
 camera.position.y = 5
 camera.rotation.x = -Math.PI / 2
+
+const updatePS = 15
+let timeTillUpdate = 1/updatePS
 
 let mouseX = 0
 let mouseY = 0
@@ -368,6 +449,20 @@ function render() {
 	renderer.render( scene, camera )
 
     let delta = clock.getDelta()
+
+    timeTillUpdate -= delta
+
+    if(timeTillUpdate <= 0){
+        timeTillUpdate = 1/updatePS
+
+        for(let i = 0; i < remote3DObjects.length; i++){
+            if(remote3DObjects[i].dirty){
+                socket.emit('update-remote', remote3DObjects[i].toObject())
+
+                remote3DObjects[i].dirty = false
+            }
+        }
+    }
 
     if(mouseScroll != 0){
         camera.position.y += mouseScroll / 102
@@ -422,7 +517,6 @@ function render() {
 
         if(remote != null){
             remote.updateValues()
-            socket.emit('update-remote', remote.toObject())
         }
     }
 
@@ -484,6 +578,9 @@ socket.on('new-user-accepted-auth', authID => {
             str: 10,
             dex: 10,
             con: 10,
+            int: 10,
+            wis: 10,
+            cha: 10,
         }
     }
 
@@ -530,5 +627,17 @@ socket.on('update-remotes', remotes => {
         }
     }
 })
+
+let checkboxes = document.getElementsByClassName('checkbox')
+
+for(let i = 0; i < checkboxes.length; i++){
+    checkboxes[i].addEventListener('click', () => {
+        if(checkboxes[i].classList.contains('checked')){
+            checkboxes[i].classList.remove('checked')
+        }else{
+            checkboxes[i].classList.add('checked')
+        }
+    })
+}
 
 render()
