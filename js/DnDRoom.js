@@ -78,13 +78,21 @@ class Remote3DObject{
                     flatShading: true,
                 })
 
-                this.object3D = new THREE.Mesh(geometry, material);
+                //this.object3D = new THREE.Mesh(geometry, material);
+                
+				loader.load('./models/Human_Female_Barbarian.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0);
+                    this.object3D.rotation.set(0, 0, 0);
+
+
+                    this.object3D.position.set(this.x, this.y, this.z);
+                    this.object3D.rotation.set(this.rx, this.ry, this.rz);
+
+                    scene.add(this.object3D)
+                })
             }
-
-            this.object3D.position.set(this.x, this.y, this.z);
-            this.object3D.rotation.set(this.rx, this.ry, this.rz);
-
-            scene.add(this.object3D)
         }
     }
 
@@ -121,8 +129,9 @@ class Remote3DObject{
     }
 }
 
-const socket = io('ws://192.168.1.101:25566')
-//const socket = io('ws://localhost:25566')
+//const socket = io('ws://192.168.1.101:25566')
+const socket = io('ws://localhost:25566')
+const loader = new THREE.FBXLoader();
 
 const joiningRoomElement = document.getElementById('joining-room')
 
@@ -293,7 +302,7 @@ dexValue.addEventListener('change', event => {
 //Init Scene
 const viewport = document.getElementById('viewport')
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera( 90, viewport.offsetWidth / viewport.offsetHeight, 0.1, 1000 )
+const camera = new THREE.PerspectiveCamera( 70, viewport.offsetWidth / viewport.offsetHeight, 0.1, 1000 )
 const renderer = new THREE.WebGLRenderer()
 const clock = new THREE.Clock()
 renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
@@ -366,8 +375,8 @@ function render() {
             camera.position.y = 5
         }
 
-        if(camera.position.y > 20){
-            camera.position.y = 20
+        if(camera.position.y > 40){
+            camera.position.y = 40
         }
     }
 
@@ -382,7 +391,7 @@ function render() {
 
             raycaster.setFromCamera( mouse, camera )
 
-            const intersects = raycaster.intersectObjects( scene.children )
+            const intersects = raycaster.intersectObjects(scene.children, true)
             
             if(intersects.length > 0){
                 selectedObject = intersects[0].object
@@ -397,21 +406,24 @@ function render() {
     }
 
     if(selectedObject != null){
-        selectedObject.position.set(camera.position.x, 0, camera.position.z)
 
-        let remote = remote3DObjects.find(remote => remote.object3D == selectedObject)
+        let remote = null
+
+        while(remote == null && selectedObject.parent != null){
+            remote = remote3DObjects.find(remote => remote.object3D == selectedObject)
+
+            if(remote == null){
+                selectedObject = selectedObject.parent
+            }
+        }
+
+        selectedObject.position.set(camera.position.x, 0, camera.position.z)
 
         if(remote != null){
             remote.updateValues()
             socket.emit('update-remote', remote.toObject())
         }
     }
-
-    //if(remote3DObjects.length > 0){
-        //remote3DObjects[0].x += randomIntFromInterval(-1, 1) * delta
-        //remote3DObjects[0].update(null)
-        //socket.emit('update-remote', remote3DObjects[0].toObject())
-    //}
 
     input = resetInput()
 }
