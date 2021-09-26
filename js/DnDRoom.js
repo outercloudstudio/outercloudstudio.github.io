@@ -129,8 +129,9 @@ class Remote3DObject{
     }
 }
 
+const socket = io('ws://76.86.240.158:25566')
 //const socket = io('ws://192.168.1.101:25566')
-const socket = io('ws://localhost:25566')
+//const socket = io('ws://localhost:25566')
 const loader = new THREE.FBXLoader();
 
 const joiningRoomElement = document.getElementById('joining-room')
