@@ -190,9 +190,10 @@ const acValue = document.getElementById('ac-value')
 const speedValue = document.getElementById('speed-value')
 const initiativeValue = document.getElementById('initiative-value')
 const hdValue = document.getElementById('hd-value')
-const thpValue = document.getElementById('thp-value')
+const thdValue = document.getElementById('thd-value')
 const dssValue = document.getElementById('dss-value')
 const dsfValue = document.getElementById('dsf-value')
+const profBonusValue = document.getElementById('prof-bonus-value')
 
 let currentData = null
 
@@ -250,7 +251,18 @@ function updatePlayerData(){
                 sleightOfHand: sleightOfHandProf.classList.contains('checked'),
                 stealth: stealthProf.classList.contains('checked'),
                 survival: survivalProf.classList.contains('checked'),
-            }
+            },
+            hp: hpValue.value,
+            mhp: mhpValue.value,
+            thp: thpValue.value,
+            ac: acValue.value,
+            speed: speedValue.value,
+            initiative: initiativeValue.value,
+            hd: hdValue.value,
+            thp: thpValue.value,
+            dss: dssValue.value,
+            dsf: dsfValue.value,
+            profBonusValue: profBonusValue.value,
         }
     }
 
@@ -309,6 +321,18 @@ function updateUI(){
         intValue.value = currentData.player.stats.int
         wisValue.value = currentData.player.stats.wis
         chaValue.value = currentData.player.stats.cha
+
+        hpValue.value = currentData.player.stats.hp
+        mhpValue.value = currentData.player.stats.mhp
+        thpValue.value = currentData.player.stats.thp
+        acValue.value = currentData.player.stats.ac
+        speedValue.value = currentData.player.stats.speed
+        initiativeValue.value = currentData.player.stats.initiative
+        hdValue.value = currentData.player.stats.hd
+        thpValue.value = currentData.player.stats.thp
+        dssValue.value = currentData.player.stats.dss
+        dsfValue.value = currentData.player.stats.dsf
+        profBonusValue.value = currentData.player.stats.profBonusValue
         
         let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
         let modifierValues = [strValue, dexValue, conValue, intValue, wisValue, chaValue]
@@ -550,6 +574,83 @@ wisValue.addEventListener('change', event => {
 
 chaValue.addEventListener('change', event => {
     currentData.player.stats.cha = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+hpValue.addEventListener('change', event => {
+    currentData.player.stats.hp = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+mhpValue.addEventListener('change', event => {
+    currentData.player.stats.mhp = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+thpValue.addEventListener('change', event => {
+    currentData.player.stats.thp = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+acValue.addEventListener('change', event => {
+    currentData.player.stats.ac = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+speedValue.addEventListener('change', event => {
+    currentData.player.stats.speed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+initiativeValue.addEventListener('change', event => {
+    currentData.player.stats.initiative = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+hdValue.addEventListener('change', event => {
+    currentData.player.stats.hd = event.target.value
+    
+    updatePlayerData()
+    updateUI()
+})
+
+thpValue.addEventListener('change', event => {
+    currentData.player.stats.thp = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+dssValue.addEventListener('change', event => {
+    currentData.player.stats.dss = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+dsfValue.addEventListener('change', event => {
+    currentData.player.stats.dsf = event.target.value
+    
+    updatePlayerData()
+    updateUI()
+})
+
+profBonusValue.addEventListener('change', event => {
+    currentData.player.stats.profBonus = event.target.value
 
     updatePlayerData()
     updateUI()
@@ -977,6 +1078,17 @@ socket.on('new-user-accepted-auth', authID => {
                 stealth: false,
                 survival: false,
             },
+            hp: 10,
+            mhp: 10,
+            thp: 10,
+            ac: 10,
+            speed: 10,
+            initiative: 10,
+            hd: 10,
+            thp: 10,
+            dss: 10,
+            dsf: 10,
+            profBonus: 10,
         }
     }
 
