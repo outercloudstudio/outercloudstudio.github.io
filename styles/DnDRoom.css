@@ -273,7 +273,8 @@ h2{
     justify-content: start;
     align-items: center;
 
-    padding: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #stats.open{
@@ -298,6 +299,10 @@ h2{
 
 .ml-1{
     margin-left: 1rem;
+}
+
+.mt-1{
+    margin-top: 1rem;
 }
 
 .checkbox{

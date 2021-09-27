@@ -164,6 +164,36 @@ const intProf = document.getElementById('saving-int-value')
 const wisProf = document.getElementById('saving-wis-value')
 const chaProf = document.getElementById('saving-cha-value')
 
+const acrobaticsProf = document.getElementById('skill-acrobatics-value')
+const animalHandlingProf = document.getElementById('skill-animal-handling-value')
+const arcanaProf = document.getElementById('skill-arcana-value')
+const athleticsProf = document.getElementById('skill-athletics-value')
+const deceptionProf = document.getElementById('skill-decepetion-value')
+const historyProf = document.getElementById('skill-history-value')
+const insightProf = document.getElementById('skill-insight-value')
+const intimidationProf = document.getElementById('skill-intimidation-value')
+const investigationProf = document.getElementById('skill-investigation-value')
+const medicineProf = document.getElementById('skill-medicine-value')
+const natureProf = document.getElementById('skill-nature-value')
+const perceptionProf = document.getElementById('skill-perception-value')
+const performanceProf = document.getElementById('skill-performance-value')
+const persuasionProf = document.getElementById('skill-persuasion-value')
+const religionProf = document.getElementById('skill-religion-value')
+const sleightOfHandProf = document.getElementById('skill-sleight-of-hand-value')
+const stealthProf = document.getElementById('skill-stealth-value')
+const survivalProf = document.getElementById('skill-survival-value')
+
+const hpValue = document.getElementById('hp-value')
+const mhpValue = document.getElementById('mhp-value')
+const thpValue = document.getElementById('thp-value')
+const acValue = document.getElementById('ac-value')
+const speedValue = document.getElementById('speed-value')
+const initiativeValue = document.getElementById('initiative-value')
+const hdValue = document.getElementById('hd-value')
+const thpValue = document.getElementById('thp-value')
+const dssValue = document.getElementById('dss-value')
+const dsfValue = document.getElementById('dsf-value')
+
 let currentData = null
 
 let isDM = false
@@ -200,6 +230,26 @@ function updatePlayerData(){
                 int: intProf.classList.contains('checked'),
                 wis: wisProf.classList.contains('checked'),
                 cha: chaProf.classList.contains('checked'),
+            },
+            skills:{
+                acrobatics: acrobaticsProf.classList.contains('checked'),
+                animalHandling: animalHandlingProf.classList.contains('checked'),
+                arcana: arcanaProf.classList.contains('checked'),
+                athletics: athleticsProf.classList.contains('checked'),
+                deception: deceptionProf.classList.contains('checked'),
+                history: historyProf.classList.contains('checked'),
+                insight: insightProf.classList.contains('checked'),
+                intimidation: intimidationProf.classList.contains('checked'),
+                investigation: investigationProf.classList.contains('checked'),
+                medicine: medicineProf.classList.contains('checked'),
+                nature: natureProf.classList.contains('checked'),
+                perception: perceptionProf.classList.contains('checked'),
+                performance: performanceProf.classList.contains('checked'),
+                persuasion: persuasionProf.classList.contains('checked'),
+                religion: religionProf.classList.contains('checked'),
+                sleightOfHand: sleightOfHandProf.classList.contains('checked'),
+                stealth: stealthProf.classList.contains('checked'),
+                survival: survivalProf.classList.contains('checked'),
             }
         }
     }
@@ -312,6 +362,114 @@ function updateUI(){
         if(currentData.player.stats.savingThrows.cha){
             chaProf.classList.add('checked')
         }
+
+        acrobaticsProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.acrobatics){
+            acrobaticsProf.classList.add('checked')
+        }
+
+        animalHandlingProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.animalHandling){
+            animalHandlingProf.classList.add('checked')
+        }
+
+        arcanaProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.arcana){
+            arcanaProf.classList.add('checked')
+        }
+
+        athleticsProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.athletics){
+            athleticsProf.classList.add('checked')
+        }
+
+        deceptionProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.deception){
+            deceptionProf.classList.add('checked')
+        }
+
+        historyProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.history){
+            historyProf.classList.add('checked')
+        }
+
+        insightProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.insight){
+            insightProf.classList.add('checked')
+        }
+
+        intimidationProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.intimidation){
+            intimidationProf.classList.add('checked')
+        }
+
+        investigationProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.investigation){
+            investigationProf.classList.add('checked')
+        }
+
+        medicineProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.medicine){
+            medicineProf.classList.add('checked')
+        }
+
+        natureProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.nature){
+            natureProf.classList.add('checked')
+        }
+
+        perceptionProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.perception){
+            perceptionProf.classList.add('checked')
+        }
+
+        performanceProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.performance){
+            performanceProf.classList.add('checked')
+        }
+
+        persuasionProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.persuasion){
+            persuasionProf.classList.add('checked')
+        }
+
+        religionProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.religion){
+            religionProf.classList.add('checked')
+        }
+
+        sleightOfHandProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.sleightOfHand){
+            sleightOfHandProf.classList.add('checked')
+        }
+
+        stealthProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.stealth){
+            stealthProf.classList.add('checked')
+        }
+
+        survivalProf.classList.remove('checked')
+
+        if(currentData.player.stats.skills.survival){
+            survivalProf.classList.add('checked')
+        }
     }
 }
 
@@ -407,7 +565,7 @@ for(let i = 0; i < checkboxes.length; i++){
             checkboxes[i].classList.add('checked')
         }
 
-        if(['saving-str-value', 'saving-dex-value', 'saving-con-value', 'saving-int-value', 'saving-wis-value', 'saving-cha-value'].includes(checkboxes[i].id)){
+        if(['saving-str-value', 'saving-dex-value', 'saving-con-value', 'saving-int-value', 'saving-wis-value', 'saving-cha-value', 'skill-acrobatics-value', 'skill-animal-handling-value', 'skill-arcana-value', 'skill-athletics-value', 'skill-deception-value', 'skill-history-value', 'skill-insight-value', 'skill-intimidation-value', 'skill-investigation-value', 'skill-medicine-value', 'skill-nature-value', 'skill-perception-value', 'skill-performance-value', 'skill-persuasion-value', 'skill-religion-value', 'skill-sleight-of-hand-value', 'skill-stealth-value', 'skill-survival-value'].includes(checkboxes[i].id)){
             if(checkboxes[i].id == 'saving-str-value'){
                 currentData.player.stats.savingThrows.str = checkboxes[i].classList.contains('checked')
 
@@ -445,6 +603,132 @@ for(let i = 0; i < checkboxes.length; i++){
 
             if(checkboxes[i].id == 'saving-cha-value'){
                 currentData.player.stats.savingThrows.cha = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-acrobatics-value'){
+                currentData.player.stats.skills.acrobatics = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-animal-handling-value'){
+                currentData.player.stats.skills.animalHandling = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-arcana-value'){
+                currentData.player.stats.skills.arcana = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-athletics-value'){
+                currentData.player.stats.skills.athletics = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-deception-value'){
+                currentData.player.stats.skills.deception = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-history-value'){
+                currentData.player.stats.skills.history = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-insight-value'){
+                currentData.player.stats.skills.insight = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-intimidation-value'){
+                currentData.player.stats.skills.intimidation = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-investigation-value'){
+                currentData.player.stats.skills.investigation = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-medicine-value'){
+                currentData.player.stats.skills.medicine = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-nature-value'){
+                currentData.player.stats.skills.nature = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-perception-value'){
+                currentData.player.stats.skills.perception = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-performance-value'){
+                currentData.player.stats.skills.performance = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-persuasion-value'){
+                currentData.player.stats.skills.persuasion = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-religion-value'){
+                currentData.player.stats.skills.religion = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-sleight-of-hand-value'){
+                currentData.player.stats.skills.sleightOfHand = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-stealth-value'){
+                currentData.player.stats.skills.stealth = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'skill-survival-value'){
+                currentData.player.stats.skills.survival = checkboxes[i].classList.contains('checked')
 
                 updatePlayerData()
                 updateUI()
@@ -657,18 +941,6 @@ socket.on('new-user-accepted-auth', authID => {
                 name: 'Wood',
                 note: 'A bag of wood.',
             },
-            {
-                name: 'Iron',
-                note: 'A bag of iron.',
-            },
-            {
-                name: 'Copper',
-                note: 'A bag of copper.',
-            },
-            {
-                name: 'Silver',
-                note: 'A bag of silver.',
-            }
         ],
         stats:{
             str: 10,
@@ -684,7 +956,27 @@ socket.on('new-user-accepted-auth', authID => {
                 int: false,
                 wis: false,
                 cha: false,
-            }
+            },
+            skills: {
+                acrobatics: false,
+                animalHandling: false,
+                arcana: false,
+                athletics: false,
+                deception: false,
+                history: false,
+                insight: false,
+                intimidation: false,
+                investigation: false,
+                medicine: false,
+                nature: false,
+                perception: false,
+                performance: false,
+                persuasion: false,
+                religion: false,
+                sleightOfHand: false,
+                stealth: false,
+                survival: false,
+            },
         }
     }
 
