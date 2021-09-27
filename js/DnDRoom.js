@@ -157,12 +157,12 @@ const intValue = document.getElementById('int-value')
 const wisValue = document.getElementById('wis-value')
 const chaValue = document.getElementById('cha-value')
 
-const strModifier = document.getElementById('str-modifier')
-const dexModifier = document.getElementById('dex-modifier')
-const conModifier = document.getElementById('con-modifier')
-const intModifier = document.getElementById('int-modifier')
-const wisModifier = document.getElementById('wis-modifier')
-const chaModifier = document.getElementById('cha-modifier')
+const strProf = document.getElementById('saving-str-value')
+const dexProf = document.getElementById('saving-dex-value')
+const conProf = document.getElementById('saving-con-value')
+const intProf = document.getElementById('saving-int-value')
+const wisProf = document.getElementById('saving-wis-value')
+const chaProf = document.getElementById('saving-cha-value')
 
 let currentData = null
 
@@ -193,6 +193,14 @@ function updatePlayerData(){
             int: intValue.value,
             wis: wisValue.value,
             cha: chaValue.value,
+            savingThrows:{
+                str: strProf.classList.contains('checked'),
+                dex: dexProf.classList.contains('checked'),
+                con: conProf.classList.contains('checked'),
+                int: intProf.classList.contains('checked'),
+                wis: wisProf.classList.contains('checked'),
+                cha: chaProf.classList.contains('checked'),
+            }
         }
     }
 
@@ -245,54 +253,65 @@ function updateInventory(){
 
 function updateUI(){
     if(currentData != null){
-        let strMod = Math.floor((strValue.value - 10) / 2)
-        strModifier.innerHTML = strMod
-
-        if(strMod >= 0){
-            strModifier.innerHTML = '+' + strMod.toString()
-        }
-
-        let dexMod = Math.floor((dexValue.value - 10) / 2)
-        dexModifier.innerHTML = dexMod
-
-        if(dexMod >= 0){
-            dexModifier.innerHTML = '+' + dexMod.toString()
-        }
-
-        let conMod = Math.floor((conValue.value - 10) / 2)
-        conModifier.innerHTML = conMod
-
-        if(conMod >= 0){
-            conModifier.innerHTML = '+' + conMod.toString()
-        }
-
-        let intMod = Math.floor((intValue.value - 10) / 2)
-        intModifier.innerHTML = intMod
-
-        if(intMod >= 0){
-            intModifier.innerHTML = '+' + intMod.toString()
-        }
-
-        let wisMod = Math.floor((wisValue.value - 10) / 2)
-        wisModifier.innerHTML = wisMod
-
-        if(wisMod >= 0){
-            wisModifier.innerHTML = '+' + wisMod.toString()
-        }
-
-        let chaMod = Math.floor((chaValue.value - 10) / 2)
-        chaModifier.innerHTML = chaMod
-
-        if(chaMod >= 0){
-            chaModifier.innerHTML = '+' + chaMod.toString()
-        }
-
         strValue.value = currentData.player.stats.str
         dexValue.value = currentData.player.stats.dex
         conValue.value = currentData.player.stats.con
         intValue.value = currentData.player.stats.int
         wisValue.value = currentData.player.stats.wis
         chaValue.value = currentData.player.stats.cha
+        
+        let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
+        let modifierValues = [strValue, dexValue, conValue, intValue, wisValue, chaValue]
+
+        for (let i = 0; i < modifierValues.length; i++) {
+            let fields = document.getElementsByClassName(modifierTypes[i] + '-modifier')
+
+            let mod = Math.floor((parseInt(modifierValues[i].value) - 10) / 2)
+
+            for (let j = 0; j < fields.length; j++) {
+                fields[j].innerHTML = mod
+
+                if(mod >= 0){
+                    fields[j].innerHTML = '+' + mod.toString()
+                }
+            }
+        }
+
+        strProf.classList.remove('checked')
+        
+        if(currentData.player.stats.savingThrows.str){
+            strProf.classList.add('checked')
+        }
+
+        dexProf.classList.remove('checked')
+        
+        if(currentData.player.stats.savingThrows.dex){
+            dexProf.classList.add('checked')
+        }
+
+        conProf.classList.remove('checked')
+
+        if(currentData.player.stats.savingThrows.con){
+            conProf.classList.add('checked')
+        }
+
+        intProf.classList.remove('checked')
+
+        if(currentData.player.stats.savingThrows.int){
+            intProf.classList.add('checked')
+        }
+
+        wisProf.classList.remove('checked')
+
+        if(currentData.player.stats.savingThrows.wis){
+            wisProf.classList.add('checked')
+        }
+
+        chaProf.classList.remove('checked')
+
+        if(currentData.player.stats.savingThrows.cha){
+            chaProf.classList.add('checked')
+        }
     }
 }
 
@@ -377,6 +396,63 @@ chaValue.addEventListener('change', event => {
     updatePlayerData()
     updateUI()
 })
+
+let checkboxes = document.getElementsByClassName('checkbox')
+
+for(let i = 0; i < checkboxes.length; i++){
+    checkboxes[i].addEventListener('click', () => {
+        if(checkboxes[i].classList.contains('checked')){
+            checkboxes[i].classList.remove('checked')
+        }else{
+            checkboxes[i].classList.add('checked')
+        }
+
+        if(['saving-str-value', 'saving-dex-value', 'saving-con-value', 'saving-int-value', 'saving-wis-value', 'saving-cha-value'].includes(checkboxes[i].id)){
+            if(checkboxes[i].id == 'saving-str-value'){
+                currentData.player.stats.savingThrows.str = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'saving-dex-value'){
+                currentData.player.stats.savingThrows.dex = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'saving-con-value'){
+                currentData.player.stats.savingThrows.con = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'saving-int-value'){
+                currentData.player.stats.savingThrows.int = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'saving-wis-value'){
+                currentData.player.stats.savingThrows.wis = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+
+            if(checkboxes[i].id == 'saving-cha-value'){
+                currentData.player.stats.savingThrows.cha = checkboxes[i].classList.contains('checked')
+
+                updatePlayerData()
+                updateUI()
+            }
+        }
+    })
+    
+}
 
 //Init Scene
 const viewport = document.getElementById('viewport')
@@ -558,6 +634,14 @@ socket.on('new-user-accepted-auth', authID => {
                 note: 'A shield that can block incoming attacks.',
             },
             {
+                name: 'Helmet',
+                note: 'A helmet that can protect the head.',
+            },
+            {
+                name: 'Chestplate',
+                note: 'A chestplate that can protect the torso.',
+            },
+            {
                 name: 'Health Potion',
                 note: 'A potion that can restore health.',
             },
@@ -572,6 +656,18 @@ socket.on('new-user-accepted-auth', authID => {
             {
                 name: 'Wood',
                 note: 'A bag of wood.',
+            },
+            {
+                name: 'Iron',
+                note: 'A bag of iron.',
+            },
+            {
+                name: 'Copper',
+                note: 'A bag of copper.',
+            },
+            {
+                name: 'Silver',
+                note: 'A bag of silver.',
             }
         ],
         stats:{
@@ -581,6 +677,14 @@ socket.on('new-user-accepted-auth', authID => {
             int: 10,
             wis: 10,
             cha: 10,
+            savingThrows: {
+                str: true,
+                dex: false,
+                con: false,
+                int: false,
+                wis: false,
+                cha: false,
+            }
         }
     }
 
@@ -627,17 +731,5 @@ socket.on('update-remotes', remotes => {
         }
     }
 })
-
-let checkboxes = document.getElementsByClassName('checkbox')
-
-for(let i = 0; i < checkboxes.length; i++){
-    checkboxes[i].addEventListener('click', () => {
-        if(checkboxes[i].classList.contains('checked')){
-            checkboxes[i].classList.remove('checked')
-        }else{
-            checkboxes[i].classList.add('checked')
-        }
-    })
-}
 
 render()

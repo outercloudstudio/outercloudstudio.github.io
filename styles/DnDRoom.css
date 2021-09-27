@@ -19,54 +19,6 @@
     font-family: "Fira Code"
 }
 
-.code{
-background: var(--medium);
-display: inline-block;
-padding: 3rem;
-}
-
-.code.glass{
-background: var(--medium-glass)
-}
-
-.code-window{
-background: var(--dark);
-display: inline-block;
-padding: var(--window-padding);
-border-radius: var(--window-radius);
-}
-
-.code-window.glass{
-background: rgba( 255, 255, 255, 0.25 );
-backdrop-filter: blur( 4px );
--webkit-backdrop-filter: blur( 4px );
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-}
-
-.code-window-header{
-background: var(--dark);
-height: 2rem;
-width: calc(100% + var(--window-padding) * 2);
-position: relative;
-left: calc(var(--window-padding) * -1);
-top: calc(var(--window-padding) * -1);
-border-top-left-radius: var(--window-radius);
-border-top-right-radius: var(--window-radius);
-}
-
-.code-window-header.glass{
-background: var(--dark-glass);
-}
-
-.code-window-header-buttons{
-display: flex;
-height: 100%;
-width: 4rem;
-justify-content: space-between;
-align-items: center;
-margin-left: .5rem;
-}
-
 p{
 font-family: 'Fira Code', monospace;
 color:var(--light);
@@ -188,11 +140,17 @@ h2{
     top: 0;
     left: 100%;
 
-    transition-property: left, right; 
-    transition-duration: .2s;
-    transition-timing-function: ease; 
+    transition: left .2s ease;
 
     background-color: var(--dark);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #inventory.open{
@@ -201,6 +159,7 @@ h2{
 
 #inventory > ul{
     margin: 1rem;
+    width: 100%;
 }
 
 #inventory > ul > li{
@@ -261,6 +220,7 @@ h2{
     width: 2.25rem;
     height: 2.25rem;
 
+    margin-right: calc(100% - 2.25rem);
     margin-left: 2rem;
     margin-bottom: 1rem;
 }
@@ -326,13 +286,12 @@ h2{
 .label-input{
     width: 100%;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     margin-bottom: 1rem;
 }
 
 .label-input > input{
-    flex-grow: 1;
     margin: 0;
     margin-left: 1rem;
 }
