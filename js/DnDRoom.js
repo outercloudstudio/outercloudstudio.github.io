@@ -239,6 +239,12 @@ const level8List = document.getElementById('level-8-list')
 const level9AddButton = document.getElementById('level-9-add-button')
 const level9List = document.getElementById('level-9-list')
 
+const attacksList = document.getElementById('attacks-list') 
+const attacksAddButton = document.getElementById('attacks-add-button')
+
+const generalInfo = document.getElementById('general-info')
+const generalInfoButton = document.getElementById('general-info-button')
+
 let currentData = null
 
 let isDM = false
@@ -274,7 +280,7 @@ function updateUI(){
         thpValue.value = currentData.player.stats.thp
         dssValue.value = currentData.player.stats.dss
         dsfValue.value = currentData.player.stats.dsf
-        profBonusValue.value = currentData.player.stats.profBonusValue
+        profBonusValue.value = currentData.player.stats.profBonus
 
         level1SpellSlotsValue.value = currentData.player.level1SpellSlots
         level1SpellSlotsUsedValue.value = currentData.player.level1SpellSlotsUsed
@@ -376,6 +382,45 @@ function updateUI(){
         
                 spellListElements[i].appendChild(newElement)
             }
+        }
+
+        for(let i = 0; i <attacksList.children.length; i = 0){
+            attacksList.removeChild(attacksList.children[0])
+        }
+    
+        for(let i = 0; i < currentData.player.attacks.length; i++){
+            let newElement = inventoryListItemTemplate.cloneNode(true)
+            newElement.removeAttribute('id')
+    
+            newElement.children[0].addEventListener('change', event => {
+                currentData.player.attacks[i].name = event.target.parentNode.children[0].value
+                
+                updatePlayerData()
+                updateUI()
+            })
+        
+            newElement.children[1].addEventListener('change', event => {
+                currentData.player.attacks[i].note = event.target.parentNode.children[1].value
+                
+                updatePlayerData()
+                updateUI()
+            })
+    
+            newElement.children[2].addEventListener('click', event => {
+                console.log(i)
+                
+                currentData.player.attacks.splice(i, 1)
+    
+                event.target.parentNode.parentNode.remove()
+    
+                updatePlayerData()
+                updateUI()
+            })
+    
+            newElement.children[0].value = currentData.player.attacks[i].name
+            newElement.children[1].value = currentData.player.attacks[i].note
+    
+            attacksList.appendChild(newElement)
         }
         
         let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
@@ -940,6 +985,26 @@ level9AddButton.addEventListener('click', () => {
     updatePlayerData()
 })
 
+attacksAddButton.addEventListener('click', () => {
+    currentData.player.attacks.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+    updatePlayerData()
+})
+
+generalInfoButton.addEventListener('click', () => {
+    if(generalInfo.classList.contains('open')) {
+        closeAllWindows()
+    }else{
+        closeAllWindows()
+
+        generalInfo.classList.add('open')
+    }
+})
+
 let checkboxes = document.getElementsByClassName('checkbox')
 
 for(let i = 0; i < checkboxes.length; i++){
@@ -1440,27 +1505,27 @@ socket.on('new-user-accepted-auth', authID => {
                     name: 'Light',
                     note: 'A spell that can be cast without any material components.',
                 },
-            ],
+            ]
+        },
 
-            level1SpellSlots: 2,
-            level1SpellSlotsUsed: 0,
-            level2SpellSlots: 2,
-            level2SpellSlotsUsed: 0,
-            level3SpellSlots: 2,
-            level3SpellSlotsUsed: 0,
-            level4SpellSlots: 2,
-            level4SpellSlotsUsed: 0,
-            level5SpellSlots: 2,
-            level5SpellSlotsUsed: 0,
-            level6SpellSlots: 2,
-            level6SpellSlotsUsed: 0,
-            level7SpellSlots: 2,
-            level7SpellSlotsUsed: 0,
-            level8SpellSlots: 2,
-            level8SpellSlotsUsed: 0,
-            level9SpellSlots: 2,
-            level9SpellSlotsUsed: 0,
-        }
+        level1SpellSlots: 2,
+        level1SpellSlotsUsed: 0,
+        level2SpellSlots: 2,
+        level2SpellSlotsUsed: 0,
+        level3SpellSlots: 2,
+        level3SpellSlotsUsed: 0,
+        level4SpellSlots: 2,
+        level4SpellSlotsUsed: 0,
+        level5SpellSlots: 2,
+        level5SpellSlotsUsed: 0,
+        level6SpellSlots: 2,
+        level6SpellSlotsUsed: 0,
+        level7SpellSlots: 2,
+        level7SpellSlotsUsed: 0,
+        level8SpellSlots: 2,
+        level8SpellSlotsUsed: 0,
+        level9SpellSlots: 2,
+        level9SpellSlotsUsed: 0,
     }
 
     socket.emit('created-character', playerData)
