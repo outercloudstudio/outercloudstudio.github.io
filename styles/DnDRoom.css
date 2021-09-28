@@ -111,10 +111,6 @@ input{
     margin: .5rem;
 }
 
-h2{
-    margin-bottom: 1rem;
-}
-
 .menu-bar-button{
     margin: 1rem;
     flex-grow: 1;
@@ -324,4 +320,42 @@ h2{
 
 .checkbox.checked{
     background: var(--medium) !important;
+}
+
+#spells{
+    width: 90%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 100%;
+
+    transition: left .2s ease;
+
+    background-color: var(--dark);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#spells.open{
+    left: 0;
+}
+
+#spells > ul{
+    margin: 1rem;
+    width: 100%;
+}
+
+#spells > ul > li{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }

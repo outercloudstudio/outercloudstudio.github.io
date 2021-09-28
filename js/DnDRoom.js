@@ -195,6 +195,50 @@ const dssValue = document.getElementById('dss-value')
 const dsfValue = document.getElementById('dsf-value')
 const profBonusValue = document.getElementById('prof-bonus-value')
 
+const spellsButton = document.getElementById('spells-button')
+const spells = document.getElementById('spells')
+
+const level1SpellSlotsValue = document.getElementById('level-1-spell-slots')
+const level2SpellSlotsValue = document.getElementById('level-2-spell-slots')
+const level3SpellSlotsValue = document.getElementById('level-3-spell-slots')
+const level4SpellSlotsValue = document.getElementById('level-4-spell-slots')
+const level5SpellSlotsValue = document.getElementById('level-5-spell-slots')
+const level6SpellSlotsValue = document.getElementById('level-6-spell-slots')
+const level7SpellSlotsValue = document.getElementById('level-7-spell-slots')
+const level8SpellSlotsValue = document.getElementById('level-8-spell-slots')
+const level9SpellSlotsValue = document.getElementById('level-9-spell-slots')
+
+const level1SpellSlotsUsedValue = document.getElementById('level-1-spell-slots-used')
+const level2SpellSlotsUsedValue = document.getElementById('level-2-spell-slots-used')
+const level3SpellSlotsUsedValue = document.getElementById('level-3-spell-slots-used')
+const level4SpellSlotsUsedValue = document.getElementById('level-4-spell-slots-used')
+const level5SpellSlotsUsedValue = document.getElementById('level-5-spell-slots-used')
+const level6SpellSlotsUsedValue = document.getElementById('level-6-spell-slots-used')
+const level7SpellSlotsUsedValue = document.getElementById('level-7-spell-slots-used')
+const level8SpellSlotsUsedValue = document.getElementById('level-8-spell-slots-used')
+const level9SpellSlotsUsedValue = document.getElementById('level-9-spell-slots-used')
+
+const cantripsAddButton = document.getElementById('cantrips-add-button')
+const cantripsList = document.getElementById('cantrips-list')
+const level1AddButton = document.getElementById('level-1-add-button')
+const level1List = document.getElementById('level-1-list')
+const level2AddButton = document.getElementById('level-2-add-button')
+const level2List = document.getElementById('level-2-list')
+const level3AddButton = document.getElementById('level-3-add-button')
+const level3List = document.getElementById('level-3-list')
+const level4AddButton = document.getElementById('level-4-add-button')
+const level4List = document.getElementById('level-4-list')
+const level5AddButton = document.getElementById('level-5-add-button')
+const level5List = document.getElementById('level-5-list')
+const level6AddButton = document.getElementById('level-6-add-button')
+const level6List = document.getElementById('level-6-list')
+const level7AddButton = document.getElementById('level-7-add-button')
+const level7List = document.getElementById('level-7-list')
+const level8AddButton = document.getElementById('level-8-add-button')
+const level8List = document.getElementById('level-8-list')
+const level9AddButton = document.getElementById('level-9-add-button')
+const level9List = document.getElementById('level-9-list')
+
 let currentData = null
 
 let isDM = false
@@ -263,54 +307,46 @@ function updatePlayerData(){
             dss: dssValue.value,
             dsf: dsfValue.value,
             profBonusValue: profBonusValue.value,
-        }
+        },
+
+        attacks: [],
+
+        spells:{
+            cantrips: [],
+            level1: [],
+            level2: [],
+            level3: [],
+            level4: [],
+            level5: [],
+            level6: [],
+            level7: [],
+            level8: [],
+            level9: [],  
+        },
+
+        level1SpellSlots: level1SpellSlotsValue.value,
+        level1SpellSlotsUsed: level1SpellSlotsUsedValue.value,
+        level2SpellSlots: level2SpellSlotsValue.value,
+        level2SpellSlotsUsed: level2SpellSlotsUsedValue.value,
+        level3SpellSlots: level3SpellSlotsValue.value,
+        level3SpellSlotsUsed: level3SpellSlotsUsedValue.value,
+        level4SpellSlots: level4SpellSlotsValue.value,
+        level4SpellSlotsUsed: level4SpellSlotsUsedValue.value,
+        level5SpellSlots: level5SpellSlotsValue.value,
+        level5SpellSlotsUsed: level5SpellSlotsUsedValue.value,
+        level6SpellSlots: level6SpellSlotsValue.value,
+        level6SpellSlotsUsed: level6SpellSlotsUsedValue.value,
+        level7SpellSlots: level7SpellSlotsValue.value,
+        level7SpellSlotsUsed: level7SpellSlotsUsedValue.value,
+        level8SpellSlots: level8SpellSlotsValue.value,
+        level8SpellSlotsUsed: level8SpellSlotsUsedValue.value,
+        level9SpellSlots: level9SpellSlotsValue.value,
+        level9SpellSlotsUsed: level9SpellSlotsUsedValue.value,
     }
 
     console.log(data)
 
     socket.emit('update-player-data', data)
-}
-
-function updateInventory(){
-    for(let i = 0; i <inventoryList.children.length; i = 0){
-        inventoryList.removeChild(inventoryList.children[0])
-    }
-
-    for(let i = 0; i < currentData.player.inventory.length; i++){
-        let newElement = inventoryListItemTemplate.cloneNode(true)
-        newElement.removeAttribute('id')
-
-        newElement.children[0].addEventListener('change', event => {
-            currentData.player.inventory[i].name = event.target.parentNode.children[0].value
-            
-            updatePlayerData()
-            updateUI()
-        })
-    
-        newElement.children[1].addEventListener('change', event => {
-            currentData.player.inventory[i].note = event.target.parentNode.children[1].value
-            
-            updatePlayerData()
-            updateUI()
-        })
-
-        newElement.children[2].addEventListener('click', event => {
-            console.log(i)
-            
-            currentData.player.inventory.splice(i, 1)
-
-            event.target.parentNode.parentNode.remove()
-
-            updatePlayerData()
-            updateInventory()
-            updateUI()
-        })
-
-        newElement.children[0].value = currentData.player.inventory[i].name
-        newElement.children[1].value = currentData.player.inventory[i].note
-
-        inventoryList.appendChild(newElement)
-    }
 }
 
 function updateUI(){
@@ -333,6 +369,64 @@ function updateUI(){
         dssValue.value = currentData.player.stats.dss
         dsfValue.value = currentData.player.stats.dsf
         profBonusValue.value = currentData.player.stats.profBonusValue
+
+        level1SpellSlotsValue.value = currentData.player.level1SpellSlots
+        level1SpellSlotsUsedValue.value = currentData.player.level1SpellSlotsUsed
+        level2SpellSlotsValue.value = currentData.player.level2SpellSlots
+        level2SpellSlotsUsedValue.value = currentData.player.level2SpellSlotsUsed
+        level3SpellSlotsValue.value = currentData.player.level3SpellSlots
+        level3SpellSlotsUsedValue.value = currentData.player.level3SpellSlotsUsed
+        level4SpellSlotsValue.value = currentData.player.level4SpellSlots
+        level4SpellSlotsUsedValue.value = currentData.player.level4SpellSlotsUsed
+        level5SpellSlotsValue.value = currentData.player.level5SpellSlots
+        level5SpellSlotsUsedValue.value = currentData.player.level5SpellSlotsUsed
+        level6SpellSlotsValue.value = currentData.player.level6SpellSlots
+        level6SpellSlotsUsedValue.value = currentData.player.level6SpellSlotsUsed
+        level7SpellSlotsValue.value = currentData.player.level7SpellSlots
+        level7SpellSlotsUsedValue.value = currentData.player.level7SpellSlotsUsed
+        level8SpellSlotsValue.value = currentData.player.level8SpellSlots
+        level8SpellSlotsUsedValue.value = currentData.player.level8SpellSlotsUsed
+        level9SpellSlotsValue.value = currentData.player.level9SpellSlots
+        level9SpellSlotsUsedValue.value = currentData.player.level9SpellSlotsUsed
+
+        for(let i = 0; i <inventoryList.children.length; i = 0){
+            inventoryList.removeChild(inventoryList.children[0])
+        }
+    
+        for(let i = 0; i < currentData.player.inventory.length; i++){
+            let newElement = inventoryListItemTemplate.cloneNode(true)
+            newElement.removeAttribute('id')
+    
+            newElement.children[0].addEventListener('change', event => {
+                currentData.player.inventory[i].name = event.target.parentNode.children[0].value
+                
+                updatePlayerData()
+                updateUI()
+            })
+        
+            newElement.children[1].addEventListener('change', event => {
+                currentData.player.inventory[i].note = event.target.parentNode.children[1].value
+                
+                updatePlayerData()
+                updateUI()
+            })
+    
+            newElement.children[2].addEventListener('click', event => {
+                console.log(i)
+                
+                currentData.player.inventory.splice(i, 1)
+    
+                event.target.parentNode.parentNode.remove()
+    
+                updatePlayerData()
+                updateUI()
+            })
+    
+            newElement.children[0].value = currentData.player.inventory[i].name
+            newElement.children[1].value = currentData.player.inventory[i].note
+    
+            inventoryList.appendChild(newElement)
+        }
         
         let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
         let modifierValues = [strValue, dexValue, conValue, intValue, wisValue, chaValue]
@@ -505,6 +599,10 @@ function closeAllWindows(){
     if(stats.classList.contains('open')) {
         stats.classList.remove('open')
     }
+
+    if(spells.classList.contains('open')) {
+        spells.classList.remove('open')
+    }
 }
 
 inventoryButton.addEventListener('click', () => {
@@ -533,7 +631,6 @@ inventoryAddButton.addEventListener('click', () => {
         note: '',
     })
 
-    updateInventory()
     updateUI()
 })
 
@@ -653,6 +750,232 @@ profBonusValue.addEventListener('change', event => {
     currentData.player.stats.profBonus = event.target.value
 
     updatePlayerData()
+    updateUI()
+})
+
+spellsButton.addEventListener('click', () => {
+    if(spells.classList.contains('open')) {
+        closeAllWindows()
+    }else{
+        closeAllWindows()
+
+        spells.classList.add('open')
+    }
+})
+
+level1SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level1SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level2SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level2SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level3SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level3SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level4SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level4SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level5SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level5SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level6SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level6SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level7SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level7SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level8SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level8SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level9SpellSlotsValue.addEventListener('change', event => {
+    currentData.player.level9SpellSlots = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level1SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level1SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level2SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level2SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level3SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level3SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level4SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level4SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level5SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level5SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level6SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level6SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level7SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level7SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level8SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level8SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+level9SpellSlotsUsedValue.addEventListener('change', event => {
+    currentData.player.level9SpellSlotsUsed = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+cantripsAddButton.addEventListener('click', () => {
+    currentData.player.spells.cantrips.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level1AddButton.addEventListener('click', () => {
+    currentData.player.spells.level1.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level2AddButton.addEventListener('click', () => {
+    currentData.player.spells.level2.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level3AddButton.addEventListener('click', () => {
+    currentData.player.spells.level3.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level4AddButton.addEventListener('click', () => {
+    currentData.player.spells.level4.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level5AddButton.addEventListener('click', () => {
+    currentData.player.spells.level5.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level6AddButton.addEventListener('click', () => {
+    currentData.player.spells.level6.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level7AddButton.addEventListener('click', () => {
+    currentData.player.spells.level7.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level8AddButton.addEventListener('click', () => {
+    currentData.player.spells.level8.push({
+        name: '',
+        note: '',
+    })
+
+    updateUI()
+})
+
+level9AddButton.addEventListener('click', () => {
+    currentData.player.spells.level9.push({
+        name: '',
+        note: '',
+    })
+
     updateUI()
 })
 
@@ -1089,6 +1412,93 @@ socket.on('new-user-accepted-auth', authID => {
             dss: 10,
             dsf: 10,
             profBonus: 10,
+        },
+        attacks: [
+            {
+                name: 'Attack',
+                note: 'A basic attack.',
+            },
+        ],
+        spells:{
+            cantrips: [
+                {
+                    name: 'Light',
+                    note: 'A cantrip that can be cast without any material components.',
+                },
+            ],
+            level1: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level2: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level3: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level4: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level5: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level6: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level7: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level8: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+            level9: [
+                {
+                    name: 'Light',
+                    note: 'A spell that can be cast without any material components.',
+                },
+            ],
+
+            level1SpellSlots: 2,
+            level1SpellSlotsUsed: 0,
+            level2SpellSlots: 2,
+            level2SpellSlotsUsed: 0,
+            level3SpellSlots: 2,
+            level3SpellSlotsUsed: 0,
+            level4SpellSlots: 2,
+            level4SpellSlotsUsed: 0,
+            level5SpellSlots: 2,
+            level5SpellSlotsUsed: 0,
+            level6SpellSlots: 2,
+            level6SpellSlotsUsed: 0,
+            level7SpellSlots: 2,
+            level7SpellSlotsUsed: 0,
+            level8SpellSlots: 2,
+            level8SpellSlotsUsed: 0,
+            level9SpellSlots: 2,
+            level9SpellSlotsUsed: 0,
         }
     }
 
@@ -1112,7 +1522,6 @@ socket.on('joined-room', roomData => {
         statsButton.remove()
     }
 
-    updateInventory()
     updateUI()
 });
 
