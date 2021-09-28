@@ -250,103 +250,9 @@ function randomIntFromInterval(min, max) {
 }
 
 function updatePlayerData(){
-    let inventory = []
+    console.log(currentData.player)
 
-    for (let i = 0; i < inventoryList.children.length; i++) {
-        inventory.push({
-            name: inventoryList.children[i].children[0].value,
-            note: inventoryList.children[i].children[1].value,
-        })
-    }
-    
-    let data = {
-        inventory: inventory,
-        stats: {
-            str: strValue.value,
-            dex: dexValue.value,
-            con: conValue.value,
-            int: intValue.value,
-            wis: wisValue.value,
-            cha: chaValue.value,
-            savingThrows:{
-                str: strProf.classList.contains('checked'),
-                dex: dexProf.classList.contains('checked'),
-                con: conProf.classList.contains('checked'),
-                int: intProf.classList.contains('checked'),
-                wis: wisProf.classList.contains('checked'),
-                cha: chaProf.classList.contains('checked'),
-            },
-            skills:{
-                acrobatics: acrobaticsProf.classList.contains('checked'),
-                animalHandling: animalHandlingProf.classList.contains('checked'),
-                arcana: arcanaProf.classList.contains('checked'),
-                athletics: athleticsProf.classList.contains('checked'),
-                deception: deceptionProf.classList.contains('checked'),
-                history: historyProf.classList.contains('checked'),
-                insight: insightProf.classList.contains('checked'),
-                intimidation: intimidationProf.classList.contains('checked'),
-                investigation: investigationProf.classList.contains('checked'),
-                medicine: medicineProf.classList.contains('checked'),
-                nature: natureProf.classList.contains('checked'),
-                perception: perceptionProf.classList.contains('checked'),
-                performance: performanceProf.classList.contains('checked'),
-                persuasion: persuasionProf.classList.contains('checked'),
-                religion: religionProf.classList.contains('checked'),
-                sleightOfHand: sleightOfHandProf.classList.contains('checked'),
-                stealth: stealthProf.classList.contains('checked'),
-                survival: survivalProf.classList.contains('checked'),
-            },
-            hp: hpValue.value,
-            mhp: mhpValue.value,
-            thp: thpValue.value,
-            ac: acValue.value,
-            speed: speedValue.value,
-            initiative: initiativeValue.value,
-            hd: hdValue.value,
-            thp: thpValue.value,
-            dss: dssValue.value,
-            dsf: dsfValue.value,
-            profBonusValue: profBonusValue.value,
-        },
-
-        attacks: [],
-
-        spells:{
-            cantrips: [],
-            level1: [],
-            level2: [],
-            level3: [],
-            level4: [],
-            level5: [],
-            level6: [],
-            level7: [],
-            level8: [],
-            level9: [],  
-        },
-
-        level1SpellSlots: level1SpellSlotsValue.value,
-        level1SpellSlotsUsed: level1SpellSlotsUsedValue.value,
-        level2SpellSlots: level2SpellSlotsValue.value,
-        level2SpellSlotsUsed: level2SpellSlotsUsedValue.value,
-        level3SpellSlots: level3SpellSlotsValue.value,
-        level3SpellSlotsUsed: level3SpellSlotsUsedValue.value,
-        level4SpellSlots: level4SpellSlotsValue.value,
-        level4SpellSlotsUsed: level4SpellSlotsUsedValue.value,
-        level5SpellSlots: level5SpellSlotsValue.value,
-        level5SpellSlotsUsed: level5SpellSlotsUsedValue.value,
-        level6SpellSlots: level6SpellSlotsValue.value,
-        level6SpellSlotsUsed: level6SpellSlotsUsedValue.value,
-        level7SpellSlots: level7SpellSlotsValue.value,
-        level7SpellSlotsUsed: level7SpellSlotsUsedValue.value,
-        level8SpellSlots: level8SpellSlotsValue.value,
-        level8SpellSlotsUsed: level8SpellSlotsUsedValue.value,
-        level9SpellSlots: level9SpellSlotsValue.value,
-        level9SpellSlotsUsed: level9SpellSlotsUsedValue.value,
-    }
-
-    console.log(data)
-
-    socket.emit('update-player-data', data)
+    socket.emit('update-player-data', currentData.player)
 }
 
 function updateUI(){
@@ -426,6 +332,50 @@ function updateUI(){
             newElement.children[1].value = currentData.player.inventory[i].note
     
             inventoryList.appendChild(newElement)
+        }
+
+        let spellListElements = [cantripsList, level1List, level2List, level3List, level4List, level5List, level6List, level7List, level8List, level9List]
+        let spellObjectProps = ['cantrips', 'level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
+        
+        for(let i = 0; i < spellListElements.length; i++){
+            for(let j = 0; j <spellListElements[i].children.length; j = 0){
+                spellListElements[i].removeChild(spellListElements[i].children[0])
+            }
+
+            for(let j = 0; j < currentData.player.spells[spellObjectProps[i]].length; j++){
+                let newElement = inventoryListItemTemplate.cloneNode(true)
+                newElement.removeAttribute('id')
+        
+                newElement.children[0].addEventListener('change', event => {
+                    currentData.player.spells[spellObjectProps[i]][j].name = event.target.parentNode.children[0].value
+                    
+                    updatePlayerData()
+                    updateUI()
+                })
+            
+                newElement.children[1].addEventListener('change', event => {
+                    currentData.player.spells[spellObjectProps[i]][j].note = event.target.parentNode.children[1].value
+                    
+                    updatePlayerData()
+                    updateUI()
+                })
+        
+                newElement.children[2].addEventListener('click', event => {
+                    console.log(i)
+                    
+                    currentData.player.spells[spellObjectProps[i]].splice(i, 1)
+        
+                    event.target.parentNode.parentNode.remove()
+        
+                    updatePlayerData()
+                    updateUI()
+                })
+        
+                newElement.children[0].value = currentData.player.spells[spellObjectProps[i]][j].name
+                newElement.children[1].value = currentData.player.spells[spellObjectProps[i]][j].note
+        
+                spellListElements[i].appendChild(newElement)
+            }
         }
         
         let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
@@ -632,6 +582,7 @@ inventoryAddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 strValue.addEventListener('change', event => {
@@ -896,6 +847,7 @@ cantripsAddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level1AddButton.addEventListener('click', () => {
@@ -905,6 +857,7 @@ level1AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level2AddButton.addEventListener('click', () => {
@@ -914,6 +867,7 @@ level2AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level3AddButton.addEventListener('click', () => {
@@ -923,6 +877,7 @@ level3AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level4AddButton.addEventListener('click', () => {
@@ -932,6 +887,7 @@ level4AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level5AddButton.addEventListener('click', () => {
@@ -941,6 +897,7 @@ level5AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level6AddButton.addEventListener('click', () => {
@@ -950,6 +907,7 @@ level6AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level7AddButton.addEventListener('click', () => {
@@ -959,6 +917,7 @@ level7AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level8AddButton.addEventListener('click', () => {
@@ -968,6 +927,7 @@ level8AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 level9AddButton.addEventListener('click', () => {
@@ -977,6 +937,7 @@ level9AddButton.addEventListener('click', () => {
     })
 
     updateUI()
+    updatePlayerData()
 })
 
 let checkboxes = document.getElementsByClassName('checkbox')
