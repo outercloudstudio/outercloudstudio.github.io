@@ -245,6 +245,22 @@ const attacksAddButton = document.getElementById('attacks-add-button')
 const generalInfo = document.getElementById('general-info')
 const generalInfoButton = document.getElementById('general-info-button')
 
+const notes = document.getElementById('notes')
+
+const characterNameValue = document.getElementById('character-name-value')
+const classValue = document.getElementById('class-value')
+const backgroundValue = document.getElementById('background-value')
+const playerNameValue = document.getElementById('name-value')
+const raceValue = document.getElementById('race-value')
+const alignmentValue = document.getElementById('alignment-value')
+const experienceValue = document.getElementById('experience-value')
+
+const otherProfValue = document.getElementById('other-prof-value')
+
+const characterCreator = document.getElementById('character-creator')
+
+const characterFile = document.getElementById('character-file')
+
 let currentData = null
 
 let isDM = false
@@ -263,104 +279,75 @@ function updatePlayerData(){
 
 function updateUI(){
     if(currentData != null){
-        strValue.value = currentData.player.stats.str
-        dexValue.value = currentData.player.stats.dex
-        conValue.value = currentData.player.stats.con
-        intValue.value = currentData.player.stats.int
-        wisValue.value = currentData.player.stats.wis
-        chaValue.value = currentData.player.stats.cha
+        if(currentData.player != null){
+            strValue.value = currentData.player.stats.str
+            dexValue.value = currentData.player.stats.dex
+            conValue.value = currentData.player.stats.con
+            intValue.value = currentData.player.stats.int
+            wisValue.value = currentData.player.stats.wis
+            chaValue.value = currentData.player.stats.cha
 
-        hpValue.value = currentData.player.stats.hp
-        mhpValue.value = currentData.player.stats.mhp
-        thpValue.value = currentData.player.stats.thp
-        acValue.value = currentData.player.stats.ac
-        speedValue.value = currentData.player.stats.speed
-        initiativeValue.value = currentData.player.stats.initiative
-        hdValue.value = currentData.player.stats.hd
-        thpValue.value = currentData.player.stats.thp
-        dssValue.value = currentData.player.stats.dss
-        dsfValue.value = currentData.player.stats.dsf
-        profBonusValue.value = currentData.player.stats.profBonus
+            hpValue.value = currentData.player.stats.hp
+            mhpValue.value = currentData.player.stats.mhp
+            thpValue.value = currentData.player.stats.thp
+            acValue.value = currentData.player.stats.ac
+            speedValue.value = currentData.player.stats.speed
+            initiativeValue.value = currentData.player.stats.initiative
+            hdValue.value = currentData.player.stats.hd
+            thdValue.value = currentData.player.stats.thd
+            thpValue.value = currentData.player.stats.thp
+            dssValue.value = currentData.player.stats.dss
+            dsfValue.value = currentData.player.stats.dsf
+            profBonusValue.value = currentData.player.stats.profBonus
 
-        level1SpellSlotsValue.value = currentData.player.level1SpellSlots
-        level1SpellSlotsUsedValue.value = currentData.player.level1SpellSlotsUsed
-        level2SpellSlotsValue.value = currentData.player.level2SpellSlots
-        level2SpellSlotsUsedValue.value = currentData.player.level2SpellSlotsUsed
-        level3SpellSlotsValue.value = currentData.player.level3SpellSlots
-        level3SpellSlotsUsedValue.value = currentData.player.level3SpellSlotsUsed
-        level4SpellSlotsValue.value = currentData.player.level4SpellSlots
-        level4SpellSlotsUsedValue.value = currentData.player.level4SpellSlotsUsed
-        level5SpellSlotsValue.value = currentData.player.level5SpellSlots
-        level5SpellSlotsUsedValue.value = currentData.player.level5SpellSlotsUsed
-        level6SpellSlotsValue.value = currentData.player.level6SpellSlots
-        level6SpellSlotsUsedValue.value = currentData.player.level6SpellSlotsUsed
-        level7SpellSlotsValue.value = currentData.player.level7SpellSlots
-        level7SpellSlotsUsedValue.value = currentData.player.level7SpellSlotsUsed
-        level8SpellSlotsValue.value = currentData.player.level8SpellSlots
-        level8SpellSlotsUsedValue.value = currentData.player.level8SpellSlotsUsed
-        level9SpellSlotsValue.value = currentData.player.level9SpellSlots
-        level9SpellSlotsUsedValue.value = currentData.player.level9SpellSlotsUsed
+            notes.value = currentData.player.notes
 
-        for(let i = 0; i <inventoryList.children.length; i = 0){
-            inventoryList.removeChild(inventoryList.children[0])
-        }
-    
-        for(let i = 0; i < currentData.player.inventory.length; i++){
-            let newElement = inventoryListItemTemplate.cloneNode(true)
-            newElement.removeAttribute('id')
-    
-            newElement.children[0].addEventListener('change', event => {
-                currentData.player.inventory[i].name = event.target.parentNode.children[0].value
-                
-                updatePlayerData()
-                updateUI()
-            })
-        
-            newElement.children[1].addEventListener('change', event => {
-                currentData.player.inventory[i].note = event.target.parentNode.children[1].value
-                
-                updatePlayerData()
-                updateUI()
-            })
-    
-            newElement.children[2].addEventListener('click', event => {
-                console.log(i)
-                
-                currentData.player.inventory.splice(i, 1)
-    
-                event.target.parentNode.parentNode.remove()
-    
-                updatePlayerData()
-                updateUI()
-            })
-    
-            newElement.children[0].value = currentData.player.inventory[i].name
-            newElement.children[1].value = currentData.player.inventory[i].note
-    
-            inventoryList.appendChild(newElement)
-        }
+            characterNameValue.value = currentData.player.characterName
+            classValue.value = currentData.player.class
+            backgroundValue.value = currentData.player.background
+            playerNameValue.value = currentData.player.playerName
+            raceValue.value = currentData.player.race
+            alignmentValue.value = currentData.player.alignment
+            experienceValue.value = currentData.player.experience
 
-        let spellListElements = [cantripsList, level1List, level2List, level3List, level4List, level5List, level6List, level7List, level8List, level9List]
-        let spellObjectProps = ['cantrips', 'level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
-        
-        for(let i = 0; i < spellListElements.length; i++){
-            for(let j = 0; j <spellListElements[i].children.length; j = 0){
-                spellListElements[i].removeChild(spellListElements[i].children[0])
+            otherProfValue.value = currentData.player.otherProf
+
+            level1SpellSlotsValue.value = currentData.player.level1SpellSlots
+            level1SpellSlotsUsedValue.value = currentData.player.level1SpellSlotsUsed
+            level2SpellSlotsValue.value = currentData.player.level2SpellSlots
+            level2SpellSlotsUsedValue.value = currentData.player.level2SpellSlotsUsed
+            level3SpellSlotsValue.value = currentData.player.level3SpellSlots
+            level3SpellSlotsUsedValue.value = currentData.player.level3SpellSlotsUsed
+            level4SpellSlotsValue.value = currentData.player.level4SpellSlots
+            level4SpellSlotsUsedValue.value = currentData.player.level4SpellSlotsUsed
+            level5SpellSlotsValue.value = currentData.player.level5SpellSlots
+            level5SpellSlotsUsedValue.value = currentData.player.level5SpellSlotsUsed
+            level6SpellSlotsValue.value = currentData.player.level6SpellSlots
+            level6SpellSlotsUsedValue.value = currentData.player.level6SpellSlotsUsed
+            level7SpellSlotsValue.value = currentData.player.level7SpellSlots
+            level7SpellSlotsUsedValue.value = currentData.player.level7SpellSlotsUsed
+            level8SpellSlotsValue.value = currentData.player.level8SpellSlots
+            level8SpellSlotsUsedValue.value = currentData.player.level8SpellSlotsUsed
+            level9SpellSlotsValue.value = currentData.player.level9SpellSlots
+            level9SpellSlotsUsedValue.value = currentData.player.level9SpellSlotsUsed
+
+            for(let i = 0; i <inventoryList.children.length; i = 0){
+                inventoryList.removeChild(inventoryList.children[0])
             }
-
-            for(let j = 0; j < currentData.player.spells[spellObjectProps[i]].length; j++){
+        
+            for(let i = 0; i < currentData.player.inventory.length; i++){
                 let newElement = inventoryListItemTemplate.cloneNode(true)
                 newElement.removeAttribute('id')
         
                 newElement.children[0].addEventListener('change', event => {
-                    currentData.player.spells[spellObjectProps[i]][j].name = event.target.parentNode.children[0].value
+                    currentData.player.inventory[i].name = event.target.parentNode.children[0].value
                     
                     updatePlayerData()
                     updateUI()
                 })
             
                 newElement.children[1].addEventListener('change', event => {
-                    currentData.player.spells[spellObjectProps[i]][j].note = event.target.parentNode.children[1].value
+                    currentData.player.inventory[i].note = event.target.parentNode.children[1].value
                     
                     updatePlayerData()
                     updateUI()
@@ -369,7 +356,7 @@ function updateUI(){
                 newElement.children[2].addEventListener('click', event => {
                     console.log(i)
                     
-                    currentData.player.spells[spellObjectProps[i]].splice(i, 1)
+                    currentData.player.inventory.splice(i, 1)
         
                     event.target.parentNode.parentNode.remove()
         
@@ -377,211 +364,255 @@ function updateUI(){
                     updateUI()
                 })
         
-                newElement.children[0].value = currentData.player.spells[spellObjectProps[i]][j].name
-                newElement.children[1].value = currentData.player.spells[spellObjectProps[i]][j].note
+                newElement.children[0].value = currentData.player.inventory[i].name
+                newElement.children[1].value = currentData.player.inventory[i].note
         
-                spellListElements[i].appendChild(newElement)
+                inventoryList.appendChild(newElement)
             }
-        }
 
-        for(let i = 0; i <attacksList.children.length; i = 0){
-            attacksList.removeChild(attacksList.children[0])
-        }
-    
-        for(let i = 0; i < currentData.player.attacks.length; i++){
-            let newElement = inventoryListItemTemplate.cloneNode(true)
-            newElement.removeAttribute('id')
-    
-            newElement.children[0].addEventListener('change', event => {
-                currentData.player.attacks[i].name = event.target.parentNode.children[0].value
+            let spellListElements = [cantripsList, level1List, level2List, level3List, level4List, level5List, level6List, level7List, level8List, level9List]
+            let spellObjectProps = ['cantrips', 'level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
+            
+            for(let i = 0; i < spellListElements.length; i++){
+                for(let j = 0; j <spellListElements[i].children.length; j = 0){
+                    spellListElements[i].removeChild(spellListElements[i].children[0])
+                }
+
+                for(let j = 0; j < currentData.player.spells[spellObjectProps[i]].length; j++){
+                    let newElement = inventoryListItemTemplate.cloneNode(true)
+                    newElement.removeAttribute('id')
+            
+                    newElement.children[0].addEventListener('change', event => {
+                        currentData.player.spells[spellObjectProps[i]][j].name = event.target.parentNode.children[0].value
+                        
+                        updatePlayerData()
+                        updateUI()
+                    })
                 
-                updatePlayerData()
-                updateUI()
-            })
-        
-            newElement.children[1].addEventListener('change', event => {
-                currentData.player.attacks[i].note = event.target.parentNode.children[1].value
-                
-                updatePlayerData()
-                updateUI()
-            })
-    
-            newElement.children[2].addEventListener('click', event => {
-                console.log(i)
-                
-                currentData.player.attacks.splice(i, 1)
-    
-                event.target.parentNode.parentNode.remove()
-    
-                updatePlayerData()
-                updateUI()
-            })
-    
-            newElement.children[0].value = currentData.player.attacks[i].name
-            newElement.children[1].value = currentData.player.attacks[i].note
-    
-            attacksList.appendChild(newElement)
-        }
-        
-        let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
-        let modifierValues = [strValue, dexValue, conValue, intValue, wisValue, chaValue]
-
-        for (let i = 0; i < modifierValues.length; i++) {
-            let fields = document.getElementsByClassName(modifierTypes[i] + '-modifier')
-
-            let mod = Math.floor((parseInt(modifierValues[i].value) - 10) / 2)
-
-            for (let j = 0; j < fields.length; j++) {
-                fields[j].innerHTML = mod
-
-                if(mod >= 0){
-                    fields[j].innerHTML = '+' + mod.toString()
+                    newElement.children[1].addEventListener('change', event => {
+                        currentData.player.spells[spellObjectProps[i]][j].note = event.target.parentNode.children[1].value
+                        
+                        updatePlayerData()
+                        updateUI()
+                    })
+            
+                    newElement.children[2].addEventListener('click', event => {
+                        console.log(i)
+                        
+                        currentData.player.spells[spellObjectProps[i]].splice(i, 1)
+            
+                        event.target.parentNode.parentNode.remove()
+            
+                        updatePlayerData()
+                        updateUI()
+                    })
+            
+                    newElement.children[0].value = currentData.player.spells[spellObjectProps[i]][j].name
+                    newElement.children[1].value = currentData.player.spells[spellObjectProps[i]][j].note
+            
+                    spellListElements[i].appendChild(newElement)
                 }
             }
-        }
 
-        strProf.classList.remove('checked')
+            for(let i = 0; i <attacksList.children.length; i = 0){
+                attacksList.removeChild(attacksList.children[0])
+            }
         
-        if(currentData.player.stats.savingThrows.str){
-            strProf.classList.add('checked')
-        }
-
-        dexProf.classList.remove('checked')
+            for(let i = 0; i < currentData.player.attacks.length; i++){
+                let newElement = inventoryListItemTemplate.cloneNode(true)
+                newElement.removeAttribute('id')
         
-        if(currentData.player.stats.savingThrows.dex){
-            dexProf.classList.add('checked')
-        }
+                newElement.children[0].addEventListener('change', event => {
+                    currentData.player.attacks[i].name = event.target.parentNode.children[0].value
+                    
+                    updatePlayerData()
+                    updateUI()
+                })
+            
+                newElement.children[1].addEventListener('change', event => {
+                    currentData.player.attacks[i].note = event.target.parentNode.children[1].value
+                    
+                    updatePlayerData()
+                    updateUI()
+                })
+        
+                newElement.children[2].addEventListener('click', event => {
+                    console.log(i)
+                    
+                    currentData.player.attacks.splice(i, 1)
+        
+                    event.target.parentNode.parentNode.remove()
+        
+                    updatePlayerData()
+                    updateUI()
+                })
+        
+                newElement.children[0].value = currentData.player.attacks[i].name
+                newElement.children[1].value = currentData.player.attacks[i].note
+        
+                attacksList.appendChild(newElement)
+            }
+            
+            let modifierTypes = ["str", "dex", "con", "int", "wis", "cha"]
+            let modifierValues = [strValue, dexValue, conValue, intValue, wisValue, chaValue]
 
-        conProf.classList.remove('checked')
+            for (let i = 0; i < modifierValues.length; i++) {
+                let fields = document.getElementsByClassName(modifierTypes[i] + '-modifier')
 
-        if(currentData.player.stats.savingThrows.con){
-            conProf.classList.add('checked')
-        }
+                let mod = Math.floor((parseInt(modifierValues[i].value) - 10) / 2)
 
-        intProf.classList.remove('checked')
+                for (let j = 0; j < fields.length; j++) {
+                    fields[j].innerHTML = mod
 
-        if(currentData.player.stats.savingThrows.int){
-            intProf.classList.add('checked')
-        }
+                    if(mod >= 0){
+                        fields[j].innerHTML = '+' + mod.toString()
+                    }
+                }
+            }
 
-        wisProf.classList.remove('checked')
+            strProf.classList.remove('checked')
+            
+            if(currentData.player.stats.savingThrows.str){
+                strProf.classList.add('checked')
+            }
 
-        if(currentData.player.stats.savingThrows.wis){
-            wisProf.classList.add('checked')
-        }
+            dexProf.classList.remove('checked')
+            
+            if(currentData.player.stats.savingThrows.dex){
+                dexProf.classList.add('checked')
+            }
 
-        chaProf.classList.remove('checked')
+            conProf.classList.remove('checked')
 
-        if(currentData.player.stats.savingThrows.cha){
-            chaProf.classList.add('checked')
-        }
+            if(currentData.player.stats.savingThrows.con){
+                conProf.classList.add('checked')
+            }
 
-        acrobaticsProf.classList.remove('checked')
+            intProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.acrobatics){
-            acrobaticsProf.classList.add('checked')
-        }
+            if(currentData.player.stats.savingThrows.int){
+                intProf.classList.add('checked')
+            }
 
-        animalHandlingProf.classList.remove('checked')
+            wisProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.animalHandling){
-            animalHandlingProf.classList.add('checked')
-        }
+            if(currentData.player.stats.savingThrows.wis){
+                wisProf.classList.add('checked')
+            }
 
-        arcanaProf.classList.remove('checked')
+            chaProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.arcana){
-            arcanaProf.classList.add('checked')
-        }
+            if(currentData.player.stats.savingThrows.cha){
+                chaProf.classList.add('checked')
+            }
 
-        athleticsProf.classList.remove('checked')
+            acrobaticsProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.athletics){
-            athleticsProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.acrobatics){
+                acrobaticsProf.classList.add('checked')
+            }
 
-        deceptionProf.classList.remove('checked')
+            animalHandlingProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.deception){
-            deceptionProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.animalHandling){
+                animalHandlingProf.classList.add('checked')
+            }
 
-        historyProf.classList.remove('checked')
+            arcanaProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.history){
-            historyProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.arcana){
+                arcanaProf.classList.add('checked')
+            }
 
-        insightProf.classList.remove('checked')
+            athleticsProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.insight){
-            insightProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.athletics){
+                athleticsProf.classList.add('checked')
+            }
 
-        intimidationProf.classList.remove('checked')
+            deceptionProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.intimidation){
-            intimidationProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.deception){
+                deceptionProf.classList.add('checked')
+            }
 
-        investigationProf.classList.remove('checked')
+            historyProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.investigation){
-            investigationProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.history){
+                historyProf.classList.add('checked')
+            }
 
-        medicineProf.classList.remove('checked')
+            insightProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.medicine){
-            medicineProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.insight){
+                insightProf.classList.add('checked')
+            }
 
-        natureProf.classList.remove('checked')
+            intimidationProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.nature){
-            natureProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.intimidation){
+                intimidationProf.classList.add('checked')
+            }
 
-        perceptionProf.classList.remove('checked')
+            investigationProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.perception){
-            perceptionProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.investigation){
+                investigationProf.classList.add('checked')
+            }
 
-        performanceProf.classList.remove('checked')
+            medicineProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.performance){
-            performanceProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.medicine){
+                medicineProf.classList.add('checked')
+            }
 
-        persuasionProf.classList.remove('checked')
+            natureProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.persuasion){
-            persuasionProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.nature){
+                natureProf.classList.add('checked')
+            }
 
-        religionProf.classList.remove('checked')
+            perceptionProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.religion){
-            religionProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.perception){
+                perceptionProf.classList.add('checked')
+            }
 
-        sleightOfHandProf.classList.remove('checked')
+            performanceProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.sleightOfHand){
-            sleightOfHandProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.performance){
+                performanceProf.classList.add('checked')
+            }
 
-        stealthProf.classList.remove('checked')
+            persuasionProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.stealth){
-            stealthProf.classList.add('checked')
-        }
+            if(currentData.player.stats.skills.persuasion){
+                persuasionProf.classList.add('checked')
+            }
 
-        survivalProf.classList.remove('checked')
+            religionProf.classList.remove('checked')
 
-        if(currentData.player.stats.skills.survival){
-            survivalProf.classList.add('checked')
+            if(currentData.player.stats.skills.religion){
+                religionProf.classList.add('checked')
+            }
+
+            sleightOfHandProf.classList.remove('checked')
+
+            if(currentData.player.stats.skills.sleightOfHand){
+                sleightOfHandProf.classList.add('checked')
+            }
+
+            stealthProf.classList.remove('checked')
+
+            if(currentData.player.stats.skills.stealth){
+                stealthProf.classList.add('checked')
+            }
+
+            survivalProf.classList.remove('checked')
+
+            if(currentData.player.stats.skills.survival){
+                survivalProf.classList.add('checked')
+            }
         }
     }
 }
@@ -597,6 +628,10 @@ function closeAllWindows(){
 
     if(spells.classList.contains('open')) {
         spells.classList.remove('open')
+    }
+
+    if(generalInfo.classList.contains('open')) {
+        generalInfo.classList.remove('open')
     }
 }
 
@@ -717,6 +752,13 @@ initiativeValue.addEventListener('change', event => {
 hdValue.addEventListener('change', event => {
     currentData.player.stats.hd = event.target.value
     
+    updatePlayerData()
+    updateUI()
+})
+
+thdValue.addEventListener('change', event => {
+    currentData.player.stats.thd = event.target.value
+
     updatePlayerData()
     updateUI()
 })
@@ -1003,6 +1045,85 @@ generalInfoButton.addEventListener('click', () => {
 
         generalInfo.classList.add('open')
     }
+})
+
+notes.addEventListener('change', () => {
+    currentData.player.notes = notes.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+characterNameValue.addEventListener('change', event => {
+    currentData.player.characterName = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+classValue.addEventListener('change', event => {
+    currentData.player.class = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+backgroundValue.addEventListener('change', event => {
+    currentData.player.background = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+playerNameValue.addEventListener('change', event => {
+    currentData.player.playerName = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+raceValue.addEventListener('change', event => {
+    currentData.player.race = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+alignmentValue.addEventListener('change', event => {
+    currentData.player.alignment = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+experienceValue.addEventListener('change', event => {
+    currentData.player.experience = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+otherProfValue.addEventListener('change', event => {
+    currentData.player.otherProf = event.target.value
+
+    updatePlayerData()
+    updateUI()
+})
+
+characterFile.addEventListener('change', event => {
+    const file = event.target.files[0]
+
+    const reader = new FileReader()
+    reader.readAsText(file)
+
+    reader.addEventListener('load', () => {
+        console.log(reader.result)
+        currentData.player = JSON.parse(reader.result)
+
+        characterCreator.classList.remove('open')
+        
+        socket.emit('created-character', currentData)
+    })
 })
 
 let checkboxes = document.getElementsByClassName('checkbox')
@@ -1356,8 +1477,7 @@ socket.on('new-user-accepted-auth', authID => {
 
     localStorage.setItem('ID', authID)
 
-    //Go to character creation
-    let playerData = {
+    currentData = {
         inventory: [
             {
                 name: 'Sword',
@@ -1434,6 +1554,7 @@ socket.on('new-user-accepted-auth', authID => {
             speed: 10,
             initiative: 10,
             hd: 10,
+            thd: 10,
             thp: 10,
             dss: 10,
             dsf: 10,
@@ -1526,9 +1647,21 @@ socket.on('new-user-accepted-auth', authID => {
         level8SpellSlotsUsed: 0,
         level9SpellSlots: 2,
         level9SpellSlotsUsed: 0,
+
+        notes: '',
+
+        characterName: '',
+        class: '',
+        background: '',
+        playerName: '',
+        race: '',
+        alignment: '',
+        experience: '',
+
+        otherProf: '',
     }
 
-    socket.emit('created-character', playerData)
+    characterCreator.classList.add('open')
 });
 
 socket.on('joined-room', roomData => {
