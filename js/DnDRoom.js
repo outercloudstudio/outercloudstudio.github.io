@@ -90,11 +90,12 @@ class Remote3DObject{
 
                 this.object3D.position.set(this.x, this.y, this.z)
                 this.object3D.rotation.set(this.rx, this.ry, this.rz)
+                this.object3D.scale.set(this.sx, this.sy, this.sz)
 
                 scene.add(this.object3D)
             }
 
-            if(this.builder == "miniture"){
+            if(this.builder == "miniture-base"){
                 geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
 
                 material = new THREE.MeshPhongMaterial({
@@ -111,6 +112,7 @@ class Remote3DObject{
 
                     this.object3D.position.set(this.x, this.y, this.z)
                     this.object3D.rotation.set(this.rx, this.ry, this.rz)
+                    this.object3D.scale.set(this.sx, this.sy, this.sz)
 
                     updateMaterialHDRI(object)
                     
@@ -139,9 +141,12 @@ class Remote3DObject{
         if(this.object3D != null){
             if(!lerpPos){
                 this.object3D.position.set(this.x, this.y, this.z)
-                this.object3D.rotation.set(this.rx, this.ry, this.rz)
-                this.object3D.scale.set(this.sx, this.sy, this.sz)
             }
+
+            this.object3D.rotation.set(this.rx, this.ry, this.rz)
+
+            console.log(this.sx)
+            this.object3D.scale.set(this.sx, this.sy, this.sz)
         }
     }
 
@@ -287,17 +292,35 @@ const experienceValue = document.getElementById('experience-value')
 const otherProfValue = document.getElementById('other-prof-value')
 
 const characterCreator = document.getElementById('character-creator')
-
 const characterFile = document.getElementById('character-file')
 
+const minitures = document.getElementById('miniture-controls')
+const minituresButton = document.getElementById('minitures-button')
+const createMinitureBaseButton = document.getElementById('create-miniture-base')
+const deleteMinituresButton = document.getElementById('delete-minitures')
+
 let currentData = null
-
 let isDM = false
-
 let remote3DObjects = []
 
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function uuidv4() {
+    var d = new Date().getTime();
+    var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16;
+        if(d > 0){
+            r = (d + r)%16 | 0;
+            d = Math.floor(d/16);
+        } else {
+            r = (d2 + r)%16 | 0;
+            d2 = Math.floor(d2/16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
 }
 
 function updatePlayerData(){
@@ -647,21 +670,11 @@ function updateUI(){
 }
 
 function closeAllWindows(){
-    if(inventory.classList.contains('open')) {
-        inventory.classList.remove('open')
-    }
-
-    if(stats.classList.contains('open')) {
-        stats.classList.remove('open')
-    }
-
-    if(spells.classList.contains('open')) {
-        spells.classList.remove('open')
-    }
-
-    if(generalInfo.classList.contains('open')) {
-        generalInfo.classList.remove('open')
-    }
+    inventory.classList.remove('open')
+    stats.classList.remove('open')
+    spells.classList.remove('open')
+    generalInfo.classList.remove('open')
+    minitures.classList.remove('open')
 }
 
 function setupEventListeners(){
@@ -1155,6 +1168,24 @@ function setupEventListeners(){
             socket.emit('created-character', currentData)
         })
     })
+
+    minituresButton.addEventListener('click', () => {
+        if(minitures.classList.contains('open')) {
+            closeAllWindows()
+        }else{
+            closeAllWindows()
+
+            minitures.classList.add('open')
+        }
+    })
+
+    createMinitureBaseButton.addEventListener('click', () => {
+        socket.emit('new-miniture', 'base')
+    })
+
+    deleteMinituresButton.addEventListener('click', () => {
+        socket.emit('delete-minitures')
+    })
 }
 
 function updateMaterialHDRI(object){
@@ -1416,10 +1447,12 @@ loader.load('./models/Room.fbx', object =>{
 
 loader.load('./models/DungeonTest.fbx', object =>{
     updateMaterialHDRI(object)
-    selectables.add(object)
+    scene.add(object)
 
-    object.position.set(-.1,.7,-.1)
+    object.position.set(-2,.7,0)
 })
+
+let playerModels = []
 
 renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
 viewport.appendChild(renderer.domElement)
@@ -1453,6 +1486,7 @@ let EDown = false
 let RDown = false
 let TDown = false
 let YDown = false
+let BackspaceDown = false
 
 //Setup input
 viewport.addEventListener('mousemove', event => {
@@ -1522,6 +1556,11 @@ document.addEventListener('keydown', event => {
     {
         YDown = true
     }
+
+    if(event.key == 'Backspace')
+    {
+        BackspaceDown = true
+    }
 })
 
 document.addEventListener('keyup', event => {
@@ -1565,6 +1604,11 @@ document.addEventListener('keyup', event => {
     {
         YDown = false
     }
+
+    if(event.key == 'Backspace')
+    {
+        BackspaceDown = false
+    }
 })
 
 function resetInput(){
@@ -1585,22 +1629,26 @@ function render() {
         timeTillUpdate = 1/updatePS
 
         for(let i = 0; i < remote3DObjects.length; i++){
-            if(remote3DObjects[i].object3D == transformer.object){
-                remote3DObjects[i].dirty = true
-                remote3DObjects[i].updateValues()
-            }
+            if(remote3DObjects[i].object3D != null){
+                if(remote3DObjects[i].object3D == transformer.object){
+                    remote3DObjects[i].dirty = true
+                    remote3DObjects[i].updateValues()
+                }
 
-            if(remote3DObjects[i].dirty){
-                socket.emit('update-remote', remote3DObjects[i].toObject())
+                if(remote3DObjects[i].dirty){
+                    socket.emit('update-remote', remote3DObjects[i].toObject())
 
-                remote3DObjects[i].dirty = false
-                remote3DObjects[i].position = remote3DObjects[i].object3D.position
+                    remote3DObjects[i].dirty = false
+                    remote3DObjects[i].position = remote3DObjects[i].object3D.position
+                }
             }
         }
     }
 
     for(let i = 0; i < remote3DObjects.length; i++){
-        remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
+        if(remote3DObjects[i].object3D != null){
+            remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
+        }
     }
 
     let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
@@ -1655,11 +1703,11 @@ function render() {
     }
 
     if(QDown){
-        camera.translateY(-1 * delta);
+        camera.position.y += -1 * delta;
     }
 
     if(EDown){
-        camera.translateY(1 * delta);
+        camera.position.y += 1 * delta;
     }
 
     if(TDown){
@@ -1672,6 +1720,22 @@ function render() {
 
     if(RDown){
         transformer.setMode('scale')
+    }
+
+    if(BackspaceDown){
+        if(transformer.object != null){
+            let object = transformer.object
+
+            transformer.detach()
+
+            let remote = remote3DObjects.find(remote => remote.object3D == object)
+
+            if(remote != null){
+                socket.emit('delete-remote-3D-object', remote.ID)
+            }else{
+                scene.remove(object)
+            }
+        }
     }
 
     if(mouseScroll != 0){
@@ -1916,6 +1980,9 @@ socket.on('joined-room', roomData => {
 
         inventoryButton.remove()
         statsButton.remove()
+        spellsButton.remove()
+    }else{
+        minituresButton.remove()
     }
 
     updateUI()
@@ -1937,6 +2004,17 @@ socket.on('update-remotes', remotes => {
 
         if(remote != null){
             remote3DObjects[i].update(remote, true)
+        }
+    }
+})
+
+socket.on('delete-remote-3D-object' , ID => {
+    for(let i = 0; i < remote3DObjects.length; i++){
+        if(remote3DObjects[i].ID == ID){
+            remote3DObjects[i].object3D.removeFromParent()
+            remote3DObjects.splice(i, 1)
+
+            i--
         }
     }
 })

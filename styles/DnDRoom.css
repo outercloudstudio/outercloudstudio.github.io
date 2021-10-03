@@ -480,3 +480,38 @@ input{
 input[type="file"] {
     display: none;
 }
+
+#miniture-controls{
+    width: 90%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 100%;
+
+    transition: left .2s ease;
+
+    background-color: var(--dark);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+
+    padding: 1rem;
+}
+
+#miniture-controls.open{
+    left: 0;
+}
+
+.info-button{
+    padding: .5rem;
+    font-size: 1rem;
+    background: var(--medium);
+
+    border: none;
+    outline: none;
+
+    margin-bottom: 1rem;
+}
