@@ -62,7 +62,7 @@ class Remote3DObject{
             sx: this.sx,
             sy: this.sy,
             sz: this.sz,
-            ID: this.ID
+            ID: this.ID,
         }
     }
 
@@ -80,8 +80,22 @@ class Remote3DObject{
                     flatShading: true,
                 })
 
-                //this.object3D = new THREE.Mesh(geometry, material);
-                
+                this.object3D = new THREE.Mesh(geometry, material);
+
+                this.object3D.position.set(this.x, this.y, this.z)
+                this.object3D.rotation.set(this.rx, this.ry, this.rz)
+
+                scene.add(this.object3D)
+            }
+
+            if(this.builder == "miniture"){
+                geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
+
+                material = new THREE.MeshPhongMaterial({
+                    color: 0xFFFFFF,
+                    flatShading: true,
+                })
+
 				loader.load('./models/Human_Female_Barbarian.fbx', object =>{
                     this.object3D = object
 
@@ -92,7 +106,9 @@ class Remote3DObject{
                     this.object3D.position.set(this.x, this.y, this.z)
                     this.object3D.rotation.set(this.rx, this.ry, this.rz)
 
-                    scene.add(this.object3D)
+                    updateMaterialHDRI(object)
+                    
+                    selectables.add(this.object3D)
                 })
             }
         }
@@ -136,7 +152,6 @@ class Remote3DObject{
 //const socket = io('ws://76.86.240.158:25566')
 //const socket = io('ws://192.168.1.101:25566')
 const socket = io('ws://localhost:25566')
-const loader = new THREE.FBXLoader();
 
 const joiningRoomElement = document.getElementById('joining-room')
 
@@ -635,496 +650,535 @@ function closeAllWindows(){
     }
 }
 
-inventoryButton.addEventListener('click', () => {
-    if(inventory.classList.contains('open')) {
-        closeAllWindows()
-    }else{
-        closeAllWindows()
+function setupEventListeners(){
+    inventoryButton.addEventListener('click', () => {
+        if(inventory.classList.contains('open')) {
+            closeAllWindows()
+        }else{
+            closeAllWindows()
 
-        inventory.classList.add('open')
-    }
-})
-
-statsButton.addEventListener('click', () => {
-    if(stats.classList.contains('open')) {
-        closeAllWindows()
-    }else{
-        closeAllWindows()
-
-        stats.classList.add('open')
-    }
-})
-
-inventoryAddButton.addEventListener('click', () => {
-    currentData.player.inventory.push({
-        name: '',
-        note: '',
+            inventory.classList.add('open')
+        }
     })
 
-    updateUI()
-    updatePlayerData()
-})
-
-strValue.addEventListener('change', event => {
-    currentData.player.stats.str = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-dexValue.addEventListener('change', event => {
-    currentData.player.stats.dex = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-conValue.addEventListener('change', event => {
-    currentData.player.stats.con = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-intValue.addEventListener('change', event => {
-    currentData.player.stats.int = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-wisValue.addEventListener('change', event => {
-    currentData.player.stats.wis = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-chaValue.addEventListener('change', event => {
-    currentData.player.stats.cha = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-hpValue.addEventListener('change', event => {
-    currentData.player.stats.hp = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-mhpValue.addEventListener('change', event => {
-    currentData.player.stats.mhp = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-thpValue.addEventListener('change', event => {
-    currentData.player.stats.thp = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-acValue.addEventListener('change', event => {
-    currentData.player.stats.ac = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-speedValue.addEventListener('change', event => {
-    currentData.player.stats.speed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-initiativeValue.addEventListener('change', event => {
-    currentData.player.stats.initiative = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-hdValue.addEventListener('change', event => {
-    currentData.player.stats.hd = event.target.value
-    
-    updatePlayerData()
-    updateUI()
-})
-
-thdValue.addEventListener('change', event => {
-    currentData.player.stats.thd = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-thpValue.addEventListener('change', event => {
-    currentData.player.stats.thp = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-dssValue.addEventListener('change', event => {
-    currentData.player.stats.dss = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-dsfValue.addEventListener('change', event => {
-    currentData.player.stats.dsf = event.target.value
-    
-    updatePlayerData()
-    updateUI()
-})
-
-profBonusValue.addEventListener('change', event => {
-    currentData.player.stats.profBonus = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-spellsButton.addEventListener('click', () => {
-    if(spells.classList.contains('open')) {
-        closeAllWindows()
-    }else{
-        closeAllWindows()
-
-        spells.classList.add('open')
-    }
-})
-
-level1SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level1SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level2SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level2SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level3SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level3SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level4SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level4SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level5SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level5SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level6SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level6SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level7SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level7SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level8SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level8SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level9SpellSlotsValue.addEventListener('change', event => {
-    currentData.player.level9SpellSlots = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level1SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level1SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level2SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level2SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level3SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level3SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level4SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level4SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level5SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level5SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level6SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level6SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level7SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level7SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level8SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level8SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-level9SpellSlotsUsedValue.addEventListener('change', event => {
-    currentData.player.level9SpellSlotsUsed = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-cantripsAddButton.addEventListener('click', () => {
-    currentData.player.spells.cantrips.push({
-        name: '',
-        note: '',
+    statsButton.addEventListener('click', () => {
+        if(stats.classList.contains('open')) {
+            closeAllWindows()
+        }else{
+            closeAllWindows()
+
+            stats.classList.add('open')
+        }
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    inventoryAddButton.addEventListener('click', () => {
+        currentData.player.inventory.push({
+            name: '',
+            note: '',
+        })
 
-level1AddButton.addEventListener('click', () => {
-    currentData.player.spells.level1.push({
-        name: '',
-        note: '',
+        updateUI()
+        updatePlayerData()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    strValue.addEventListener('change', event => {
+        currentData.player.stats.str = event.target.value
 
-level2AddButton.addEventListener('click', () => {
-    currentData.player.spells.level2.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    dexValue.addEventListener('change', event => {
+        currentData.player.stats.dex = event.target.value
 
-level3AddButton.addEventListener('click', () => {
-    currentData.player.spells.level3.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    conValue.addEventListener('change', event => {
+        currentData.player.stats.con = event.target.value
 
-level4AddButton.addEventListener('click', () => {
-    currentData.player.spells.level4.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    intValue.addEventListener('change', event => {
+        currentData.player.stats.int = event.target.value
 
-level5AddButton.addEventListener('click', () => {
-    currentData.player.spells.level5.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    wisValue.addEventListener('change', event => {
+        currentData.player.stats.wis = event.target.value
 
-level6AddButton.addEventListener('click', () => {
-    currentData.player.spells.level6.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    chaValue.addEventListener('change', event => {
+        currentData.player.stats.cha = event.target.value
 
-level7AddButton.addEventListener('click', () => {
-    currentData.player.spells.level7.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    hpValue.addEventListener('change', event => {
+        currentData.player.stats.hp = event.target.value
 
-level8AddButton.addEventListener('click', () => {
-    currentData.player.spells.level8.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    mhpValue.addEventListener('change', event => {
+        currentData.player.stats.mhp = event.target.value
 
-level9AddButton.addEventListener('click', () => {
-    currentData.player.spells.level9.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    thpValue.addEventListener('change', event => {
+        currentData.player.stats.thp = event.target.value
 
-attacksAddButton.addEventListener('click', () => {
-    currentData.player.attacks.push({
-        name: '',
-        note: '',
+        updatePlayerData()
+        updateUI()
     })
 
-    updateUI()
-    updatePlayerData()
-})
+    acValue.addEventListener('change', event => {
+        currentData.player.stats.ac = event.target.value
 
-generalInfoButton.addEventListener('click', () => {
-    if(generalInfo.classList.contains('open')) {
-        closeAllWindows()
-    }else{
-        closeAllWindows()
+        updatePlayerData()
+        updateUI()
+    })
 
-        generalInfo.classList.add('open')
-    }
-})
+    speedValue.addEventListener('change', event => {
+        currentData.player.stats.speed = event.target.value
 
-notes.addEventListener('change', () => {
-    currentData.player.notes = notes.value
+        updatePlayerData()
+        updateUI()
+    })
 
-    updatePlayerData()
-    updateUI()
-})
+    initiativeValue.addEventListener('change', event => {
+        currentData.player.stats.initiative = event.target.value
 
-characterNameValue.addEventListener('change', event => {
-    currentData.player.characterName = event.target.value
+        updatePlayerData()
+        updateUI()
+    })
 
-    updatePlayerData()
-    updateUI()
-})
-
-classValue.addEventListener('change', event => {
-    currentData.player.class = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-backgroundValue.addEventListener('change', event => {
-    currentData.player.background = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-playerNameValue.addEventListener('change', event => {
-    currentData.player.playerName = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-raceValue.addEventListener('change', event => {
-    currentData.player.race = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-alignmentValue.addEventListener('change', event => {
-    currentData.player.alignment = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-experienceValue.addEventListener('change', event => {
-    currentData.player.experience = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-otherProfValue.addEventListener('change', event => {
-    currentData.player.otherProf = event.target.value
-
-    updatePlayerData()
-    updateUI()
-})
-
-characterFile.addEventListener('change', event => {
-    const file = event.target.files[0]
-
-    const reader = new FileReader()
-    reader.readAsText(file)
-
-    reader.addEventListener('load', () => {
-        console.log(reader.result)
-        currentData.player = JSON.parse(reader.result)
-
-        characterCreator.classList.remove('open')
+    hdValue.addEventListener('change', event => {
+        currentData.player.stats.hd = event.target.value
         
-        socket.emit('created-character', currentData)
+        updatePlayerData()
+        updateUI()
     })
-})
+
+    thdValue.addEventListener('change', event => {
+        currentData.player.stats.thd = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    thpValue.addEventListener('change', event => {
+        currentData.player.stats.thp = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    dssValue.addEventListener('change', event => {
+        currentData.player.stats.dss = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    dsfValue.addEventListener('change', event => {
+        currentData.player.stats.dsf = event.target.value
+        
+        updatePlayerData()
+        updateUI()
+    })
+
+    profBonusValue.addEventListener('change', event => {
+        currentData.player.stats.profBonus = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    spellsButton.addEventListener('click', () => {
+        if(spells.classList.contains('open')) {
+            closeAllWindows()
+        }else{
+            closeAllWindows()
+
+            spells.classList.add('open')
+        }
+    })
+
+    level1SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level1SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level2SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level2SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level3SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level3SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level4SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level4SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level5SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level5SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level6SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level6SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level7SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level7SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level8SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level8SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level9SpellSlotsValue.addEventListener('change', event => {
+        currentData.player.level9SpellSlots = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level1SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level1SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level2SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level2SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level3SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level3SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level4SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level4SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level5SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level5SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level6SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level6SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level7SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level7SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level8SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level8SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    level9SpellSlotsUsedValue.addEventListener('change', event => {
+        currentData.player.level9SpellSlotsUsed = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    cantripsAddButton.addEventListener('click', () => {
+        currentData.player.spells.cantrips.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level1AddButton.addEventListener('click', () => {
+        currentData.player.spells.level1.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level2AddButton.addEventListener('click', () => {
+        currentData.player.spells.level2.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level3AddButton.addEventListener('click', () => {
+        currentData.player.spells.level3.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level4AddButton.addEventListener('click', () => {
+        currentData.player.spells.level4.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level5AddButton.addEventListener('click', () => {
+        currentData.player.spells.level5.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level6AddButton.addEventListener('click', () => {
+        currentData.player.spells.level6.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level7AddButton.addEventListener('click', () => {
+        currentData.player.spells.level7.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level8AddButton.addEventListener('click', () => {
+        currentData.player.spells.level8.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    level9AddButton.addEventListener('click', () => {
+        currentData.player.spells.level9.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    attacksAddButton.addEventListener('click', () => {
+        currentData.player.attacks.push({
+            name: '',
+            note: '',
+        })
+
+        updateUI()
+        updatePlayerData()
+    })
+
+    generalInfoButton.addEventListener('click', () => {
+        if(generalInfo.classList.contains('open')) {
+            closeAllWindows()
+        }else{
+            closeAllWindows()
+
+            generalInfo.classList.add('open')
+        }
+    })
+
+    notes.addEventListener('change', () => {
+        currentData.player.notes = notes.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    characterNameValue.addEventListener('change', event => {
+        currentData.player.characterName = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    classValue.addEventListener('change', event => {
+        currentData.player.class = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    backgroundValue.addEventListener('change', event => {
+        currentData.player.background = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    playerNameValue.addEventListener('change', event => {
+        currentData.player.playerName = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    raceValue.addEventListener('change', event => {
+        currentData.player.race = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    alignmentValue.addEventListener('change', event => {
+        currentData.player.alignment = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    experienceValue.addEventListener('change', event => {
+        currentData.player.experience = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    otherProfValue.addEventListener('change', event => {
+        currentData.player.otherProf = event.target.value
+
+        updatePlayerData()
+        updateUI()
+    })
+
+    characterFile.addEventListener('change', event => {
+        const file = event.target.files[0]
+
+        const reader = new FileReader()
+        reader.readAsText(file)
+
+        reader.addEventListener('load', () => {
+            console.log(reader.result)
+            currentData.player = JSON.parse(reader.result)
+
+            characterCreator.classList.remove('open')
+            
+            socket.emit('created-character', currentData)
+        })
+    })
+}
+
+function updateMaterialHDRI(object){
+    object.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+            /*if(child.material.length != null){
+                for(let i = 0; i < child.material.length; i++){
+                    child.material[i] = new THREE.MeshPhysicalMaterial({
+                        metalness: child.material[i].metalness,
+                        roughness: child.material[i].roughness,
+                        color: child.material[i].color,
+                        envMap: envmap.texture
+                    })
+                }
+            }else{
+                child.material = new THREE.MeshPhysicalMaterial({
+                    metalness: child.material.metalness,
+                    roughness: child.material.roughness,
+                    color: child.material.color,
+                    envMap: envmap.texture
+                })
+            }*/
+
+            child.castShadow = true
+            child.receiveShadow = true
+        }
+
+        if (child instanceof THREE.DirectionalLight) {
+            light.castShadow = true;
+            light.shadow.mapSize.width = 512;
+            light.shadow.mapSize.height = 512;
+            light.shadow.camera.near = 0.5;
+            light.shadow.camera.far = 500;
+        }
+    })
+}
+
+setupEventListeners()
 
 let checkboxes = document.getElementsByClassName('checkbox')
 
@@ -1314,24 +1368,77 @@ const viewport = document.getElementById('viewport')
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera( 70, viewport.offsetWidth / viewport.offsetHeight, 0.1, 1000 )
 const renderer = new THREE.WebGLRenderer()
+renderer.physicallyCorrectLights = true
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.outputEncoding = THREE.sRGBEncoding
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+
 const clock = new THREE.Clock()
+const selectables = new THREE.Group()
+scene.add(selectables)
+
+const loader = new THREE.FBXLoader()
+const envmaploader = new THREE.PMREMGenerator(renderer);
+const RGBELoader = new THREE.RGBELoader()
+
+let envmap = new THREE.CubeTexture()
+
+//Load HDRI
+RGBELoader.setPath('models/')
+.load( 'hdri.hdr', texture => {
+
+    texture.mapping = THREE.EquirectangularReflectionMapping
+
+    scene.background = texture
+    scene.environment = texture
+    envmap = envmaploader.fromCubemap(texture)
+})
+
+/*loader.load('./models/Room.fbx', object =>{
+    updateMaterialHDRI(object)
+    scene.add(object)
+})*/
+
 renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
 viewport.appendChild(renderer.domElement)
 
 //Lighting
-const ambientLight = new THREE.AmbientLight( 0x404040 )
-scene.add( ambientLight )
+const light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+light.position.set( 0, 10, 0 ); //default; light shining from top
+light.castShadow = true; // default false
+scene.add( light );
 
-const pointLight = new THREE.PointLight( 0xffffff, 10, 100 )
-pointLight.position.set( 50, 50, 50 )
-scene.add( pointLight )
+const helper = new THREE.CameraHelper( light.shadow.camera );
+scene.add( helper );
 
-//Set Camera Position
-camera.position.y = 5
-camera.rotation.x = -Math.PI / 2
+//Set up shadow properties for the light
+light.shadow.mapSize.width = 512; // default
+light.shadow.mapSize.height = 512; // default
+light.shadow.camera.near = 0.5; // default
+light.shadow.camera.far = 500; // default
+
+const geometry = new THREE.PlaneGeometry(20, 20);
+const material = new THREE.MeshStandardMaterial( {color: 0x00ff00, side: THREE.DoubleSide} );
+const plane = new THREE.Mesh( geometry, material );
+plane.castShadow = true
+plane.receiveShadow = true
+plane.rotation.x = -Math.PI / 2
+scene.add( plane );
+
+//Setup Camera
+camera.rotation.order = "YXZ";
+camera.position.y = .5
+camera.position.x = -1
+camera.rotation.y = -Math.PI / 2
+
+const transformer = new THREE.TransformControls(camera, renderer.domElement)
+scene.add(transformer)
 
 const updatePS = 15
 let timeTillUpdate = 1/updatePS
+
+const mouseMoveThreshold = 10
 
 let mouseX = 0
 let mouseY = 0
@@ -1339,7 +1446,12 @@ let mouseAbsX = 0
 let mouseAbsY = 0
 let mouseDown = false
 let mouseScroll = 0
-let selectedObject = null
+let WDown = false
+let ADown = false
+let SDown = false
+let DDown = false
+let QDown = false
+let EDown = false
 
 //Setup input
 viewport.addEventListener('mousemove', event => {
@@ -1364,8 +1476,64 @@ viewport.addEventListener('wheel', event => {
 
 viewport.addEventListener('contextmenu', event => {
     event.preventDefault()
+})
 
-    selectedObject = null
+document.addEventListener('keydown', event => {
+    console.log(event.key)
+
+    if(event.key == 'w'){
+        WDown = true
+    }
+
+    if(event.key == 'a'){
+        ADown = true
+    }
+
+    if(event.key == 's'){
+        SDown = true
+    }
+
+    if(event.key == 'd'){
+        DDown = true
+    }
+
+    if(event.key == 'q')
+    {
+        QDown = true
+    }
+
+    if(event.key == 'e')
+    {
+        EDown = true
+    }
+})
+
+document.addEventListener('keyup', event => {
+    if(event.key == 'w'){
+        WDown = false
+    }
+
+    if(event.key == 'a'){
+        ADown = false
+    }
+
+    if(event.key == 's'){
+        SDown = false
+    }
+
+    if(event.key == 'd'){
+        DDown = false
+    }
+
+    if(event.key == 'q')
+    {
+        QDown = false
+    }
+
+    if(event.key == 'e')
+    {
+        EDown = false
+    }
 })
 
 function resetInput(){
@@ -1373,7 +1541,6 @@ function resetInput(){
     mouseY = 0
     mouseScroll = 0
 }
-
 //Render Loop
 function render() {
 	requestAnimationFrame( render )
@@ -1395,60 +1562,47 @@ function render() {
         }
     }
 
-    if(mouseScroll != 0){
-        camera.position.y += mouseScroll / 102
-
-        if(camera.position.y < 5){
-            camera.position.y = 5
-        }
-
-        if(camera.position.y > 40){
-            camera.position.y = 40
-        }
-    }
+    let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
 
     if(mouseDown){
-
-        if(selectedObject == null){
-            const raycaster = new THREE.Raycaster()
-            const mouse = new THREE.Vector2()
-
-            mouse.x = (mouseAbsX / viewport.offsetWidth ) * 2 - 1
-            mouse.y = -(mouseAbsY / viewport.offsetHeight ) * 2 + 1
-
-            raycaster.setFromCamera( mouse, camera )
-
-            const intersects = raycaster.intersectObjects(scene.children, true)
-            
-            if(intersects.length > 0){
-                selectedObject = intersects[0].object
+        if(!transformer.dragging){
+            if(mouseMoved){
+                camera.rotation.y += mouseX / 10 * delta
+                camera.rotation.x += mouseY / 10 * delta
             }else{
-                camera.position.x += -mouseX * delta * camera.position.y / 7
-                camera.position.z += -mouseY * delta * camera.position.y / 7
+                const raycaster = new THREE.Raycaster()
+                const mouse = new THREE.Vector2()
+
+                mouse.x = (mouseAbsX / viewport.offsetWidth ) * 2 - 1
+                mouse.y = -(mouseAbsY / viewport.offsetHeight ) * 2 + 1
+
+                raycaster.setFromCamera(mouse, camera)
+
+                const intersects = raycaster.intersectObject(selectables, true)
+
+                if(intersects.length > 0){
+                    transformer.attach(intersects[0].object)
+                }else{
+                    transformer.detach()
+                }
             }
-        }else{
-            camera.position.x += -mouseX * delta * camera.position.y / 7
-            camera.position.z += -mouseY * delta * camera.position.y / 7
         }
+    }else{
+        
     }
 
-    if(selectedObject != null){
+    if(mouseScroll != 0){
+        camera.fov += mouseScroll * delta
 
-        let remote = null
-
-        while(remote == null && selectedObject.parent != null){
-            remote = remote3DObjects.find(remote => remote.object3D == selectedObject)
-
-            if(remote == null){
-                selectedObject = selectedObject.parent
-            }
+        if(camera.fov < 10){
+            camera.fov = 10
         }
 
-        selectedObject.position.set(camera.position.x, 0, camera.position.z)
-
-        if(remote != null){
-            remote.updateValues()
+        if(camera.fov > 70){
+            camera.fov = 70
         }
+
+        camera.updateProjectionMatrix()
     }
 
     input = resetInput()
