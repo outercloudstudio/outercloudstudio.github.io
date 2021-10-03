@@ -299,6 +299,13 @@ const minituresButton = document.getElementById('minitures-button')
 const createMinitureBaseButton = document.getElementById('create-miniture-base')
 const deleteMinituresButton = document.getElementById('delete-minitures')
 
+const players = document.getElementById('players')
+const playersButton = document.getElementById('people-button')
+
+const playerDataButtonTemplate = document.getElementById('player-data-button-template')
+const playerRow = document.getElementById('player-row')
+const otherPlayerDataShow = document.getElementById('other-player-data-show')
+
 let currentData = null
 let isDM = false
 let remote3DObjects = []
@@ -675,6 +682,7 @@ function closeAllWindows(){
     spells.classList.remove('open')
     generalInfo.classList.remove('open')
     minitures.classList.remove('open')
+    players.classList.remove('open')
 }
 
 function setupEventListeners(){
@@ -1161,7 +1169,7 @@ function setupEventListeners(){
 
         reader.addEventListener('load', () => {
             console.log(reader.result)
-            currentData.player = JSON.parse(reader.result)
+            currentData = JSON.parse(reader.result)
 
             characterCreator.classList.remove('open')
             
@@ -1185,6 +1193,18 @@ function setupEventListeners(){
 
     deleteMinituresButton.addEventListener('click', () => {
         socket.emit('delete-minitures')
+    })
+
+    playersButton.addEventListener('click', () => {
+        if(players.classList.contains('open')) {
+            closeAllWindows()
+        }else{
+            closeAllWindows()
+
+            socket.emit('get-players')
+
+            players.classList.add('open')
+        }
     })
 }
 
@@ -2017,6 +2037,10 @@ socket.on('delete-remote-3D-object' , ID => {
             i--
         }
     }
+})
+
+socket.on('set-players', data => {
+    console.log(data)
 })
 
 render()
