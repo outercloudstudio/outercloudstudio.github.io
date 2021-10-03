@@ -28,6 +28,9 @@ class Remote3DObject{
             this.x = object.x
             this.y = object.y
             this.z = object.z
+            this.targetX = object.x
+            this.targetY = object.y
+            this.targetZ = object.z
             this.rx = object.rx
             this.ry = object.ry
             this.rz = object.rz
@@ -40,6 +43,9 @@ class Remote3DObject{
             this.x = x
             this.y = y
             this.z = z
+            this.targetX = x
+            this.targetY = y
+            this.targetZ = z
             this.rx = rx
             this.ry = ry
             this.rz = rz
@@ -114,11 +120,14 @@ class Remote3DObject{
         }
     }
 
-    update(object){
+    update(object, lerpPos = false){
         if(object != null){
             this.x = object.x
             this.y = object.y
             this.z = object.z
+            this.targetX = object.x
+            this.targetY = object.y
+            this.targetZ = object.z
             this.rx = object.rx
             this.ry = object.ry
             this.rz = object.rz
@@ -128,9 +137,11 @@ class Remote3DObject{
         }
 
         if(this.object3D != null){
-            this.object3D.position.set(this.x, this.y, this.z)
-            this.object3D.rotation.set(this.rx, this.ry, this.rz)
-            this.object3D.scale.set(this.sx, this.sy, this.sz)
+            if(!lerpPos){
+                this.object3D.position.set(this.x, this.y, this.z)
+                this.object3D.rotation.set(this.rx, this.ry, this.rz)
+                this.object3D.scale.set(this.sx, this.sy, this.sz)
+            }
         }
     }
 
@@ -138,6 +149,9 @@ class Remote3DObject{
         this.x = this.object3D.position.x
         this.y = this.object3D.position.y
         this.z = this.object3D.position.z
+        this.targetX = this.object3D.position.x
+        this.targetY = this.object3D.position.y
+        this.targetZ = this.object3D.position.z
         this.rx = this.object3D.rotation.x
         this.ry = this.object3D.rotation.y
         this.rz = this.object3D.rotation.z
@@ -1400,10 +1414,15 @@ loader.load('./models/Room.fbx', object =>{
     scene.add(object)
 })
 
+loader.load('./models/DungeonTest.fbx', object =>{
+    updateMaterialHDRI(object)
+    selectables.add(object)
+
+    object.position.set(-.1,.7,-.1)
+})
+
 renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
 viewport.appendChild(renderer.domElement)
-
-//Lighting
 
 //Setup Camera
 camera.rotation.order = "YXZ";
@@ -1431,6 +1450,9 @@ let SDown = false
 let DDown = false
 let QDown = false
 let EDown = false
+let RDown = false
+let TDown = false
+let YDown = false
 
 //Setup input
 viewport.addEventListener('mousemove', event => {
@@ -1485,6 +1507,21 @@ document.addEventListener('keydown', event => {
     {
         EDown = true
     }
+
+    if(event.key == 'r')
+    {
+        RDown = true
+    }
+
+    if(event.key == 't')
+    {
+        TDown = true
+    }
+
+    if(event.key == 'y')
+    {
+        YDown = true
+    }
 })
 
 document.addEventListener('keyup', event => {
@@ -1513,6 +1550,21 @@ document.addEventListener('keyup', event => {
     {
         EDown = false
     }
+
+    if(event.key == 'r')
+    {
+        RDown = false
+    }
+
+    if(event.key == 't')
+    {
+        TDown = false
+    }
+
+    if(event.key == 'y')
+    {
+        YDown = false
+    }
 })
 
 function resetInput(){
@@ -1533,12 +1585,22 @@ function render() {
         timeTillUpdate = 1/updatePS
 
         for(let i = 0; i < remote3DObjects.length; i++){
+            if(remote3DObjects[i].object3D == transformer.object){
+                remote3DObjects[i].dirty = true
+                remote3DObjects[i].updateValues()
+            }
+
             if(remote3DObjects[i].dirty){
                 socket.emit('update-remote', remote3DObjects[i].toObject())
 
                 remote3DObjects[i].dirty = false
+                remote3DObjects[i].position = remote3DObjects[i].object3D.position
             }
         }
+    }
+
+    for(let i = 0; i < remote3DObjects.length; i++){
+        remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
     }
 
     let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
@@ -1546,8 +1608,8 @@ function render() {
     if(mouseDown){
         if(!transformer.dragging){
             if(mouseMoved){
-                camera.rotation.y += mouseX / 10 * delta
-                camera.rotation.x += mouseY / 10 * delta
+                camera.rotation.y += mouseX / 500
+                camera.rotation.x += mouseY / 500
             }else{
                 const raycaster = new THREE.Raycaster()
                 const mouse = new THREE.Vector2()
@@ -1560,7 +1622,13 @@ function render() {
                 const intersects = raycaster.intersectObject(selectables, true)
 
                 if(intersects.length > 0){
-                    transformer.attach(intersects[0].object)
+                    let object = intersects[0].object
+
+                    while(object.parent.parent != null && object.parent != selectables){
+                        object = object.parent
+                    }
+
+                    transformer.attach(object)
                 }else{
                     transformer.detach()
                 }
@@ -1568,6 +1636,42 @@ function render() {
         }
     }else{
         
+    }
+
+    if(WDown){
+        camera.translateZ(-1 * delta);
+    }
+
+    if(SDown){
+        camera.translateZ(1 * delta);
+    }
+
+    if(ADown){
+        camera.translateX(-1 * delta);
+    }
+
+    if(DDown){
+        camera.translateX(1 * delta);
+    }
+
+    if(QDown){
+        camera.translateY(-1 * delta);
+    }
+
+    if(EDown){
+        camera.translateY(1 * delta);
+    }
+
+    if(TDown){
+        transformer.setMode('translate')
+    }
+
+    if(YDown){
+        transformer.setMode('rotate')
+    }
+
+    if(RDown){
+        transformer.setMode('scale')
     }
 
     if(mouseScroll != 0){
@@ -1832,7 +1936,7 @@ socket.on('update-remotes', remotes => {
         let remote = remotes.find(remote => remote.ID == remote3DObjects[i].ID)
 
         if(remote != null){
-            remote3DObjects[i].update(remote)
+            remote3DObjects[i].update(remote, true)
         }
     }
 })
