@@ -1146,13 +1146,13 @@ function setupEventListeners(){
 function updateMaterialHDRI(object){
     object.traverse(child => {
         if (child instanceof THREE.Mesh) {
-            /*if(child.material.length != null){
+            if(child.material.length != null){
                 for(let i = 0; i < child.material.length; i++){
                     child.material[i] = new THREE.MeshPhysicalMaterial({
                         metalness: child.material[i].metalness,
                         roughness: child.material[i].roughness,
                         color: child.material[i].color,
-                        envMap: envmap.texture
+                        envMap: envmap.texture,
                     })
                 }
             }else{
@@ -1162,18 +1162,18 @@ function updateMaterialHDRI(object){
                     color: child.material.color,
                     envMap: envmap.texture
                 })
-            }*/
+            }
 
             child.castShadow = true
             child.receiveShadow = true
         }
 
         if (child instanceof THREE.DirectionalLight) {
-            light.castShadow = true;
-            light.shadow.mapSize.width = 512;
-            light.shadow.mapSize.height = 512;
-            light.shadow.camera.near = 0.5;
-            light.shadow.camera.far = 500;
+            child.castShadow = true
+            child.shadow.mapSize.width = 512
+            child.shadow.mapSize.height = 512
+            child.shadow.camera.near = 0.5
+            child.shadow.camera.far = 500
         }
     })
 }
@@ -1372,7 +1372,7 @@ renderer.physicallyCorrectLights = true
 renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.outputEncoding = THREE.sRGBEncoding
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const clock = new THREE.Clock()
 const selectables = new THREE.Group()
@@ -1395,41 +1395,20 @@ RGBELoader.setPath('models/')
     envmap = envmaploader.fromCubemap(texture)
 })
 
-/*loader.load('./models/Room.fbx', object =>{
+loader.load('./models/Room.fbx', object =>{
     updateMaterialHDRI(object)
     scene.add(object)
-})*/
+})
 
 renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
 viewport.appendChild(renderer.domElement)
 
 //Lighting
-const light = new THREE.DirectionalLight( 0xffffff, 1, 100 );
-light.position.set( 0, 10, 0 ); //default; light shining from top
-light.castShadow = true; // default false
-scene.add( light );
-
-const helper = new THREE.CameraHelper( light.shadow.camera );
-scene.add( helper );
-
-//Set up shadow properties for the light
-light.shadow.mapSize.width = 512; // default
-light.shadow.mapSize.height = 512; // default
-light.shadow.camera.near = 0.5; // default
-light.shadow.camera.far = 500; // default
-
-const geometry = new THREE.PlaneGeometry(20, 20);
-const material = new THREE.MeshStandardMaterial( {color: 0x00ff00, side: THREE.DoubleSide} );
-const plane = new THREE.Mesh( geometry, material );
-plane.castShadow = true
-plane.receiveShadow = true
-plane.rotation.x = -Math.PI / 2
-scene.add( plane );
 
 //Setup Camera
 camera.rotation.order = "YXZ";
-camera.position.y = .5
-camera.position.x = -1
+camera.position.y = 1
+camera.position.x = -0.7
 camera.rotation.y = -Math.PI / 2
 
 const transformer = new THREE.TransformControls(camera, renderer.domElement)
