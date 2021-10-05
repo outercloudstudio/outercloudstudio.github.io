@@ -94,7 +94,7 @@ main{
     height: 100vh;
 
     display: flex;
-    align-items: flex-start;
+    align-items: start;
     justify-content: center;
 }
 
@@ -528,14 +528,46 @@ input[type="file"] {
 
     background-color: var(--dark);
 
+    padding: 1rem;
+
     display: flex;
+    align-items: center;
     flex-direction: column;
     justify-content: start;
-    align-items: center;
-
-    padding: 1rem;
 }
 
 #players.open{
     left: 0;
+}
+
+
+.player-data-button{
+    background: var(--medium);
+
+    border: none;
+    outline: none;
+
+    flex-grow: 1;
+    margin-right: .5rem;
+    margin-left: .5rem;
+
+    height: 4rem;
+}
+
+#player-row{
+    width: calc(100% - 4rem);
+
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+
+    margin-bottom: 1rem;
+}
+
+#other-player-data-show{
+    white-space: pre;
+    width: calc(90% - 4rem);
+
+    overflow: auto;
+    margin-bottom: 2rem;
 }

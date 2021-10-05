@@ -18,101 +18,112 @@ addToScene(scene){
         scene.add(object)
     }
 */
+class Component{
+    constructor(value, networked){
+        this.value = value
+        this.networked = networked
+        this.type = 'Unkown'
+    }
 
-class Remote3DObject{
-    constructor(object, builder, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1){
-        this.dirty = false
-
-        if(object != null){
-            this.builder = object.builder
-            this.x = object.x
-            this.y = object.y
-            this.z = object.z
-            this.targetX = object.x
-            this.targetY = object.y
-            this.targetZ = object.z
-            this.rx = object.rx
-            this.ry = object.ry
-            this.rz = object.rz
-            this.sx = object.sx
-            this.sy = object.sy
-            this.sz = object.sz
-            this.ID = object.ID
-        }else{
-            this.builder = builder
-            this.x = x
-            this.y = y
-            this.z = z
-            this.targetX = x
-            this.targetY = y
-            this.targetZ = z
-            this.rx = rx
-            this.ry = ry
-            this.rz = rz
-            this.sx = sx
-            this.sy = sy
-            this.sz = sz
-            this.ID = uuidv4()
+    toObject(){
+        return {
+            type: this.type,
+            value: this.value.toObject(),
+            networked: this.networked,
         }
+    }
+
+    init(gameObject){
+        if(this.value instanceof Transform){
+            this.type = 'Transform'
+        }
+
+        if(this.value instanceof Renderer){
+            this.type = 'Renderer'
+        }
+
+        console.log(this.value)
+
+        this.value.init(gameObject)
+    }
+}
+
+class Transform{
+    constructor(position, rotation, scale){
+        this.position = position
+        this.remotePosition = position
+        this.rotation = rotation
+        this.scale = scale
+    }
+
+    toObject(){
+        return {
+            position: this.position,
+            rotation: this.rotation,
+            scale: this.scale,
+        }
+    }
+
+    init(gameObject){
+        this.gameObject = gameObject
+    }
+}
+
+class Renderer{
+    constructor(builder){
+        this.builder = builder
     }
 
     toObject(){
         return {
             builder: this.builder,
-            x: this.x,
-            y: this.y,
-            z: this.z,
-            rx: this.rx,
-            ry: this.ry,
-            rz: this.rz,
-            sx: this.sx,
-            sy: this.sy,
-            sz: this.sz,
-            ID: this.ID,
         }
+    }
+
+    init(gameObject){
+        this.gameObject = gameObject
+
+        console.log(this.gameObject)
+        
+        this.addToScene(scene)
     }
 
     addToScene(scene){
         if(this.object3D == null){
-            let geometry = null
-            let material = null
-            this.object3D = null
-
             if(this.builder == "cube"){
-                geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
+                let geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
 
-                material = new THREE.MeshPhongMaterial({
+                let material = new THREE.MeshPhongMaterial({
                     color: 0xFFFFFF,
                     flatShading: true,
                 })
 
                 this.object3D = new THREE.Mesh(geometry, material);
 
-                this.object3D.position.set(this.x, this.y, this.z)
-                this.object3D.rotation.set(this.rx, this.ry, this.rz)
-                this.object3D.scale.set(this.sx, this.sy, this.sz)
+                let transform = this.gameObject.GetComponent('Transform')
+
+                this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+                this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                updateMaterialHDRI(this.object3D)
 
                 scene.add(this.object3D)
             }
 
             if(this.builder == "miniture-base"){
-                geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
-
-                material = new THREE.MeshPhongMaterial({
-                    color: 0xFFFFFF,
-                    flatShading: true,
-                })
-
 				loader.load('./models/Human_Female_Barbarian.fbx', object =>{
                     this.object3D = object
 
                     this.object3D.position.set(0, 0, 0)
                     this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
 
+                    let transform = this.gameObject.GetComponent('Transform')
 
-                    this.object3D.position.set(this.x, this.y, this.z)
-                    this.object3D.rotation.set(this.rx, this.ry, this.rz)
-                    this.object3D.scale.set(this.sx, this.sy, this.sz)
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
 
                     updateMaterialHDRI(object)
                     
@@ -121,8 +132,44 @@ class Remote3DObject{
             }
         }
     }
+}
 
-    update(object, lerpPos = false){
+class GameObject{
+    constructor(components, ID = null){
+        this.dirty = false
+        this.components = components
+
+        if(ID == null){
+            this.ID = uuidv4()
+        }
+
+        for (let i = 0; i < components.length; i++) {
+            components[i].init(this)
+        }
+    }
+
+    toObject(){
+        let components = []
+
+        for (let i = 0; i < this.components.length; i++) {
+            components.push(this.components[i].toObject())    
+        }
+
+        return {
+            ID: this.ID,
+            components: components,
+        }
+    }
+
+    GetComponent(componentType){
+        for (let i = 0; i < this.components.length; i++) {
+            if(this.components[i].type == componentType){
+                return this.components[i].value
+            }
+        }
+    }
+
+    /*update(object, lerpPos = false){
         if(object != null){
             this.x = object.x
             this.y = object.y
@@ -165,12 +212,12 @@ class Remote3DObject{
         this.sz = this.object3D.scale.z
 
         this.dirty = true
-    }
+    }*/
 }
 
-const socket = io('ws://76.86.240.158:25566')
+//const socket = io('ws://76.86.240.158:25566')
 //const socket = io('ws://192.168.1.101:25566')
-//const socket = io('ws://localhost:25566')
+const socket = io('ws://localhost:25566')
 
 const joiningRoomElement = document.getElementById('joining-room')
 
@@ -416,9 +463,7 @@ function updateUI(){
                     console.log(i)
                     
                     currentData.player.inventory.splice(i, 1)
-        
-                    event.target.parentNode.parentNode.remove()
-        
+
                     updatePlayerData()
                     updateUI()
                 })
@@ -456,11 +501,7 @@ function updateUI(){
                     })
             
                     newElement.children[2].addEventListener('click', event => {
-                        console.log(i)
-                        
-                        currentData.player.spells[spellObjectProps[i]].splice(i, 1)
-            
-                        event.target.parentNode.parentNode.remove()
+                        currentData.player.spells[spellObjectProps[i]].splice(j, 1)
             
                         updatePlayerData()
                         updateUI()
@@ -496,11 +537,7 @@ function updateUI(){
                 })
         
                 newElement.children[2].addEventListener('click', event => {
-                    console.log(i)
-                    
                     currentData.player.attacks.splice(i, 1)
-        
-                    event.target.parentNode.parentNode.remove()
         
                     updatePlayerData()
                     updateUI()
@@ -1218,6 +1255,7 @@ function updateMaterialHDRI(object){
                         roughness: child.material[i].roughness,
                         color: child.material[i].color,
                         envMap: envmap.texture,
+
                     })
                 }
             }else{
@@ -1427,6 +1465,20 @@ for(let i = 0; i < checkboxes.length; i++){
     })
     
 }
+
+//Init Ammo
+let physicsWorld
+
+Ammo().then(() => {
+    let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
+    let dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
+    let overlappingPairCache = new Ammo.btDbvtBroadphase()
+    let solver = new Ammo.btSequentialImpulseConstraintSolver()
+
+    physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration)
+
+    physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0))
+})
 
 //Init Scene
 const viewport = document.getElementById('viewport')
@@ -2009,15 +2061,15 @@ socket.on('joined-room', roomData => {
 });
 
 socket.on('create-remote-3D-object', object => {
-    console.log('Creating 3D object with builder: ' + object.builder)
+    /*console.log('Creating 3D object with builder: ' + object.builder)
 
-    remote3DObjects.push(new Remote3DObject(object))
+    remote3DObjects.push(new GameObject(object))
 
-    remote3DObjects[remote3DObjects.length - 1].addToScene(scene)
+    remote3DObjects[remote3DObjects.length - 1].addToScene(scene)*/
 })
 
 socket.on('update-remotes', remotes => {
-    console.log('Updating remotes')
+    /*onsole.log('Updating remotes')
 
     for(let i = 0; i < remote3DObjects.length; i++){
         let remote = remotes.find(remote => remote.ID == remote3DObjects[i].ID)
@@ -2025,22 +2077,53 @@ socket.on('update-remotes', remotes => {
         if(remote != null){
             remote3DObjects[i].update(remote, true)
         }
-    }
+    }*/
 })
 
 socket.on('delete-remote-3D-object' , ID => {
-    for(let i = 0; i < remote3DObjects.length; i++){
+    /*for(let i = 0; i < remote3DObjects.length; i++){
         if(remote3DObjects[i].ID == ID){
             remote3DObjects[i].object3D.removeFromParent()
             remote3DObjects.splice(i, 1)
 
             i--
         }
-    }
+    }*/
 })
 
 socket.on('set-players', data => {
-    console.log(data)
+    for(i = 0; i < playerRow.children.length; i++){
+        playerRow.children[0].remove()
+    }
+
+    for(i = 0; i < data.length; i++){
+        let playerButton = playerDataButtonTemplate.cloneNode(true)
+
+        playerButton.removeAttribute('id')
+
+        playerButton.children[0].innerHTML = data[i].playerName
+
+        playerRow.appendChild(playerButton)
+
+        let index = i
+
+        playerButton.addEventListener('click', () => {
+            otherPlayerDataShow.innerHTML = JSON.stringify(data[index], null, 4)
+        })
+    }
 })
+
+let gameObjectTest = new GameObject([
+    new Component(
+        new Transform(new THREE.Vector3(0, .8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 1)),
+        true,
+    ),
+    new Component(
+        new Renderer('miniture-base'),
+        false,
+    ),
+])
+
+//console.log(gameObjectTest.toObject())
 
 render()
