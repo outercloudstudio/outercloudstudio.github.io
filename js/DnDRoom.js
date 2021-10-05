@@ -18,6 +18,49 @@ addToScene(scene){
         scene.add(object)
     }
 */
+
+class Collider{
+    constructor(colliderShape){
+        this.shape = colliderShape
+    }
+
+    toObject(){
+        return {
+            shape: this.shape.toObject()
+        }
+    }
+
+    init(gameObject){
+        this.gameObject = gameObject
+    }
+}
+
+class SphereCollider{
+    constructor(radius){
+        this.radius = radius
+    }
+
+    toObject(){
+        return {
+            type: 'Sphere',
+            radius: this.radius
+        }
+    }
+}
+
+class BoxCollider{
+    constructor(scale){
+        this.scale = scale
+    }
+
+    toObject(){
+        return {
+            type: 'Box',
+            scale: this.scale
+        }
+    }
+}
+
 class Component{
     constructor(value, networked){
         this.value = value
@@ -40,6 +83,10 @@ class Component{
 
         if(this.value instanceof Renderer){
             this.type = 'Renderer'
+        }
+
+        if(this.value instanceof Collider){
+            this.type = 'Collider'
         }
 
         console.log(this.value)
@@ -130,7 +177,84 @@ class Renderer{
                     selectables.add(this.object3D)
                 })
             }
+
+            if(this.builder == "plane"){
+                let geometry = new THREE.PlaneGeometry(this.sx, this.sy, this.sz)
+
+                let material = new THREE.MeshPhongMaterial({
+                    color: 0xFFFFFF,
+                    flatShading: true,
+                })
+
+                this.object3D = new THREE.Mesh(geometry, material);
+
+                let transform = this.gameObject.GetComponent('Transform')
+
+                let rotatedRotation = new THREE.Vector3(-Math.PI / 2, 0, 0).add(transform.rotation)
+
+                this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                this.object3D.rotation.set(rotatedRotation.x, rotatedRotation.y, rotatedRotation.z)
+                this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                updateMaterialHDRI(this.object3D)
+
+                scene.add(this.object3D)
+            }
         }
+    }
+}
+
+class RigidBody{
+    constructor(dynamic, mass){
+        this.dynamic = dynamic
+        this.mass = mass
+    }
+
+    toObject(){
+        return {
+            dynamic: this.dynamic,
+            mass: this.mass
+        }
+    }
+
+    init(gameObject){
+        this.gameObject = gameObject
+
+        this.transform = new Ammo.btTransform()
+        this.transform.setIdentity()
+
+        let transform = this.gameObject.GetComponent('Transform')
+
+        this.transform.setOrigin(new Ammo.btVector3(transform.position.x, transform.position.y, transform.position.z))
+
+        let transformQuaternion = new THREE.Quaternion(0, 0, 0, 1)
+        transformQuaternion.setFromEuler(new THREE.Euler(transform.rotation.x, transform.rotation.y, transform.rotation.z, 'XYZ'))
+
+        this.transform.setRotation(new Ammo.btQuaternion(transformQuaternion.x, transformQuaternion.y, transformQuaternion.z, transformQuaternion.w))
+
+        this.motionState = new Ammo.btDefaultMotionState(this.transform)
+
+        let collider = this.gameObject.GetComponent('Collider')
+
+        if(collider.shape instanceof SphereCollider){
+            this.colliderShape = new Ammo.btSphereShape(collider.shape.radius)
+        }
+
+        if(collider.shape instanceof BoxCollider){
+            this.colliderShape = new Ammo.btBoxShape(new Ammo.btVector3(collider.shape.sx, collider.shape.sy, collider.shape.sz))
+        }
+
+        this.colliderShape.setMargin(0.05)
+
+        this.localInertia = new Ammo.btVector3(0, 0, 0)
+        this.colliderShape.calculateLocalInertia(this.mass, this.localInertia)
+
+        this.rigidBodyData = new Ammo.btRigidBodyConstructionInfo(this.mass, this.motionState, this.colliderShape, this.localInertia)
+        this.rigidBody = new Ammo.btRigidBody(this.rigidBodyData)
+
+        physicsWorld.addRigidBody(this.rigidBody)
+
+        rigidBodies.push(this)
     }
 }
 
@@ -213,6 +337,39 @@ class GameObject{
 
         this.dirty = true
     }*/
+}
+
+let rigidBodies = []
+
+function updatePhysics(delta){
+    physicsWorld.stepSimulation(delta, 10)
+
+    for (let i = 0; i < rigidBodies.length; i++) {
+        let rigidBody = rigidBodies[i]
+
+        if(rigidBody.dynamic){
+            let motionState = rigidBody.motionState
+
+            if(motionState){
+                let updatedTransform = new Ammo.btTransform()
+
+                motionState.getWorldTransform(updatedTransform)
+
+                let position = updatedTransform.getOrigin()
+                let rotation = updatedTransform.getRotation()
+
+                let transform = rigidBody.gameObject.GetComponent('Transform')
+                transform.position.set(position.x(), position.y(), position.z())
+
+                let euler = new THREE.Euler(0, 0, 0, 'XYZ')
+                euler.setFromQuaternion(new THREE.Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()))
+
+                transform.rotation.set(euler.x, euler.y, euler.z)
+
+                console.log(transform.toObject())
+            }
+        }
+    }
 }
 
 //const socket = io('ws://76.86.240.158:25566')
@@ -1245,7 +1402,7 @@ function setupEventListeners(){
     })
 }
 
-function updateMaterialHDRI(object){
+function updateMaterialHDRI(object, sides = THREE.FrontSide){
     object.traverse(child => {
         if (child instanceof THREE.Mesh) {
             if(child.material.length != null){
@@ -1255,7 +1412,7 @@ function updateMaterialHDRI(object){
                         roughness: child.material[i].roughness,
                         color: child.material[i].color,
                         envMap: envmap.texture,
-
+                        side: sides,
                     })
                 }
             }else{
@@ -1263,7 +1420,8 @@ function updateMaterialHDRI(object){
                     metalness: child.material.metalness,
                     roughness: child.material.roughness,
                     color: child.material.color,
-                    envMap: envmap.texture
+                    envMap: envmap.texture,
+                    side: sides,
                 })
             }
 
@@ -1466,22 +1624,8 @@ for(let i = 0; i < checkboxes.length; i++){
     
 }
 
-//Init Ammo
-let physicsWorld
-
-Ammo().then(() => {
-    let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
-    let dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
-    let overlappingPairCache = new Ammo.btDbvtBroadphase()
-    let solver = new Ammo.btSequentialImpulseConstraintSolver()
-
-    physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration)
-
-    physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0))
-})
-
-//Init Scene
-const viewport = document.getElementById('viewport')
+//Init THREE
+let viewport = document.getElementById('viewport')
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera( 70, viewport.offsetWidth / viewport.offsetHeight, 0.1, 1000 )
 const renderer = new THREE.WebGLRenderer()
@@ -1490,6 +1634,9 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.outputEncoding = THREE.sRGBEncoding
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
+viewport.appendChild(renderer.domElement)
 
 const clock = new THREE.Clock()
 const selectables = new THREE.Group()
@@ -1501,331 +1648,383 @@ const RGBELoader = new THREE.RGBELoader()
 
 let envmap = new THREE.CubeTexture()
 
-//Load HDRI
-RGBELoader.setPath('models/')
-.load( 'hdri.hdr', texture => {
+//Init Ammo and Load Scene
+let physicsWorld
 
-    texture.mapping = THREE.EquirectangularReflectionMapping
+Ammo().then(() => {
+    let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
+    let dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
+    let overlappingPairCache = new Ammo.btDbvtBroadphase()
+    let solver = new Ammo.btSequentialImpulseConstraintSolver()
 
-    scene.background = texture
-    scene.environment = texture
-    envmap = envmaploader.fromCubemap(texture)
-})
+    physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration)
 
-loader.load('./models/Room.fbx', object =>{
-    updateMaterialHDRI(object)
-    scene.add(object)
-})
+    physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0))
+    
+    //Load HDRI
+    RGBELoader.setPath('models/')
+    .load( 'hdri.hdr', texture => {
 
-loader.load('./models/DungeonTest.fbx', object =>{
-    updateMaterialHDRI(object)
-    scene.add(object)
+        texture.mapping = THREE.EquirectangularReflectionMapping
 
-    object.position.set(-2,.7,0)
-})
+        scene.background = texture
+        scene.environment = texture
+        envmap = envmaploader.fromCubemap(texture)
+    })
 
-let playerModels = []
+    loader.load('./models/Room.fbx', object =>{
+        updateMaterialHDRI(object)
+        scene.add(object)
+    })
 
-renderer.setSize(viewport.offsetWidth, viewport.offsetHeight)
-viewport.appendChild(renderer.domElement)
+    loader.load('./models/DungeonTest.fbx', object =>{
+        updateMaterialHDRI(object)
+        scene.add(object)
 
-//Setup Camera
-camera.rotation.order = "YXZ";
-camera.position.y = 1
-camera.position.x = -0.7
-camera.rotation.y = -Math.PI / 2
+        object.position.set(-2,.7,0)
+    })
 
-const transformer = new THREE.TransformControls(camera, renderer.domElement)
-scene.add(transformer)
+    //Setup Camera
+    camera.rotation.order = "YXZ";
+    camera.position.y = 1
+    camera.position.x = -0.7
+    camera.rotation.y = -Math.PI / 2
 
-const updatePS = 15
-let timeTillUpdate = 1/updatePS
+    const transformer = new THREE.TransformControls(camera, renderer.domElement)
+    scene.add(transformer)
 
-const mouseMoveThreshold = 10
+    const updatePS = 15
+    let timeTillUpdate = 1/updatePS
 
-let mouseX = 0
-let mouseY = 0
-let mouseAbsX = 0
-let mouseAbsY = 0
-let mouseDown = false
-let mouseScroll = 0
-let WDown = false
-let ADown = false
-let SDown = false
-let DDown = false
-let QDown = false
-let EDown = false
-let RDown = false
-let TDown = false
-let YDown = false
-let BackspaceDown = false
+    const mouseMoveThreshold = 10
 
-//Setup input
-viewport.addEventListener('mousemove', event => {
-    mouseX += event.movementX
-    mouseY += event.movementY
+    let mouseX = 0
+    let mouseY = 0
+    let mouseAbsX = 0
+    let mouseAbsY = 0
+    let mouseDown = false
+    let mouseScroll = 0
+    let WDown = false
+    let ADown = false
+    let SDown = false
+    let DDown = false
+    let QDown = false
+    let EDown = false
+    let RDown = false
+    let TDown = false
+    let YDown = false
+    let BackspaceDown = false
 
-    mouseAbsX = event.clientX
-    mouseAbsY = event.clientY
-})
+    //Setup input
+    viewport.addEventListener('mousemove', event => {
+        mouseX += event.movementX
+        mouseY += event.movementY
 
-viewport.addEventListener('mousedown', event => {
-    mouseDown = true
-})
+        mouseAbsX = event.clientX
+        mouseAbsY = event.clientY
+    })
 
-viewport.addEventListener('mouseup', event => {
-    mouseDown = false
-})
+    viewport.addEventListener('mousedown', event => {
+        mouseDown = true
+    })
 
-viewport.addEventListener('wheel', event => {
-    mouseScroll = event.deltaY
-});
+    viewport.addEventListener('mouseup', event => {
+        mouseDown = false
+    })
 
-viewport.addEventListener('contextmenu', event => {
-    event.preventDefault()
-})
+    viewport.addEventListener('wheel', event => {
+        mouseScroll = event.deltaY
+    });
 
-document.addEventListener('keydown', event => {
-    console.log(event.key)
+    viewport.addEventListener('contextmenu', event => {
+        event.preventDefault()
+    })
 
-    if(event.key == 'w'){
-        WDown = true
+    document.addEventListener('keydown', event => {
+        console.log(event.key)
+
+        if(event.key == 'w'){
+            WDown = true
+        }
+
+        if(event.key == 'a'){
+            ADown = true
+        }
+
+        if(event.key == 's'){
+            SDown = true
+        }
+
+        if(event.key == 'd'){
+            DDown = true
+        }
+
+        if(event.key == 'q')
+        {
+            QDown = true
+        }
+
+        if(event.key == 'e')
+        {
+            EDown = true
+        }
+
+        if(event.key == 'r')
+        {
+            RDown = true
+        }
+
+        if(event.key == 't')
+        {
+            TDown = true
+        }
+
+        if(event.key == 'y')
+        {
+            YDown = true
+        }
+
+        if(event.key == 'Backspace')
+        {
+            BackspaceDown = true
+        }
+    })
+
+    document.addEventListener('keyup', event => {
+        if(event.key == 'w'){
+            WDown = false
+        }
+
+        if(event.key == 'a'){
+            ADown = false
+        }
+
+        if(event.key == 's'){
+            SDown = false
+        }
+
+        if(event.key == 'd'){
+            DDown = false
+        }
+
+        if(event.key == 'q')
+        {
+            QDown = false
+        }
+
+        if(event.key == 'e')
+        {
+            EDown = false
+        }
+
+        if(event.key == 'r')
+        {
+            RDown = false
+        }
+
+        if(event.key == 't')
+        {
+            TDown = false
+        }
+
+        if(event.key == 'y')
+        {
+            YDown = false
+        }
+
+        if(event.key == 'Backspace')
+        {
+            BackspaceDown = false
+        }
+    })
+
+    function resetInput(){
+        mouseX = 0
+        mouseY = 0
+        mouseScroll = 0
     }
+    //Render Loop
+    function render() {
+        requestAnimationFrame( render )
+        renderer.render( scene, camera )
 
-    if(event.key == 'a'){
-        ADown = true
-    }
+        let delta = clock.getDelta()
 
-    if(event.key == 's'){
-        SDown = true
-    }
+        timeTillUpdate -= delta
 
-    if(event.key == 'd'){
-        DDown = true
-    }
+        if(timeTillUpdate <= 0){
+            timeTillUpdate = 1/updatePS
 
-    if(event.key == 'q')
-    {
-        QDown = true
-    }
+            for(let i = 0; i < remote3DObjects.length; i++){
+                if(remote3DObjects[i].object3D != null){
+                    if(remote3DObjects[i].object3D == transformer.object){
+                        remote3DObjects[i].dirty = true
+                        remote3DObjects[i].updateValues()
+                    }
 
-    if(event.key == 'e')
-    {
-        EDown = true
-    }
+                    if(remote3DObjects[i].dirty){
+                        socket.emit('update-remote', remote3DObjects[i].toObject())
 
-    if(event.key == 'r')
-    {
-        RDown = true
-    }
-
-    if(event.key == 't')
-    {
-        TDown = true
-    }
-
-    if(event.key == 'y')
-    {
-        YDown = true
-    }
-
-    if(event.key == 'Backspace')
-    {
-        BackspaceDown = true
-    }
-})
-
-document.addEventListener('keyup', event => {
-    if(event.key == 'w'){
-        WDown = false
-    }
-
-    if(event.key == 'a'){
-        ADown = false
-    }
-
-    if(event.key == 's'){
-        SDown = false
-    }
-
-    if(event.key == 'd'){
-        DDown = false
-    }
-
-    if(event.key == 'q')
-    {
-        QDown = false
-    }
-
-    if(event.key == 'e')
-    {
-        EDown = false
-    }
-
-    if(event.key == 'r')
-    {
-        RDown = false
-    }
-
-    if(event.key == 't')
-    {
-        TDown = false
-    }
-
-    if(event.key == 'y')
-    {
-        YDown = false
-    }
-
-    if(event.key == 'Backspace')
-    {
-        BackspaceDown = false
-    }
-})
-
-function resetInput(){
-    mouseX = 0
-    mouseY = 0
-    mouseScroll = 0
-}
-//Render Loop
-function render() {
-	requestAnimationFrame( render )
-	renderer.render( scene, camera )
-
-    let delta = clock.getDelta()
-
-    timeTillUpdate -= delta
-
-    if(timeTillUpdate <= 0){
-        timeTillUpdate = 1/updatePS
+                        remote3DObjects[i].dirty = false
+                        remote3DObjects[i].position = remote3DObjects[i].object3D.position
+                    }
+                }
+            }
+        }
 
         for(let i = 0; i < remote3DObjects.length; i++){
             if(remote3DObjects[i].object3D != null){
-                if(remote3DObjects[i].object3D == transformer.object){
-                    remote3DObjects[i].dirty = true
-                    remote3DObjects[i].updateValues()
-                }
-
-                if(remote3DObjects[i].dirty){
-                    socket.emit('update-remote', remote3DObjects[i].toObject())
-
-                    remote3DObjects[i].dirty = false
-                    remote3DObjects[i].position = remote3DObjects[i].object3D.position
-                }
+                remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
             }
         }
-    }
 
-    for(let i = 0; i < remote3DObjects.length; i++){
-        if(remote3DObjects[i].object3D != null){
-            remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
-        }
-    }
+        let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
 
-    let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
-
-    if(mouseDown){
-        if(!transformer.dragging){
-            if(mouseMoved){
-                camera.rotation.y += mouseX / 500
-                camera.rotation.x += mouseY / 500
-            }else{
-                const raycaster = new THREE.Raycaster()
-                const mouse = new THREE.Vector2()
-
-                mouse.x = (mouseAbsX / viewport.offsetWidth ) * 2 - 1
-                mouse.y = -(mouseAbsY / viewport.offsetHeight ) * 2 + 1
-
-                raycaster.setFromCamera(mouse, camera)
-
-                const intersects = raycaster.intersectObject(selectables, true)
-
-                if(intersects.length > 0){
-                    let object = intersects[0].object
-
-                    while(object.parent.parent != null && object.parent != selectables){
-                        object = object.parent
-                    }
-
-                    transformer.attach(object)
+        if(mouseDown){
+            if(!transformer.dragging){
+                if(mouseMoved){
+                    camera.rotation.y += mouseX / 500
+                    camera.rotation.x += mouseY / 500
                 }else{
-                    transformer.detach()
+                    const raycaster = new THREE.Raycaster()
+                    const mouse = new THREE.Vector2()
+
+                    mouse.x = (mouseAbsX / viewport.offsetWidth ) * 2 - 1
+                    mouse.y = -(mouseAbsY / viewport.offsetHeight ) * 2 + 1
+
+                    raycaster.setFromCamera(mouse, camera)
+
+                    const intersects = raycaster.intersectObject(selectables, true)
+
+                    if(intersects.length > 0){
+                        let object = intersects[0].object
+
+                        while(object.parent.parent != null && object.parent != selectables){
+                            object = object.parent
+                        }
+
+                        transformer.attach(object)
+                    }else{
+                        transformer.detach()
+                    }
+                }
+            }
+        }else{
+            
+        }
+
+        if(WDown){
+            camera.translateZ(-1 * delta);
+        }
+
+        if(SDown){
+            camera.translateZ(1 * delta);
+        }
+
+        if(ADown){
+            camera.translateX(-1 * delta);
+        }
+
+        if(DDown){
+            camera.translateX(1 * delta);
+        }
+
+        if(QDown){
+            camera.position.y += -1 * delta;
+        }
+
+        if(EDown){
+            camera.position.y += 1 * delta;
+        }
+
+        if(TDown){
+            transformer.setMode('translate')
+        }
+
+        if(YDown){
+            transformer.setMode('rotate')
+        }
+
+        if(RDown){
+            transformer.setMode('scale')
+        }
+
+        if(BackspaceDown){
+            if(transformer.object != null){
+                let object = transformer.object
+
+                transformer.detach()
+
+                let remote = remote3DObjects.find(remote => remote.object3D == object)
+
+                if(remote != null){
+                    socket.emit('delete-remote-3D-object', remote.ID)
+                }else{
+                    scene.remove(object)
                 }
             }
         }
-    }else{
-        
-    }
 
-    if(WDown){
-        camera.translateZ(-1 * delta);
-    }
+        if(mouseScroll != 0){
+            camera.fov += mouseScroll * delta
 
-    if(SDown){
-        camera.translateZ(1 * delta);
-    }
-
-    if(ADown){
-        camera.translateX(-1 * delta);
-    }
-
-    if(DDown){
-        camera.translateX(1 * delta);
-    }
-
-    if(QDown){
-        camera.position.y += -1 * delta;
-    }
-
-    if(EDown){
-        camera.position.y += 1 * delta;
-    }
-
-    if(TDown){
-        transformer.setMode('translate')
-    }
-
-    if(YDown){
-        transformer.setMode('rotate')
-    }
-
-    if(RDown){
-        transformer.setMode('scale')
-    }
-
-    if(BackspaceDown){
-        if(transformer.object != null){
-            let object = transformer.object
-
-            transformer.detach()
-
-            let remote = remote3DObjects.find(remote => remote.object3D == object)
-
-            if(remote != null){
-                socket.emit('delete-remote-3D-object', remote.ID)
-            }else{
-                scene.remove(object)
+            if(camera.fov < 10){
+                camera.fov = 10
             }
+
+            if(camera.fov > 70){
+                camera.fov = 70
+            }
+
+            camera.updateProjectionMatrix()
         }
+
+        updatePhysics(delta)
+
+        input = resetInput()
     }
 
-    if(mouseScroll != 0){
-        camera.fov += mouseScroll * delta
+    
+    let ground = new GameObject([
+        new Component(
+            new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 1)),
+            true,
+        ),
+        new Component(
+            new Renderer('plane'),
+            false,
+        ),
+        new Component(
+            new Collider(new BoxCollider(new THREE.Vector3(1, 0.01, 1))),
+            false,
+        ),
+        new Component(
+            new RigidBody(false, 0),
+            false,
+        ),
+    ])
 
-        if(camera.fov < 10){
-            camera.fov = 10
-        }
-
-        if(camera.fov > 70){
-            camera.fov = 70
-        }
-
-        camera.updateProjectionMatrix()
-    }
-
-    input = resetInput()
-}
+    let ball = new GameObject([
+        new Component(
+            new Transform(new THREE.Vector3(0, 1.8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(.2, .2, .2)),
+            true,
+        ),
+        new Component(
+            new Renderer('cube'),
+            false,
+        ),
+        new Component(
+            new Collider(new BoxCollider(new THREE.Vector3(.2, .2, .2))),
+            false,
+        ),
+        new Component(
+            new RigidBody(true, 1),
+            false,
+        ),
+    ])
+  
+    render()
+})
 
 socket.on('request-auth', authID => {
     console.log('Requested auth')
@@ -2112,18 +2311,3 @@ socket.on('set-players', data => {
         })
     }
 })
-
-let gameObjectTest = new GameObject([
-    new Component(
-        new Transform(new THREE.Vector3(0, .8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 1)),
-        true,
-    ),
-    new Component(
-        new Renderer('miniture-base'),
-        false,
-    ),
-])
-
-//console.log(gameObjectTest.toObject())
-
-render()
