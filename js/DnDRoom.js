@@ -164,7 +164,7 @@ class Renderer{
                 let transform = this.gameObject.GetComponent('Transform')
 
                 this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
-                this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+                this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
                 this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
 
                 updateMaterialHDRI(this.object3D)
@@ -183,7 +183,7 @@ class Renderer{
                     let transform = this.gameObject.GetComponent('Transform')
 
                     this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
-                    this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
                     this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
 
                     updateMaterialHDRI(object)
@@ -205,7 +205,7 @@ class Renderer{
                 let transform = this.gameObject.GetComponent('Transform')
 
                 this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
-                this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+                this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
                 this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
 
                 updateMaterialHDRI(this.object3D)
@@ -219,7 +219,7 @@ class Renderer{
         let transform = this.gameObject.GetComponent('Transform')
 
         this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
-        this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+        this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
         this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
     }
 }
@@ -244,22 +244,20 @@ class RigidBody{
 
         let transform = this.gameObject.GetComponent('Transform')
 
-        /*if(collider.shape.type == 'Box'){
+        if(collider.shape.type == 'Box'){
             colliderShape = new CANNON.Box(new CANNON.Vec3(collider.shape.scale.x * transform.scale.x, collider.shape.scale.y  * transform.scale.y, collider.shape.scale.z  * transform.scale.z))
         }else if(collider.shape.type == 'Sphere'){
             colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
         }else{
             console.error('Collider type ' + collider.shape.type + ' not supported')
-        }*/
-
-        colliderShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))
+        }
 
         let bodyMaterial = new CANNON.Material()
 
         this.rigidBody = new CANNON.Body({ mass: this.mass, material: bodyMaterial })
 
         this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
-        this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+        this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
 
         this.rigidBody.addShape(colliderShape)
         this.rigidBody.linearDamping = physicsDamping
@@ -271,10 +269,7 @@ class RigidBody{
         let transform = this.gameObject.GetComponent('Transform')
 
         transform.position.set(this.rigidBody.position.x, this.rigidBody.position.y, this.rigidBody.position.z)
-
-        let rotation = new THREE.Euler().setFromQuaternion(new THREE.Quaternion(this.rigidBody.quaternion.x, this.rigidBody.quaternion.y, this.rigidBody.quaternion.z, this.rigidBody.quaternion.w), 'XYZ')
-
-        transform.rotation.set()
+        transform.rotation.set(this.rigidBody.quaternion.x, this.rigidBody.quaternion.y, this.rigidBody.quaternion.z, this.rigidBody.quaternion.w)
 
         //TODO: update collider based on scale
     }
@@ -1877,7 +1872,7 @@ function render() {
 
     timeTillUpdate -= delta
 
-    if(!timeScale == 0){
+    if(timeScale != 0){
         physicsWorld.step(delta * timeScale)
     }
 
@@ -2018,7 +2013,7 @@ function render() {
 }
 
 
-ground = new GameObject([
+/*ground = new GameObject([
     new Component(
         new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Vector3(-Math.PI / 2, 0, 0), new THREE.Vector3(1, 1, 1)),
         true,
@@ -2048,6 +2043,44 @@ ball = new GameObject([
     ),
     new Component(
         new Collider(new BoxCollider(new THREE.Vector3(.2, .2, .2))),
+        false,
+    ),
+    new Component(
+        new RigidBody(5),
+        false,
+    ),
+])*/
+
+ground = new GameObject([
+    new Component(
+        new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0, 'XYZ')), new THREE.Vector3(3, 3, 0.1)),
+        true,
+    ),
+    new Component(
+        new Renderer('cube'),
+        false,
+    ),
+    new Component(
+        new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
+        false,
+    ),
+    new Component(
+        new RigidBody(0),
+        false,
+    ),
+])
+
+ball = new GameObject([
+    new Component(
+        new Transform(new THREE.Vector3(0, 5.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.2, .2, .2)),
+        true,
+    ),
+    new Component(
+        new Renderer('cube'),
+        false,
+    ),
+    new Component(
+        new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
         false,
     ),
     new Component(
