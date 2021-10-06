@@ -38,6 +38,7 @@ class Collider{
 class SphereCollider{
     constructor(radius){
         this.radius = radius
+        this.type = 'Sphere'
     }
 
     toObject(){
@@ -51,6 +52,7 @@ class SphereCollider{
 class BoxCollider{
     constructor(scale){
         this.scale = scale
+        this.type = 'Box'
     }
 
     toObject(){
@@ -99,6 +101,12 @@ class Component{
     Update(){
         if(this.value.Update != null){
             this.value.Update()
+        }
+    }
+
+    PreUpdate(){
+        if(this.value.PreUpdate != null){
+            this.value.PreUpdate()
         }
     }
 }
@@ -230,7 +238,45 @@ class RigidBody{
     init(gameObject){
         this.gameObject = gameObject
 
-        
+        let collider = this.gameObject.GetComponent('Collider')
+
+        let colliderShape = null
+
+        let transform = this.gameObject.GetComponent('Transform')
+
+        /*if(collider.shape.type == 'Box'){
+            colliderShape = new CANNON.Box(new CANNON.Vec3(collider.shape.scale.x * transform.scale.x, collider.shape.scale.y  * transform.scale.y, collider.shape.scale.z  * transform.scale.z))
+        }else if(collider.shape.type == 'Sphere'){
+            colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
+        }else{
+            console.error('Collider type ' + collider.shape.type + ' not supported')
+        }*/
+
+        colliderShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))
+
+        let bodyMaterial = new CANNON.Material()
+
+        this.rigidBody = new CANNON.Body({ mass: this.mass, material: bodyMaterial })
+
+        this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
+        this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+
+        this.rigidBody.addShape(colliderShape)
+        this.rigidBody.linearDamping = physicsDamping
+
+        physicsWorld.add(this.rigidBody)
+    }
+
+    PreUpdate(){
+        let transform = this.gameObject.GetComponent('Transform')
+
+        transform.position.set(this.rigidBody.position.x, this.rigidBody.position.y, this.rigidBody.position.z)
+
+        let rotation = new THREE.Euler().setFromQuaternion(new THREE.Quaternion(this.rigidBody.quaternion.x, this.rigidBody.quaternion.y, this.rigidBody.quaternion.z, this.rigidBody.quaternion.w), 'XYZ')
+
+        transform.rotation.set()
+
+        //TODO: update collider based on scale
     }
 }
 
@@ -272,10 +318,18 @@ class GameObject{
     Update(){
         if(this.components){
             for (let i = 0; i < this.components.length; i++) {
+                this.components[i].PreUpdate()
+            }
+        }
+
+        if(this.components){
+            for (let i = 0; i < this.components.length; i++) {
                 this.components[i].Update()
             }
         }
     }
+
+    //TODO: network componenets
 
     /*update(object, lerpPos = false){
         if(object != null){
@@ -1598,16 +1652,15 @@ const envmaploader = new THREE.PMREMGenerator(renderer);
 const RGBELoader = new THREE.RGBELoader()
 
 //Init physics
-const world = new CANNON.World()
+const physicsWorld = new CANNON.World()
 
-let dt = 1/60
-let damping = 0.01
+const physicsDamping = 0.01
 let timeScale = 0
 
-world.broadphase = new CANNON.NaiveBroadphase()
-world.gravity.set(0, -10, 0)
+physicsWorld.broadphase = new CANNON.NaiveBroadphase()
+physicsWorld.gravity.set(0, -10, 0)
 
-let groundShape = new CANNON.Plane()
+/*let groundShape = new CANNON.Plane()
 let groundMaterial = new CANNON.Material()
 let groundBody = new CANNON.Body({ mass: 0, material: groundMaterial })
 
@@ -1631,7 +1684,7 @@ world.add(ballBody)
 
 let ball3D = new THREE.Mesh(new THREE.SphereGeometry(.1, 32, 32), new THREE.MeshPhongMaterial({ color: 0x00ffaa, side: THREE.DoubleSide }))
 ball3D.position.set(ballBody.position.x, ballBody.position.y, ballBody.position.z)
-scene.add(ball3D)
+scene.add(ball3D)*/  
 
 //Load HDRI
 let envmap = new THREE.CubeTexture()
@@ -1820,12 +1873,19 @@ function resetInput(){
 
 //Render Loop
 function render() {
-    requestAnimationFrame( render )
-    renderer.render( scene, camera )
-
     let delta = clock.getDelta()
 
     timeTillUpdate -= delta
+
+    if(!timeScale == 0){
+        physicsWorld.step(delta * timeScale)
+    }
+
+    ground.Update()
+    ball.Update()
+
+    requestAnimationFrame( render )
+    renderer.render( scene, camera )
 
     if(timeTillUpdate <= 0){
         timeTillUpdate = 1/updatePS
@@ -1954,18 +2014,11 @@ function render() {
         camera.updateProjectionMatrix()
     }
 
-    //ground.Update()
-    //ball.Update()
-
-    world.step(delta * timeScale)
-
-    ball3D.position.set(ballBody.position.x, ballBody.position.y, ballBody.position.z)
-
     input = resetInput()
 }
 
 
-/*ground = new GameObject([
+ground = new GameObject([
     new Component(
         new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Vector3(-Math.PI / 2, 0, 0), new THREE.Vector3(1, 1, 1)),
         true,
@@ -1979,7 +2032,7 @@ function render() {
         false,
     ),
     new Component(
-        new RigidBody(false, 0),
+        new RigidBody(0),
         false,
     ),
 ])
@@ -1998,10 +2051,10 @@ ball = new GameObject([
         false,
     ),
     new Component(
-        new RigidBody(true, 1),
+        new RigidBody(5),
         false,
     ),
-])*/
+])
 
 render()
 
