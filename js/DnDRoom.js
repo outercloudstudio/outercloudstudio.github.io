@@ -89,9 +89,17 @@ class Component{
             this.type = 'Collider'
         }
 
-        console.log(this.value)
+        if(this.value instanceof RigidBody){
+            this.type = 'Rigidbody'
+        }
 
         this.value.init(gameObject)
+    }
+
+    Update(){
+        if(this.value.Update != null){
+            this.value.Update()
+        }
     }
 }
 
@@ -130,8 +138,6 @@ class Renderer{
     init(gameObject){
         this.gameObject = gameObject
 
-        console.log(this.gameObject)
-        
         this.addToScene(scene)
     }
 
@@ -190,10 +196,8 @@ class Renderer{
 
                 let transform = this.gameObject.GetComponent('Transform')
 
-                let rotatedRotation = new THREE.Vector3(-Math.PI / 2, 0, 0).add(transform.rotation)
-
                 this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
-                this.object3D.rotation.set(rotatedRotation.x, rotatedRotation.y, rotatedRotation.z)
+                this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
                 this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
 
                 updateMaterialHDRI(this.object3D)
@@ -201,6 +205,14 @@ class Renderer{
                 scene.add(this.object3D)
             }
         }
+    }
+
+    Update(){
+        let transform = this.gameObject.GetComponent('Transform')
+
+        this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+        this.object3D.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z)
+        this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
     }
 }
 
@@ -255,6 +267,8 @@ class RigidBody{
         physicsWorld.addRigidBody(this.rigidBody)
 
         rigidBodies.push(this)
+
+        console.log('Added rigidbody!')
     }
 }
 
@@ -289,6 +303,14 @@ class GameObject{
         for (let i = 0; i < this.components.length; i++) {
             if(this.components[i].type == componentType){
                 return this.components[i].value
+            }
+        }
+    }
+
+    Update(){
+        if(this.components){
+            for (let i = 0; i < this.components.length; i++) {
+                this.components[i].Update()
             }
         }
     }
@@ -365,8 +387,6 @@ function updatePhysics(delta){
                 euler.setFromQuaternion(new THREE.Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()))
 
                 transform.rotation.set(euler.x, euler.y, euler.z)
-
-                console.log(transform.toObject())
             }
         }
     }
@@ -1650,6 +1670,9 @@ let envmap = new THREE.CubeTexture()
 
 //Init Ammo and Load Scene
 let physicsWorld
+let physicsSpeed = 0
+
+let ground, ball
 
 Ammo().then(() => {
     let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
@@ -1660,7 +1683,59 @@ Ammo().then(() => {
     physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration)
 
     physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0))
-    
+
+    ground = new Ammo.btTransform()
+    ground.setIdentity()
+    ground.setOrigin(new Ammo.btVector3(0, .8, 0))
+
+    let transformQuaternion = new THREE.Quaternion(0, 0, 0, 1)
+    transformQuaternion.setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ'))
+    ground.setRotation(new Ammo.btQuaternion(transformQuaternion.x, transformQuaternion.y, transformQuaternion.z, transformQuaternion.w))
+
+    let groundMotionState = new Ammo.btDefaultMotionState(ground)
+
+    let groundCollider = new Ammo.btBoxShape(new Ammo.btVector3(5, .5, 5))
+
+    groundCollider.setMargin(0.05)
+
+    let groundLocalInertia = new Ammo.btVector3(0, 0, 0)
+
+    groundCollider.calculateLocalInertia(1, groundLocalInertia)
+
+    let groundRigidBodyData = new Ammo.btRigidBodyConstructionInfo(1, groundMotionState, groundCollider, groundLocalInertia)
+    let groundRigidBody = new Ammo.btRigidBody(groundRigidBodyData)
+
+    groundRigidBody.setContactProcessingThreshold(0.05)
+
+    physicsWorld.addRigidBody(groundRigidBody)
+
+    //rigidBodies.push(groundRigidBody)
+
+    ball = new Ammo.btTransform()
+    ball.setIdentity()
+    ball.setOrigin(new Ammo.btVector3(0, 3, 0))
+
+    ball.setRotation(new Ammo.btQuaternion(transformQuaternion.x, transformQuaternion.y, transformQuaternion.z, transformQuaternion.w))
+
+    let ballMotionState = new Ammo.btDefaultMotionState(ball)
+
+    let ballCollider = new Ammo.btBoxShape(new Ammo.btVector3(1, 1, 1))
+
+    ballCollider.setMargin(0.05)
+
+    let ballLocalInertia = new Ammo.btVector3(0, 0, 0)
+
+    ballCollider.calculateLocalInertia(1, ballLocalInertia)
+
+    let ballRigidBodyData = new Ammo.btRigidBodyConstructionInfo(1, ballMotionState, ballCollider, ballLocalInertia)
+    let ballRigidBody = new Ammo.btRigidBody(ballRigidBodyData)
+
+    ballRigidBody.setContactProcessingThreshold(0.05)
+
+    physicsWorld.addRigidBody(ballRigidBody)
+
+    rigidBodies.push(ballRigidBody)
+
     //Load HDRI
     RGBELoader.setPath('models/')
     .load( 'hdri.hdr', texture => {
@@ -1695,6 +1770,19 @@ Ammo().then(() => {
 
     const updatePS = 15
     let timeTillUpdate = 1/updatePS
+
+    let ground3D = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshPhongMaterial({color: 0xffffff}))
+    ground3D.position.set(0, .8, 0)
+    ground3D.scale.set(5, .5, 5)
+    ground3D.castShadow = true
+    ground3D.receiveShadow = true
+    scene.add(ground3D)
+
+    let ball3D = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshPhongMaterial({color: 0xffffff}))
+    ball3D.castShadow = true
+    ball3D.receiveShadow = true
+    ball3D.position.set(0, 2, 0)
+    scene.add(ball3D)
 
     const mouseMoveThreshold = 10
 
@@ -1843,6 +1931,7 @@ Ammo().then(() => {
         mouseY = 0
         mouseScroll = 0
     }
+
     //Render Loop
     function render() {
         requestAnimationFrame( render )
@@ -1979,15 +2068,40 @@ Ammo().then(() => {
             camera.updateProjectionMatrix()
         }
 
-        updatePhysics(delta)
+        physicsWorld.stepSimulation(delta * physicsSpeed, 2)
+
+        let rigidBody = ballRigidBody
+
+        let motionState = rigidBody.getMotionState()
+
+        if(motionState){
+            let updatedTransform = new Ammo.btTransform()
+
+            motionState.getWorldTransform(updatedTransform)
+
+            let position = updatedTransform.getOrigin()
+            let rotation = updatedTransform.getRotation()
+
+            ball.setOrigin(position)
+            ball.setRotation(rotation)
+
+            ball3D.position.set(position.x(), position.y(), position.z())
+            ball3D.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w())
+        }else{
+            console.log('no motion state')
+        }
+        //updatePhysics(delta * physicsSpeed)
+
+        //ground.Update()
+        //ball.Update()
 
         input = resetInput()
     }
 
     
-    let ground = new GameObject([
+    /*ground = new GameObject([
         new Component(
-            new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 1)),
+            new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Vector3(-Math.PI / 2, 0, 0), new THREE.Vector3(1, 1, 1)),
             true,
         ),
         new Component(
@@ -1995,7 +2109,7 @@ Ammo().then(() => {
             false,
         ),
         new Component(
-            new Collider(new BoxCollider(new THREE.Vector3(1, 0.01, 1))),
+            new Collider(new BoxCollider(new THREE.Vector3(1, 0.2, 1))),
             false,
         ),
         new Component(
@@ -2004,7 +2118,7 @@ Ammo().then(() => {
         ),
     ])
 
-    let ball = new GameObject([
+    ball = new GameObject([
         new Component(
             new Transform(new THREE.Vector3(0, 1.8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(.2, .2, .2)),
             true,
@@ -2021,7 +2135,7 @@ Ammo().then(() => {
             new RigidBody(true, 1),
             false,
         ),
-    ])
+    ])*/
   
     render()
 })
