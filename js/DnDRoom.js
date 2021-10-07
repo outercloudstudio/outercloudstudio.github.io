@@ -121,16 +121,38 @@ class Component{
         this.value.init(gameObject)
     }
 
-    Update(){
+    Update(deltaTime){
         if(this.value.Update != null){
-            this.value.Update()
+            this.value.Update(deltaTime)
         }
     }
 
-    PreUpdate(){
+    PreUpdate(deltaTime){
         if(this.value.PreUpdate != null){
-            this.value.PreUpdate()
+            this.value.PreUpdate(deltaTime)
         }
+    }
+}
+
+class DiceScript{
+    toObject(){
+        return {}
+    }
+
+    init(gameObject){
+        this.gameObject = gameObject
+    }
+
+    PreUpdate(deltaTime){
+        let transform = this.gameObject.GetComponent('Transform')
+
+        let euler = new THREE.Euler().setFromQuaternion(transform.rotation, 'XYZ')
+
+        euler.x += 5 * deltaTime
+        euler.y += 5 * deltaTime
+        euler.z += 5 * deltaTime
+
+        transform.rotation.setFromEuler(euler, 'XYZ')
     }
 }
 
@@ -260,7 +282,7 @@ class Renderer{
         }
     }
 
-    Update(){
+    Update(deltaTime){
         if(this.object3D != null){
             let transform = this.gameObject.GetComponent('Transform')
 
@@ -323,7 +345,7 @@ class RigidBody{
         physicsWorld.add(this.rigidBody)
     }
 
-    PreUpdate(){
+    PreUpdate(deltaTime){
         let transform = this.gameObject.GetComponent('Transform')
 
         transform.position.set(this.rigidBody.position.x, this.rigidBody.position.y, this.rigidBody.position.z)
@@ -368,16 +390,16 @@ class GameObject{
         }
     }
 
-    Update(){
+    Update(deltaTime){
         if(this.components){
             for (let i = 0; i < this.components.length; i++) {
-                this.components[i].PreUpdate()
+                this.components[i].PreUpdate(deltaTime)
             }
         }
 
         if(this.components){
             for (let i = 0; i < this.components.length; i++) {
-                this.components[i].Update()
+                this.components[i].Update(deltaTime)
             }
         }
     }
@@ -1548,49 +1570,6 @@ function GeometryToData(geometry){
     }
 }
 
-let ground, ball
-let dice = []
-
-function InitializeGameObjects(){
-    ground = new GameObject([
-        new Component(
-            new Transform(new THREE.Vector3(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(100, 0.05, 100)),
-            true,
-        ),
-        new Component(
-            new Renderer('cube'),
-            false,
-        ),
-        new Component(
-            new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
-            false,
-        ),
-        new Component(
-            new RigidBody(0),
-            false,
-        ),
-    ])
-
-    table = new GameObject([
-        new Component(
-            new Transform(new THREE.Vector3(0, 0.7, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(1, 0.05, 2.7)),
-            true,
-        ),
-        /*new Component(
-            new Renderer('cube'),
-            false,
-        ),*/
-        new Component(
-            new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
-            false,
-        ),
-        new Component(
-            new RigidBody(0),
-            false,
-        ),
-    ])
-}
-
 setupEventListeners()
 
 let checkboxes = document.getElementsByClassName('checkbox')
@@ -1776,6 +1755,9 @@ for(let i = 0; i < checkboxes.length; i++){
     
 }
 
+//Init Infernal
+let gameObjects = []
+
 //Init THREE
 let viewport = document.getElementById('viewport')
 const scene = new THREE.Scene()
@@ -1827,14 +1809,13 @@ textureLoader.setPath('models/textures/')
 let D20Texture = textureLoader.load('D20.png')
 
 //Load Collision Shapes
-let D20Geometry = null
+/*let D20Geometry = null
 
 loader.load('./models/D20.fbx', object =>{
     D20Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+})*/
 
-    InitializeGameObjects()
-})
-
+//Load Scenery
 loader.load('./models/Room.fbx', object =>{
     updateMaterialHDRI(object)
     scene.add(object)
@@ -1860,6 +1841,7 @@ scene.add(transformer)
 const updatePS = 15
 let timeTillUpdate = 1/updatePS
 
+//Setup input
 const mouseMoveThreshold = 10
 
 let mouseX = 0
@@ -1879,7 +1861,6 @@ let TDown = false
 let YDown = false
 let BackspaceDown = false
 
-//Setup input
 viewport.addEventListener('mousemove', event => {
     mouseX += event.movementX
     mouseY += event.movementY
@@ -1953,26 +1934,19 @@ document.addEventListener('keydown', event => {
         BackspaceDown = true
     }
 
-    if(event.key == 'Enter')
-    {
-        let newPos = camera.position.clone()
-
-        dice.push(
+    if(event.key == 'Enter'){
+        gameObjects.push(
             new GameObject([
                 new Component(
-                    new Transform(newPos, new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
-                    true,
+                    new Transform(new THREE.Vector3(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                    false,
                 ),
                 new Component(
                     new Renderer('D20'),
                     false,
                 ),
                 new Component(
-                    new Collider(new PolygonCollider(D20Geometry)),
-                    false,
-                ),
-                new Component(
-                    new RigidBody(1),
+                    new DiceScript(),
                     false,
                 ),
             ])
@@ -2044,13 +2018,8 @@ function render() {
         physicsWorld.step(delta * timeScale)
     }
 
-    if(ground!= null){
-        ground.Update()
-        table.Update()
-
-        for (let i = 0; i < dice.length; i++) {
-            dice[i].Update()
-        }
+    for (let i = 0; i < gameObjects.length; i++) {
+        gameObjects[i].Update(delta)
     }
 
     requestAnimationFrame( render )
