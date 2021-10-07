@@ -1549,6 +1549,7 @@ function GeometryToData(geometry){
 }
 
 let ground, ball
+let dice = []
 
 function InitializeGameObjects(){
     ground = new GameObject([
@@ -1585,25 +1586,6 @@ function InitializeGameObjects(){
         ),
         new Component(
             new RigidBody(0),
-            false,
-        ),
-    ])
-    
-    ball = new GameObject([
-        new Component(
-            new Transform(new THREE.Vector3(0, 1.6, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
-            true,
-        ),
-        new Component(
-            new Renderer('D20'),
-            false,
-        ),
-        new Component(
-            new Collider(new PolygonCollider(D20Geometry)),
-            false,
-        ),
-        new Component(
-            new RigidBody(1),
             false,
         ),
     ])
@@ -1970,6 +1952,32 @@ document.addEventListener('keydown', event => {
     {
         BackspaceDown = true
     }
+
+    if(event.key == 'Enter')
+    {
+        let newPos = camera.position.clone()
+
+        dice.push(
+            new GameObject([
+                new Component(
+                    new Transform(newPos, new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                    true,
+                ),
+                new Component(
+                    new Renderer('D20'),
+                    false,
+                ),
+                new Component(
+                    new Collider(new PolygonCollider(D20Geometry)),
+                    false,
+                ),
+                new Component(
+                    new RigidBody(1),
+                    false,
+                ),
+            ])
+        )
+    }
 })
 
 document.addEventListener('keyup', event => {
@@ -2038,8 +2046,11 @@ function render() {
 
     if(ground!= null){
         ground.Update()
-        ball.Update()
         table.Update()
+
+        for (let i = 0; i < dice.length; i++) {
+            dice[i].Update()
+        }
     }
 
     requestAnimationFrame( render )
