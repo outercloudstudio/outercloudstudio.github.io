@@ -64,10 +64,17 @@ class BoxCollider{
 }
 
 class PolygonCollider{
-    constructor(points, faces){
+    constructor(points, faces = null){
         this.points = points
         this.faces = faces
         this.type = 'Polygon'
+
+        if(faces == null){
+            let result = GeometryToData(points)
+
+            this.points = result.vertices
+            this.faces = result.faces
+        }
     }
 
     toObject(){
@@ -167,7 +174,7 @@ class Renderer{
 
     addToScene(scene){
         if(this.object3D == null){
-            if(this.builder == "cube"){
+            if(this.builder == 'cube'){
                 let geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz)
 
                 let material = new THREE.MeshPhongMaterial({
@@ -188,7 +195,7 @@ class Renderer{
                 scene.add(this.object3D)
             }
 
-            if(this.builder == "miniture-base"){
+            if(this.builder == 'miniture-base'){
 				loader.load('./models/Human_Female_Barbarian.fbx', object =>{
                     this.object3D = object
 
@@ -228,15 +235,39 @@ class Renderer{
 
                 scene.add(this.object3D)
             }
+
+            if(this.builder == 'D20'){
+				loader.load('./models/D20.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
+
+                    let transform = this.gameObject.GetComponent('Transform')
+
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                    this.object3D.children[0].rotation.set(0, 0, 0)
+
+                    updateMaterialHDRI(object, D20Texture)
+                    
+                    selectables.add(this.object3D)
+                })
+            }
         }
     }
 
     Update(){
-        let transform = this.gameObject.GetComponent('Transform')
+        if(this.object3D != null){
+            let transform = this.gameObject.GetComponent('Transform')
 
-        this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
-        this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
-        this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+            this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+            this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+            this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+        }
     }
 }
 
@@ -265,7 +296,16 @@ class RigidBody{
         }else if(collider.shape.type == 'Sphere'){
             colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
         }else if(collider.shape.type == 'Polygon'){
-            colliderShape = new CANNON.ConvexPolyhedron(collider.shape.points, collider.shape.faces)
+            let result = GeometryToData(D20Geometry)
+            console.log(result)
+
+            for (let i = 0; i < result.vertices.length; i++) {
+                result.vertices[i].x *= transform.scale.x
+                result.vertices[i].y *= transform.scale.y
+                result.vertices[i].z *= transform.scale.z
+            }
+
+            colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
         }else{
             console.error('Collider type ' + collider.shape.type + ' not supported')
         }
@@ -1459,6 +1499,97 @@ function updateMaterialHDRI(object, textureMap = null, sides = THREE.FrontSide,)
     })
 }
 
+function PolyhedronColliderFromGeometry(geometry){
+    let geo = geometry.toNonIndexed().attributes.position.array
+
+    let vertices = []
+    let faces = []
+
+    let vertCount = Math.floor(geo.length / 3)
+
+    for (let i = 0; i < vertCount; i++) {
+        vertices.push(new CANNON.Vec3(geo[i * 3], geo[i * 3 + 1], geo[i * 3 + 2]))
+    }
+
+    let faceCount = Math.floor(geo.length / 9)
+
+    for (let i = 0; i < faceCount; i++) {
+        faces.push([i * 3, i * 3 + 1, i * 3 + 2])
+    }
+
+    let shape = new CANNON.ConvexPolyhedron(vertices, faces)
+
+    return shape
+}
+
+function GeometryToData(geometry){
+    let geo = geometry.toNonIndexed().attributes.position.array
+
+    console.log(geo)
+
+    let vertices = []
+    let faces = []
+
+    let vertCount = Math.floor(geo.length / 3)
+
+    for (let i = 0; i < vertCount; i++) {
+        vertices.push(new CANNON.Vec3(geo[i * 3], geo[i * 3 + 1], geo[i * 3 + 2]))
+    }
+
+    let faceCount = Math.floor(geo.length / 9)
+
+    for (let i = 0; i < faceCount; i++) {
+        faces.push([i * 3, i * 3 + 1, i * 3 + 2])
+    }
+
+    return {
+        vertices: vertices,
+        faces: faces,
+    }
+}
+
+let ground, ball
+
+function InitializeGameObjects(){
+    ground = new GameObject([
+        new Component(
+            new Transform(new THREE.Vector3(0, 0.7, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(1, 0.05, 2.7)),
+            true,
+        ),
+        /*new Component(
+            new Renderer('cube'),
+            false,
+        ),*/
+        new Component(
+            new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
+            false,
+        ),
+        new Component(
+            new RigidBody(0),
+            false,
+        ),
+    ])
+    
+    ball = new GameObject([
+        new Component(
+            new Transform(new THREE.Vector3(0, 2.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.5, .5, .5)),
+            true,
+        ),
+        new Component(
+            new Renderer('D20'),
+            false,
+        ),
+        new Component(
+            new Collider(new PolygonCollider(D20Geometry)),
+            false,
+        ),
+        new Component(
+            new RigidBody(5),
+            false,
+        ),
+    ])
+}
+
 setupEventListeners()
 
 let checkboxes = document.getElementsByClassName('checkbox')
@@ -1674,37 +1805,10 @@ const physicsDamping = 0.01
 let timeScale = 0
 
 physicsWorld.broadphase = new CANNON.NaiveBroadphase()
-physicsWorld.gravity.set(0, -10, 0)
-
-/*let groundShape = new CANNON.Plane()
-let groundMaterial = new CANNON.Material()
-let groundBody = new CANNON.Body({ mass: 0, material: groundMaterial })
-
-groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
-groundBody.addShape(groundShape)
-world.add(groundBody)
-
-let ground3D = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshPhongMaterial({ color: 0xffaa00, side: THREE.DoubleSide }))
-ground3D.position.set(groundBody.position.x, groundBody.position.y, groundBody.position.z)
-ground3D.quaternion.set(groundBody.quaternion.x, groundBody.quaternion.y, groundBody.quaternion.z, groundBody.quaternion.w)
-scene.add(ground3D)
-
-let ballShape = new CANNON.Sphere(0.1)
-let ballMaterial = new CANNON.Material()
-let ballBody = new CANNON.Body({ mass: 5, material: ballMaterial })
-
-ballBody.position.set(0, 1, 0)
-ballBody.addShape(ballShape)
-ballBody.linearDamping = damping
-world.add(ballBody)
-
-let ball3D = new THREE.Mesh(new THREE.SphereGeometry(.1, 32, 32), new THREE.MeshPhongMaterial({ color: 0x00ffaa, side: THREE.DoubleSide }))
-ball3D.position.set(ballBody.position.x, ballBody.position.y, ballBody.position.z)
-scene.add(ball3D)*/  
+physicsWorld.gravity.set(0, -10, 0)  
 
 //Load HDRI
 let envmap = new THREE.CubeTexture()
-let D20Texture = new THREE.TextureLoader().load('/models/textures/D20.png')
 
 RGBELoader.setPath('models/textures/')
 .load('hdri.hdr', texture => {
@@ -1716,7 +1820,21 @@ RGBELoader.setPath('models/textures/')
     envmap = envmaploader.fromCubemap(texture)
 })
 
-/*loader.load('./models/Room.fbx', object =>{
+//Load Textures
+textureLoader.setPath('models/textures/')
+
+let D20Texture = textureLoader.load('D20.png')
+
+//Load Collision Shapes
+let D20Geometry = null
+
+loader.load('./models/D20.fbx', object =>{
+    D20Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+
+    InitializeGameObjects()
+})
+
+loader.load('./models/Room.fbx', object =>{
     updateMaterialHDRI(object)
     scene.add(object)
 })
@@ -1727,48 +1845,6 @@ loader.load('./models/DungeonTest.fbx', object =>{
     scene.add(object)
 
     object.position.set(-2,.7,0)
-})*/
-
-loader.load('./models/D6.fbx', object =>{
-    console.log('Loaded Dice!')
-
-    updateMaterialHDRI(object, D20Texture)
-    
-    scene.add(object)
-
-    object.position.set(0,1,0)
-    object.scale.set(1,1,1)
-    object.name = 'dice'
-
-    console.log(object.children[0].geometry.attributes.position.array[0])
-
-    let geo = object.children[0].geometry.attributes.position.array
-
-    let vertices = []
-    let faces = []
-
-    let vertCount = Math.floor(geo.length / 3)
-
-    console.log(vertCount)
-
-    for (let i = 0; i < vertCount; i++) {
-        vertices.push(new CANNON.Vec3(geo[i * 3], geo[i * 3 + 1], geo[i * 3 + 2]))
-    }
-
-    let faceCount = Math.floor(geo.length / 9)
-
-    console.log(faceCount)
-
-    for (let i = 0; i < faceCount; i++) {
-        faces.push([i * 3, i * 3 + 1, i * 3 + 2])
-    }
-
-    console.log(vertices)
-    console.log(faces)
-
-    let shape = new CANNON.ConvexPolyhedron(vertices, faces)
-
-    console.log(shape)
 })
 
 //Setup Camera
@@ -1779,22 +1855,6 @@ camera.rotation.y = -Math.PI / 2
 
 const transformer = new THREE.TransformControls(camera, renderer.domElement)
 scene.add(transformer)
-
-/*let D20Geometry = new THREE.PolyhedronGeometry(1, 1)
-
-let D20Material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-})
-
-let D20Mesh = new THREE.Mesh(D20Geometry, D20Material)
-
-updateMaterialHDRI(D20Mesh)
-
-selectables.add(D20Mesh)
-transformer.attach(D20Mesh)
-
-console.log(D20Geometry)
-console.log(D20Mesh)*/
 
 const updatePS = 15
 let timeTillUpdate = 1/updatePS
@@ -1957,8 +2017,10 @@ function render() {
         physicsWorld.step(delta * timeScale)
     }
 
-    //ground.Update()
-    //ball.Update()
+    if(ground!= null){
+        ground.Update()
+        ball.Update()
+    }
 
     requestAnimationFrame( render )
     renderer.render( scene, camera )
@@ -2092,44 +2154,6 @@ function render() {
 
     input = resetInput()
 }
-
-/*ground = new GameObject([
-    new Component(
-        new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0, 'XYZ')), new THREE.Vector3(3, 3, 0.1)),
-        true,
-    ),
-    new Component(
-        new Renderer('cube'),
-        false,
-    ),
-    new Component(
-        new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
-        false,
-    ),
-    new Component(
-        new RigidBody(0),
-        false,
-    ),
-])
-
-ball = new GameObject([
-    new Component(
-        new Transform(new THREE.Vector3(0, 5.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.2, .2, .2)),
-        true,
-    ),
-    new Component(
-        new Renderer('cube'),
-        false,
-    ),
-    new Component(
-        new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
-        false,
-    ),
-    new Component(
-        new RigidBody(5),
-        false,
-    ),
-])*/
 
 render()
 
@@ -2362,6 +2386,8 @@ socket.on('joined-room', roomData => {
     }else{
         minituresButton.remove()
     }
+
+    timeScale = 1
 
     updateUI()
 });
