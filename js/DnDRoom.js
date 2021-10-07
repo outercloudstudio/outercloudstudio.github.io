@@ -63,6 +63,22 @@ class BoxCollider{
     }
 }
 
+class PolygonCollider{
+    constructor(points, faces){
+        this.points = points
+        this.faces = faces
+        this.type = 'Polygon'
+    }
+
+    toObject(){
+        return {
+            type: 'Polygon',
+            points: this.points,
+            faces: this.faces,
+        }
+    }
+}
+
 class Component{
     constructor(value, networked){
         this.value = value
@@ -248,6 +264,8 @@ class RigidBody{
             colliderShape = new CANNON.Box(new CANNON.Vec3(collider.shape.scale.x * transform.scale.x, collider.shape.scale.y  * transform.scale.y, collider.shape.scale.z  * transform.scale.z))
         }else if(collider.shape.type == 'Sphere'){
             colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
+        }else if(collider.shape.type == 'Polygon'){
+            colliderShape = new CANNON.ConvexPolyhedron(collider.shape.points, collider.shape.faces)
         }else{
             console.error('Collider type ' + collider.shape.type + ' not supported')
         }
@@ -1402,7 +1420,7 @@ function setupEventListeners(){
     })
 }
 
-function updateMaterialHDRI(object, sides = THREE.FrontSide){
+function updateMaterialHDRI(object, textureMap = null, sides = THREE.FrontSide,){
     object.traverse(child => {
         if (child instanceof THREE.Mesh) {
             if(child.material.length != null){
@@ -1413,6 +1431,7 @@ function updateMaterialHDRI(object, sides = THREE.FrontSide){
                         color: child.material[i].color,
                         envMap: envmap.texture,
                         side: sides,
+                        map: textureMap,
                     })
                 }
             }else{
@@ -1422,6 +1441,7 @@ function updateMaterialHDRI(object, sides = THREE.FrontSide){
                     color: child.material.color,
                     envMap: envmap.texture,
                     side: sides,
+                    map: textureMap,
                 })
             }
 
@@ -1645,6 +1665,7 @@ scene.add(selectables)
 const loader = new THREE.FBXLoader()
 const envmaploader = new THREE.PMREMGenerator(renderer);
 const RGBELoader = new THREE.RGBELoader()
+const textureLoader = new THREE.TextureLoader()
 
 //Init physics
 const physicsWorld = new CANNON.World()
@@ -1683,9 +1704,10 @@ scene.add(ball3D)*/
 
 //Load HDRI
 let envmap = new THREE.CubeTexture()
+let D20Texture = new THREE.TextureLoader().load('/models/textures/D20.png')
 
-RGBELoader.setPath('models/')
-.load( 'hdri.hdr', texture => {
+RGBELoader.setPath('models/textures/')
+.load('hdri.hdr', texture => {
 
     texture.mapping = THREE.EquirectangularReflectionMapping
 
@@ -1694,16 +1716,59 @@ RGBELoader.setPath('models/')
     envmap = envmaploader.fromCubemap(texture)
 })
 
-loader.load('./models/Room.fbx', object =>{
+/*loader.load('./models/Room.fbx', object =>{
     updateMaterialHDRI(object)
     scene.add(object)
 })
 
 loader.load('./models/DungeonTest.fbx', object =>{
     updateMaterialHDRI(object)
+
     scene.add(object)
 
     object.position.set(-2,.7,0)
+})*/
+
+loader.load('./models/D6.fbx', object =>{
+    console.log('Loaded Dice!')
+
+    updateMaterialHDRI(object, D20Texture)
+    
+    scene.add(object)
+
+    object.position.set(0,1,0)
+    object.scale.set(1,1,1)
+    object.name = 'dice'
+
+    console.log(object.children[0].geometry.attributes.position.array[0])
+
+    let geo = object.children[0].geometry.attributes.position.array
+
+    let vertices = []
+    let faces = []
+
+    let vertCount = Math.floor(geo.length / 3)
+
+    console.log(vertCount)
+
+    for (let i = 0; i < vertCount; i++) {
+        vertices.push(new CANNON.Vec3(geo[i * 3], geo[i * 3 + 1], geo[i * 3 + 2]))
+    }
+
+    let faceCount = Math.floor(geo.length / 9)
+
+    console.log(faceCount)
+
+    for (let i = 0; i < faceCount; i++) {
+        faces.push([i * 3, i * 3 + 1, i * 3 + 2])
+    }
+
+    console.log(vertices)
+    console.log(faces)
+
+    let shape = new CANNON.ConvexPolyhedron(vertices, faces)
+
+    console.log(shape)
 })
 
 //Setup Camera
@@ -1714,6 +1779,22 @@ camera.rotation.y = -Math.PI / 2
 
 const transformer = new THREE.TransformControls(camera, renderer.domElement)
 scene.add(transformer)
+
+/*let D20Geometry = new THREE.PolyhedronGeometry(1, 1)
+
+let D20Material = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+})
+
+let D20Mesh = new THREE.Mesh(D20Geometry, D20Material)
+
+updateMaterialHDRI(D20Mesh)
+
+selectables.add(D20Mesh)
+transformer.attach(D20Mesh)
+
+console.log(D20Geometry)
+console.log(D20Mesh)*/
 
 const updatePS = 15
 let timeTillUpdate = 1/updatePS
@@ -1876,8 +1957,8 @@ function render() {
         physicsWorld.step(delta * timeScale)
     }
 
-    ground.Update()
-    ball.Update()
+    //ground.Update()
+    //ball.Update()
 
     requestAnimationFrame( render )
     renderer.render( scene, camera )
@@ -2012,46 +2093,7 @@ function render() {
     input = resetInput()
 }
 
-
 /*ground = new GameObject([
-    new Component(
-        new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Vector3(-Math.PI / 2, 0, 0), new THREE.Vector3(1, 1, 1)),
-        true,
-    ),
-    new Component(
-        new Renderer('plane'),
-        false,
-    ),
-    new Component(
-        new Collider(new BoxCollider(new THREE.Vector3(1, 0.2, 1))),
-        false,
-    ),
-    new Component(
-        new RigidBody(0),
-        false,
-    ),
-])
-
-ball = new GameObject([
-    new Component(
-        new Transform(new THREE.Vector3(0, 1.8, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(.2, .2, .2)),
-        true,
-    ),
-    new Component(
-        new Renderer('cube'),
-        false,
-    ),
-    new Component(
-        new Collider(new BoxCollider(new THREE.Vector3(.2, .2, .2))),
-        false,
-    ),
-    new Component(
-        new RigidBody(5),
-        false,
-    ),
-])*/
-
-ground = new GameObject([
     new Component(
         new Transform(new THREE.Vector3(0, 0.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0, 'XYZ')), new THREE.Vector3(3, 3, 0.1)),
         true,
@@ -2087,7 +2129,7 @@ ball = new GameObject([
         new RigidBody(5),
         false,
     ),
-])
+])*/
 
 render()
 
