@@ -1553,6 +1553,25 @@ let ground, ball
 function InitializeGameObjects(){
     ground = new GameObject([
         new Component(
+            new Transform(new THREE.Vector3(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(100, 0.05, 100)),
+            true,
+        ),
+        new Component(
+            new Renderer('cube'),
+            false,
+        ),
+        new Component(
+            new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
+            false,
+        ),
+        new Component(
+            new RigidBody(0),
+            false,
+        ),
+    ])
+
+    table = new GameObject([
+        new Component(
             new Transform(new THREE.Vector3(0, 0.7, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(1, 0.05, 2.7)),
             true,
         ),
@@ -1572,7 +1591,7 @@ function InitializeGameObjects(){
     
     ball = new GameObject([
         new Component(
-            new Transform(new THREE.Vector3(0, 2.8, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.5, .5, .5)),
+            new Transform(new THREE.Vector3(0, 1.6, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
             true,
         ),
         new Component(
@@ -1584,7 +1603,7 @@ function InitializeGameObjects(){
             false,
         ),
         new Component(
-            new RigidBody(5),
+            new RigidBody(1),
             false,
         ),
     ])
@@ -2020,6 +2039,7 @@ function render() {
     if(ground!= null){
         ground.Update()
         ball.Update()
+        table.Update()
     }
 
     requestAnimationFrame( render )
@@ -2386,8 +2406,6 @@ socket.on('joined-room', roomData => {
     }else{
         minituresButton.remove()
     }
-
-    timeScale = 1
 
     updateUI()
 });
