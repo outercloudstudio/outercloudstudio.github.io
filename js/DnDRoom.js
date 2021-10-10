@@ -1,24 +1,3 @@
-/*
-addToScene(scene){
-        let geometry = null
-        let material = null
-        let object = null
-
-        if(this.builder == "cube"){
-            geometry = new THREE.BoxGeometry(this.sx, this.sy, this.sz);
-
-            material = new THREE.MeshPhongMaterial({
-                color: 0xFFFFFF,
-                flatShading: true,
-            })
-
-            object = new THREE.Mesh(geometry, material);
-        }
-
-        scene.add(object)
-    }
-*/
-
 class Collider{
     constructor(colliderShape){
         this.shape = colliderShape
@@ -86,6 +65,18 @@ class PolygonCollider{
     }
 }
 
+class D20Collider{
+    constructor(){
+        this.type = 'D20'
+    }
+
+    toObject(){
+        return {
+            type: 'D20',
+        }
+    }
+}
+
 class Component{
     constructor(value, networked){
         this.value = value
@@ -115,7 +106,7 @@ class Component{
         }
 
         if(this.value instanceof RigidBody){
-            this.type = 'Rigidbody'
+            this.type = 'RigidBody'
         }
 
         this.value.init(gameObject)
@@ -132,34 +123,25 @@ class Component{
             this.value.PreUpdate(deltaTime)
         }
     }
-}
 
-class DiceScript{
-    toObject(){
-        return {}
+    RemoteUpdate(){
+        return this.value.RemoteUpdate()
     }
 
-    init(gameObject){
-        this.gameObject = gameObject
+    ReceiveUpdate(update){
+        this.value.ReceiveUpdate(update)
     }
 
-    PreUpdate(deltaTime){
-        let transform = this.gameObject.GetComponent('Transform')
-
-        let euler = new THREE.Euler().setFromQuaternion(transform.rotation, 'XYZ')
-
-        euler.x += 5 * deltaTime
-        euler.y += 5 * deltaTime
-        euler.z += 5 * deltaTime
-
-        transform.rotation.setFromEuler(euler, 'XYZ')
+    PrePhysicsUpdate(deltaTime){
+        if(this.value.PrePhysicsUpdate != null){
+            this.value.PrePhysicsUpdate(deltaTime)
+        }
     }
 }
 
 class Transform{
     constructor(position, rotation, scale){
         this.position = position
-        this.remotePosition = position
         this.rotation = rotation
         this.scale = scale
     }
@@ -174,6 +156,20 @@ class Transform{
 
     init(gameObject){
         this.gameObject = gameObject
+    }
+
+    RemoteUpdate(){
+        return {
+            position: this.position,
+            rotation: this.rotation,
+            scale: this.scale,
+        }
+    }
+
+    ReceiveUpdate(update){
+        this.position = new THREE.Vector3(update.position.x, update.position.y, update.position.z)
+        this.rotation = new THREE.Quaternion(update.rotation.x, update.rotation.y, update.rotation.z, update.rotation.w)
+        this.scale = new THREE.Vector3(update.scale.x, update.scale.y, update.scale.z)
     }
 }
 
@@ -300,7 +296,9 @@ class RigidBody{
 
     toObject(){
         return {
-            mass: this.mass
+            mass: this.mass,
+            velocity: this.rigidBody.velocity,
+            //TODO: Add angular velocity
         }
     }
 
@@ -313,11 +311,14 @@ class RigidBody{
 
         let transform = this.gameObject.GetComponent('Transform')
 
+        let collisionGroup = 1
+        let collisionMask = 1 | 2
+
         if(collider.shape.type == 'Box'){
             colliderShape = new CANNON.Box(new CANNON.Vec3(collider.shape.scale.x * transform.scale.x, collider.shape.scale.y  * transform.scale.y, collider.shape.scale.z  * transform.scale.z))
         }else if(collider.shape.type == 'Sphere'){
             colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
-        }else if(collider.shape.type == 'Polygon'){
+        }else if(collider.shape.type == 'D20'){
             let result = GeometryToData(D20Geometry)
             console.log(result)
 
@@ -328,13 +329,16 @@ class RigidBody{
             }
 
             colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
+
+            collisionGroup = 2
+            collisionMask = 1
         }else{
             console.error('Collider type ' + collider.shape.type + ' not supported')
         }
 
-        let bodyMaterial = new CANNON.Material()
+        let bodyMaterial = new CANNON.Material()    
 
-        this.rigidBody = new CANNON.Body({ mass: this.mass, material: bodyMaterial })
+        this.rigidBody = new CANNON.Body({ mass: this.mass, material: bodyMaterial, collisionFilterGroup: collisionGroup, collisionFilterMask: collisionMask })
 
         this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
         this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
@@ -353,23 +357,43 @@ class RigidBody{
 
         //TODO: update collider based on scale
     }
+
+    RemoteUpdate(){
+        return{
+            velocity: this.rigidBody.velocity,
+        }
+    }
+
+    ReceiveUpdate(data){
+        this.rigidBody.velocity.set(data.velocity.x, data.velocity.y, data.velocity.z)
+    }
+
+    PrePhysicsUpdate(deltaTime){
+        let transform = this.gameObject.GetComponent('Transform')
+
+        this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
+        this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+    }
 }
 
 class GameObject{
-    constructor(components, ID = null){
+    constructor(components, owner = null){
         this.dirty = false
         this.components = components
+        this.owner = owner
 
-        if(ID == null){
-            this.ID = uuidv4()
+        if(this.owner == null){
+            this.owner = false
         }
+
+        this.ID = uuidv4()
 
         for (let i = 0; i < components.length; i++) {
             components[i].init(this)
         }
     }
 
-    toObject(){
+    toObject(asOwner){
         let components = []
 
         for (let i = 0; i < this.components.length; i++) {
@@ -379,6 +403,7 @@ class GameObject{
         return {
             ID: this.ID,
             components: components,
+            owner: this.owner && !asOwner,
         }
     }
 
@@ -391,16 +416,143 @@ class GameObject{
     }
 
     Update(deltaTime){
-        if(this.components){
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].PreUpdate(deltaTime)
+        }
+
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].Update(deltaTime)
+        }
+    }
+
+    RemoteUpdate(){
+        if(this.owner){
+            let updateData = []
+
             for (let i = 0; i < this.components.length; i++) {
-                this.components[i].PreUpdate(deltaTime)
+                if(this.components[i].networked){
+                    if(this.components[i].RemoteUpdate != null){
+                        updateData.push({
+                            type: this.components[i].type,
+                            data: this.components[i].RemoteUpdate(),
+                        })
+                    }
+                }
+            }
+
+            if(updateData.length > 0){
+                updateData = {
+                    ID: this.ID,
+                    data: updateData,
+                }
+
+                socket.emit('update-game-object', updateData)
+            }
+        }
+    }
+
+    ReceiveUpdate(updateData){
+        for (let i = 0; i < updateData.length; i++) {
+            console.log(updateData[i].data)
+            let component = this.GetComponent(updateData[i].type)
+            component.ReceiveUpdate(updateData[i].data)
+        }
+    }
+
+    PrePhysicsUpdate(deltaTime){
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].PrePhysicsUpdate(deltaTime)
+        }
+    }
+
+    Reconstruct(object){
+        this.ID = object.ID
+        this.dirty = false
+        this.owner = object.owner
+
+        this.components = []
+
+        for (let i = 0; i < object.components.length; i++) {
+            let component = object.components[i]
+            let componentType = component.type
+            let componentValue = component.value
+            let componentNetworked = component.networked
+
+            if(componentType == 'Transform'){
+                this.components.push(
+                    new Component(
+                        new Transform(new THREE.Vector3(componentValue.position.x, componentValue.position.y, componentValue.position.z), new THREE.Quaternion(componentValue.rotation.x, componentValue.rotation.y, componentValue.rotation.z, componentValue.rotation.w), new THREE.Vector3(componentValue.scale.x, componentValue.scale.y, componentValue.scale.z)),
+                        componentNetworked
+                    )
+                )
+            }else if(componentType == 'Renderer'){
+                this.components.push(
+                    new Component(
+                        new Renderer(componentValue.builder),
+                        componentNetworked
+                    )
+                )
+            }else if(componentType == 'RigidBody'){
+                this.components.push(
+                    new Component(
+                        new RigidBody(componentValue.mass),
+                        componentNetworked
+                    )
+                )
+            }else if(componentType == 'Collider'){
+                if(componentValue.shape.type == 'Box'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new BoxCollider(new THREE.Vector3(componentValue.shape.scale.x, componentValue.shape.scale.y, componentValue.shape.scale.z)),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else if(componentValue.shape.type == 'Sphere'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new SphereCollider(componentValue.shape.radius),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else if(componentValue.shape.type == 'D20'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new D20Collider(),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else{
+                    console.error('Collider type ' + componentValue.shape.type + ' not supported')
+                }
+            }else{
+                console.error('Component type ' + componentType + ' not supported')
             }
         }
 
-        if(this.components){
-            for (let i = 0; i < this.components.length; i++) {
-                this.components[i].Update(deltaTime)
+        this.init()
+
+        for (let i = 0; i < object.components.length; i++) {
+            let component = object.components[i]
+            let componentType = component.type
+            let componentValue = component.value
+            let componentNetworked = component.networked
+
+            if(componentType == 'RigidBody'){
+                let rigidBody = this.GetComponent('RigidBody').rigidBody
+                rigidBody.velocity.set(componentValue.velocity.x, componentValue.velocity.y, componentValue.velocity.z)
             }
+        }
+    }
+
+    init(){
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].init(this)
         }
     }
 
@@ -1809,11 +1961,11 @@ textureLoader.setPath('models/textures/')
 let D20Texture = textureLoader.load('D20.png')
 
 //Load Collision Shapes
-/*let D20Geometry = null
+let D20Geometry = null
 
 loader.load('./models/D20.fbx', object =>{
     D20Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
-})*/
+})
 
 //Load Scenery
 loader.load('./models/Room.fbx', object =>{
@@ -1934,23 +2086,40 @@ document.addEventListener('keydown', event => {
         BackspaceDown = true
     }
 
-    if(event.key == 'Enter'){
-        gameObjects.push(
-            new GameObject([
-                new Component(
-                    new Transform(new THREE.Vector3(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
-                    false,
-                ),
-                new Component(
-                    new Renderer('D20'),
-                    false,
-                ),
-                new Component(
-                    new DiceScript(),
-                    false,
-                ),
-            ])
-        )
+    if(event.key == '1'){
+        let dice = new GameObject([
+            new Component(
+                new Transform(camera.position.clone(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                true,
+            ),
+            new Component(
+                new Renderer('D20'),
+                false,
+            ),
+            new Component(
+                new Collider(new D20Collider()),
+                false,
+            ),
+            new Component(
+                new RigidBody(3),
+                true,
+            ),
+        ], true)
+
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+
+        console.log(cameraDir)
+
+        cameraDir.multiplyScalar(15)
+
+        console.log(cameraDir)
+
+        dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
+
+        gameObjects.push(dice)
+
+        socket.emit('create-game-object', dice.toObject(true))
     }
 })
 
@@ -2014,18 +2183,30 @@ function render() {
 
     timeTillUpdate -= delta
 
+    for (let i = 0; i < gameObjects.length; i++) {
+        gameObjects[i].PrePhysicsUpdate(delta)
+    }
+
     if(timeScale != 0){
         physicsWorld.step(delta * timeScale)
     }
 
     for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].Update(delta)
+
+        if(timeTillUpdate <= 0){
+            gameObjects[i].RemoteUpdate()
+        }
+    }
+
+    if(timeTillUpdate <= 0){
+        timeTillUpdate = 1/updatePS
     }
 
     requestAnimationFrame( render )
     renderer.render( scene, camera )
 
-    if(timeTillUpdate <= 0){
+    /*if(timeTillUpdate <= 0){
         timeTillUpdate = 1/updatePS
 
         for(let i = 0; i < remote3DObjects.length; i++){
@@ -2049,7 +2230,7 @@ function render() {
         if(remote3DObjects[i].object3D != null){
             remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
         }
-    }
+    }*/
 
     let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
 
@@ -2082,8 +2263,6 @@ function render() {
                 }
             }
         }
-    }else{
-        
     }
 
     if(WDown){
@@ -2103,11 +2282,11 @@ function render() {
     }
 
     if(QDown){
-        camera.position.y += -1 * delta;
+        camera.translateY(-1 * delta);
     }
 
     if(EDown){
-        camera.position.y += 1 * delta;
+        camera.translateY(1 * delta);
     }
 
     if(TDown){
@@ -2156,6 +2335,46 @@ function render() {
 }
 
 render()
+
+//Ground
+gameObjects.push(
+    new GameObject([
+        new Component(
+            new Transform(new THREE.Vector3(0, -0.149, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(100, .3, 100)),
+            false,
+        ),
+        new Component(
+            new Renderer('cube'),
+            false,
+        ),
+        new Component(
+            new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
+            false,
+        ),
+        new Component(
+            new RigidBody(0),
+            false,
+        ),
+    ])
+)
+
+//Table
+gameObjects.push(
+    new GameObject([
+        new Component(
+            new Transform(new THREE.Vector3(0, 0.69, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(1, .04, 1.6)),
+            false,
+        ),
+        new Component(
+            new Collider(new BoxCollider(new THREE.Vector3(.5, .5, .5))),
+            false,
+        ),
+        new Component(
+            new RigidBody(0),
+            false,
+        ),
+    ])
+)
 
 socket.on('request-auth', authID => {
     console.log('Requested auth')
@@ -2388,6 +2607,8 @@ socket.on('joined-room', roomData => {
     }
 
     updateUI()
+
+    timeScale = 1
 });
 
 socket.on('create-remote-3D-object', object => {
@@ -2396,6 +2617,21 @@ socket.on('create-remote-3D-object', object => {
     remote3DObjects.push(new GameObject(object))
 
     remote3DObjects[remote3DObjects.length - 1].addToScene(scene)*/
+})
+
+socket.on('create-game-object', object => {
+    let reconstruction = new GameObject([])
+    reconstruction.Reconstruct(object)
+
+    gameObjects.push(reconstruction)
+})
+
+socket.on('update-game-object', object => {
+    for (let i = 0; i < gameObjects.length; i++) {
+        if(gameObjects[i].ID == object.ID){
+            gameObjects[i].ReceiveUpdate(object.data)
+        }
+    }
 })
 
 socket.on('update-remotes', remotes => {
