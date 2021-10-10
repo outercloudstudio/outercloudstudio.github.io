@@ -605,9 +605,9 @@ class GameObject{
     }
 }
 
-//const socket = io('ws://76.86.240.158:25566')
-//const socket = io('ws://192.168.1.101:25566')
-const socket = io('ws://localhost:25566')
+let socket = io('ws://76.86.240.158:25566')
+//let socket = io('ws://192.168.1.101:25566')
+//let socket = io('ws://localhost:25566')
 
 const joiningRoomElement = document.getElementById('joining-room')
 
@@ -2180,6 +2180,22 @@ document.addEventListener('keyup', event => {
     {
         BackspaceDown = false
     }
+
+    /*if(event.key == 'l'){
+        console.log('disconnecting')
+        socket.disconnect()
+
+        console.log('connecting to local')
+        socket = io('ws://localhost:25566')
+    }
+
+    if(event.key == 'p'){
+        console.log('disconnecting')
+        socket.disconnect()
+
+        console.log('connecting to local raspi')
+        socket = io('ws://192.168.1.101:25566')
+    }*/
 })
 
 function resetInput(){
