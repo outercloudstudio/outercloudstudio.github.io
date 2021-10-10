@@ -335,7 +335,7 @@ class RigidBody{
 
         let collider = this.gameObject.GetComponent('Collider')
 
-        let colliderShape = null
+        let colliderShape = new CANNON.Box(new CANNON.Vec3(.5, .5, .5))
 
         let transform = this.gameObject.GetComponent('Transform')
 
@@ -745,7 +745,6 @@ const otherPlayerDataShow = document.getElementById('other-player-data-show')
 
 let currentData = null
 let isDM = false
-let remote3DObjects = []
 
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -2218,32 +2217,6 @@ function render() {
     requestAnimationFrame( render )
     renderer.render( scene, camera )
 
-    /*if(timeTillUpdate <= 0){
-        timeTillUpdate = 1/updatePS
-
-        for(let i = 0; i < remote3DObjects.length; i++){
-            if(remote3DObjects[i].object3D != null){
-                if(remote3DObjects[i].object3D == transformer.object){
-                    remote3DObjects[i].dirty = true
-                    remote3DObjects[i].updateValues()
-                }
-
-                if(remote3DObjects[i].dirty){
-                    socket.emit('update-remote', remote3DObjects[i].toObject())
-
-                    remote3DObjects[i].dirty = false
-                    remote3DObjects[i].position = remote3DObjects[i].object3D.position
-                }
-            }
-        }
-    }
-
-    for(let i = 0; i < remote3DObjects.length; i++){
-        if(remote3DObjects[i].object3D != null){
-            remote3DObjects[i].object3D.position.lerp(new THREE.Vector3(remote3DObjects[i].targetX, remote3DObjects[i].targetY, remote3DObjects[i].targetZ), 15 * delta)
-        }
-    }*/
-
     let mouseMoved = Math.sqrt(Math.pow(mouseX, 2) + Math.pow(mouseY, 2)) > mouseMoveThreshold * delta
 
     if(mouseDown){
@@ -2329,14 +2302,6 @@ function render() {
                     }
                 }
             }
-
-            /*let remote = remote3DObjects.find(remote => remote.object3D == object)
-
-            if(remote != null){
-                socket.emit('delete-remote-3D-object', remote.ID)
-            }else{
-                scene.remove(object)
-            }*/
         }
     }
 
@@ -2409,13 +2374,13 @@ socket.on('request-auth', authID => {
         console.log('Found auth: ' + localStorage.getItem('ID'))
         socket.emit('send-auth', {auth: authID, proposed: localStorage.getItem('ID')})
     }
-});
+})
 
 socket.on('accepted-auth', authID => {
     console.log('Accepted auth!')
 
     socket.emit('join-room')
-});
+})
 
 socket.on('new-user-accepted-auth', authID => {
     console.log('Accepted auth as new user!')
@@ -2607,7 +2572,7 @@ socket.on('new-user-accepted-auth', authID => {
     }
 
     characterCreator.classList.add('open')
-});
+})
 
 socket.on('joined-room', roomData => {
     console.log('Joined room!')
@@ -2632,14 +2597,6 @@ socket.on('joined-room', roomData => {
     updateUI()
 
     timeScale = 1
-});
-
-socket.on('create-remote-3D-object', object => {
-    /*console.log('Creating 3D object with builder: ' + object.builder)
-
-    remote3DObjects.push(new GameObject(object))
-
-    remote3DObjects[remote3DObjects.length - 1].addToScene(scene)*/
 })
 
 socket.on('create-game-object', object => {
