@@ -168,7 +168,7 @@ class Transform{
 
     ReceiveUpdate(update){
         this.position = new THREE.Vector3(update.position.x, update.position.y, update.position.z)
-        this.rotation = new THREE.Quaternion(update.rotation.x, update.rotation.y, update.rotation.z, update.rotation.w)
+        this.rotation = new THREE.Quaternion(update.rotation._x, update.rotation._y, update.rotation._z, update.rotation._w)
         this.scale = new THREE.Vector3(update.scale.x, update.scale.y, update.scale.z)
     }
 }
@@ -320,7 +320,6 @@ class RigidBody{
             colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
         }else if(collider.shape.type == 'D20'){
             let result = GeometryToData(D20Geometry)
-            console.log(result)
 
             for (let i = 0; i < result.vertices.length; i++) {
                 result.vertices[i].x *= transform.scale.x
@@ -453,7 +452,7 @@ class GameObject{
 
     ReceiveUpdate(updateData){
         for (let i = 0; i < updateData.length; i++) {
-            console.log(updateData[i].data)
+            //console.log(updateData[i].data)
             let component = this.GetComponent(updateData[i].type)
             component.ReceiveUpdate(updateData[i].data)
         }
@@ -481,7 +480,7 @@ class GameObject{
             if(componentType == 'Transform'){
                 this.components.push(
                     new Component(
-                        new Transform(new THREE.Vector3(componentValue.position.x, componentValue.position.y, componentValue.position.z), new THREE.Quaternion(componentValue.rotation.x, componentValue.rotation.y, componentValue.rotation.z, componentValue.rotation.w), new THREE.Vector3(componentValue.scale.x, componentValue.scale.y, componentValue.scale.z)),
+                        new Transform(new THREE.Vector3(componentValue.position.x, componentValue.position.y, componentValue.position.z), new THREE.Quaternion(componentValue.rotation._x, componentValue.rotation._y, componentValue.rotation._z, componentValue.rotation._w), new THREE.Vector3(componentValue.scale.x, componentValue.scale.y, componentValue.scale.z)),
                         componentNetworked
                     )
                 )
@@ -1990,7 +1989,7 @@ camera.rotation.y = -Math.PI / 2
 const transformer = new THREE.TransformControls(camera, renderer.domElement)
 scene.add(transformer)
 
-const updatePS = 15
+const updatePS = 10
 let timeTillUpdate = 1/updatePS
 
 //Setup input
@@ -2108,12 +2107,7 @@ document.addEventListener('keydown', event => {
 
         let cameraDir = new THREE.Vector3()
         camera.getWorldDirection(cameraDir)
-
-        console.log(cameraDir)
-
         cameraDir.multiplyScalar(15)
-
-        console.log(cameraDir)
 
         dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
 
