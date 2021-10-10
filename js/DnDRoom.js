@@ -137,6 +137,12 @@ class Component{
             this.value.PrePhysicsUpdate(deltaTime)
         }
     }
+
+    Destroy(){
+        if(this.value.Destroy != null){
+            this.value.Destroy()
+        }
+    }
 }
 
 class Transform{
@@ -287,6 +293,28 @@ class Renderer{
             this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
         }
     }
+
+    PrePhysicsUpdate(deltaTime){
+        if(this.object3D != null){
+            if(transformer.object == this.object3D){
+                let transform = this.gameObject.GetComponent('Transform')
+
+                transform.position.set(this.object3D.position.x, this.object3D.position.y, this.object3D.position.z)
+                transform.rotation.set(this.object3D.quaternion.x, this.object3D.quaternion.y, this.object3D.quaternion.z, this.object3D.quaternion.w)
+                transform.scale.set(this.object3D.scale.x, this.object3D.scale.y, this.object3D.scale.z)
+            }
+        }
+    }
+
+    Destroy(){
+        if(this.object3D != null){
+            if(transformer.object == this.object3D){
+                transformer.detach()
+            }
+
+            this.object3D.removeFromParent()
+        }
+    }
 }
 
 class RigidBody{
@@ -372,6 +400,10 @@ class RigidBody{
 
         this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
         this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+    }
+
+    Destroy(){
+        physicsWorld.remove(this.rigidBody)
     }
 }
 
@@ -555,52 +587,22 @@ class GameObject{
         }
     }
 
-    //TODO: network componenets
-
-    /*update(object, lerpPos = false){
-        if(object != null){
-            this.x = object.x
-            this.y = object.y
-            this.z = object.z
-            this.targetX = object.x
-            this.targetY = object.y
-            this.targetZ = object.z
-            this.rx = object.rx
-            this.ry = object.ry
-            this.rz = object.rz
-            this.sx = object.sx
-            this.sy = object.sy
-            this.sz = object.sz
+    Destroy(){
+        for (let i = 0; i < this.components.length; i++) {
+            this.components[i].Destroy()
         }
 
-        if(this.object3D != null){
-            if(!lerpPos){
-                this.object3D.position.set(this.x, this.y, this.z)
+        for (let i = 0; i < gameObjects.length; i++) {
+            if(gameObjects[i] == this){
+                gameObjects.splice(i, 1)
+                break
             }
+        }
 
-            this.object3D.rotation.set(this.rx, this.ry, this.rz)
-
-            console.log(this.sx)
-            this.object3D.scale.set(this.sx, this.sy, this.sz)
+        if(this.owner){
+            socket.emit('destroy-game-object', this.ID )
         }
     }
-
-    updateValues(){
-        this.x = this.object3D.position.x
-        this.y = this.object3D.position.y
-        this.z = this.object3D.position.z
-        this.targetX = this.object3D.position.x
-        this.targetY = this.object3D.position.y
-        this.targetZ = this.object3D.position.z
-        this.rx = this.object3D.rotation.x
-        this.ry = this.object3D.rotation.y
-        this.rz = this.object3D.rotation.z
-        this.sx = this.object3D.scale.x
-        this.sy = this.object3D.scale.y
-        this.sz = this.object3D.scale.z
-
-        this.dirty = true
-    }*/
 }
 
 //const socket = io('ws://76.86.240.158:25566')
@@ -1613,7 +1615,25 @@ function setupEventListeners(){
     })
 
     createMinitureBaseButton.addEventListener('click', () => {
-        socket.emit('new-miniture', 'base')
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.multiplyScalar(.5)
+
+
+        let miniture = new GameObject([
+            new Component(
+                new Transform(camera.position.clone().add(cameraDir), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')), new THREE.Vector3(1, 1, 1)),
+                true,
+            ),
+            new Component(
+                new Renderer('miniture-base'),
+                false,
+            )
+        ], true)
+
+        gameObjects.push(miniture)
+
+        socket.emit('create-game-object', miniture.toObject(true))
     })
 
     deleteMinituresButton.addEventListener('click', () => {
@@ -1697,8 +1717,6 @@ function PolyhedronColliderFromGeometry(geometry){
 
 function GeometryToData(geometry){
     let geo = geometry.toNonIndexed().attributes.position.array
-
-    console.log(geo)
 
     let vertices = []
     let faces = []
@@ -2107,7 +2125,7 @@ document.addEventListener('keydown', event => {
 
         let cameraDir = new THREE.Vector3()
         camera.getWorldDirection(cameraDir)
-        cameraDir.multiplyScalar(15)
+        cameraDir.multiplyScalar(5)
 
         dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
 
@@ -2301,13 +2319,24 @@ function render() {
 
             transformer.detach()
 
-            let remote = remote3DObjects.find(remote => remote.object3D == object)
+            for (let i = 0; i < gameObjects.length; i++) {
+                let renderer = gameObjects[i].GetComponent('Renderer')
+
+                if(renderer != null){
+                    if(renderer.object3D == object){
+                        gameObjects[i].Destroy()
+                        break
+                    }
+                }
+            }
+
+            /*let remote = remote3DObjects.find(remote => remote.object3D == object)
 
             if(remote != null){
                 socket.emit('delete-remote-3D-object', remote.ID)
             }else{
                 scene.remove(object)
-            }
+            }*/
         }
     }
 
@@ -2624,6 +2653,16 @@ socket.on('update-game-object', object => {
     for (let i = 0; i < gameObjects.length; i++) {
         if(gameObjects[i].ID == object.ID){
             gameObjects[i].ReceiveUpdate(object.data)
+        }
+    }
+})
+
+socket.on('destroy-game-object', ID => {
+    console.log('Destroying object with ID: ' + ID)
+
+    for (let i = 0; i < gameObjects.length; i++) {
+        if(gameObjects[i].ID == ID){
+            gameObjects[i].Destroy()
         }
     }
 })
