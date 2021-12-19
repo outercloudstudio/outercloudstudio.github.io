@@ -1,3 +1,5 @@
+const headless = false
+
 class Collider{
     constructor(colliderShape){
         this.shape = colliderShape
@@ -73,6 +75,66 @@ class D20Collider{
     toObject(){
         return {
             type: 'D20',
+        }
+    }
+}
+
+class D12Collider{
+    constructor(){
+        this.type = 'D12'
+    }
+
+    toObject(){
+        return {
+            type: 'D12',
+        }
+    }
+}
+
+class D10Collider{
+    constructor(){
+        this.type = 'D10'
+    }
+
+    toObject(){
+        return {
+            type: 'D10',
+        }
+    }
+}
+
+class D8Collider{
+    constructor(){
+        this.type = 'D8'
+    }
+
+    toObject(){
+        return {
+            type: 'D8',
+        }
+    }
+}
+
+class D6Collider{
+    constructor(){
+        this.type = 'D6'
+    }
+
+    toObject(){
+        return {
+            type: 'D6',
+        }
+    }
+}
+
+class D4Collider{
+    constructor(){
+        this.type = 'D4'
+    }
+
+    toObject(){
+        return {
+            type: 'D4',
         }
     }
 }
@@ -193,7 +255,9 @@ class Renderer{
     init(gameObject){
         this.gameObject = gameObject
 
-        this.addToScene(scene)
+        if(!headless){
+            this.addToScene(scene)
+        }
     }
 
     addToScene(scene){
@@ -281,6 +345,116 @@ class Renderer{
                     selectables.add(this.object3D)
                 })
             }
+
+            if(this.builder == 'D12'){
+				loader.load('./models/D12.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
+
+                    let transform = this.gameObject.GetComponent('Transform')
+
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                    this.object3D.children[0].rotation.set(0, 0, 0)
+
+                    updateMaterialHDRI(object, D12Texture)
+                    
+                    selectables.add(this.object3D)
+                })
+            }
+
+            if(this.builder == 'D10'){
+                loader.load('./models/D10.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
+
+                    let transform = this.gameObject.GetComponent('Transform')
+
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                    this.object3D.children[0].rotation.set(0, 0, 0)
+
+                    updateMaterialHDRI(object, D10Texture)
+                    
+                    selectables.add(this.object3D)
+                })
+            }
+
+            if(this.builder == 'D8'){
+                loader.load('./models/D8.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
+
+                    let transform = this.gameObject.GetComponent('Transform')
+
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                    this.object3D.children[0].rotation.set(0, 0, 0)
+
+                    updateMaterialHDRI(object, D8Texture)
+                    
+                    selectables.add(this.object3D)
+                })
+            }
+
+            if(this.builder == 'D6'){
+                loader.load('./models/D6.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
+
+                    let transform = this.gameObject.GetComponent('Transform')
+
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                    this.object3D.children[0].rotation.set(0, 0, 0)
+
+                    updateMaterialHDRI(object, D6Texture)
+                    
+                    selectables.add(this.object3D)
+                })
+            }
+
+            if(this.builder == 'D4'){
+                loader.load('./models/D4.fbx', object =>{
+                    this.object3D = object
+
+                    this.object3D.position.set(0, 0, 0)
+                    this.object3D.rotation.set(0, 0, 0)
+                    this.object3D.scale.set(1, 1, 1)
+
+                    let transform = this.gameObject.GetComponent('Transform')
+
+                    this.object3D.position.set(transform.position.x, transform.position.y, transform.position.z)
+                    this.object3D.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+                    this.object3D.scale.set(transform.scale.x, transform.scale.y, transform.scale.z)
+
+                    this.object3D.children[0].rotation.set(0, 0, 0)
+
+                    updateMaterialHDRI(object, D4Texture)
+                    
+                    selectables.add(this.object3D)
+                })
+            }
         }
     }
 
@@ -342,25 +516,94 @@ class RigidBody{
         let collisionGroup = 1
         let collisionMask = 1 | 2
 
-        if(collider.shape.type == 'Box'){
-            colliderShape = new CANNON.Box(new CANNON.Vec3(collider.shape.scale.x * transform.scale.x, collider.shape.scale.y  * transform.scale.y, collider.shape.scale.z  * transform.scale.z))
-        }else if(collider.shape.type == 'Sphere'){
-            colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
-        }else if(collider.shape.type == 'D20'){
-            let result = GeometryToData(D20Geometry)
+        if(!headless){
+            if(collider.shape.type == 'Box'){
+                colliderShape = new CANNON.Box(new CANNON.Vec3(collider.shape.scale.x * transform.scale.x, collider.shape.scale.y  * transform.scale.y, collider.shape.scale.z  * transform.scale.z))
+            }else if(collider.shape.type == 'Sphere'){
+                colliderShape = new CANNON.Sphere(collider.shape.radius * transform.scale.x)
+            }else if(collider.shape.type == 'D20'){
+                let result = GeometryToData(D20Geometry)
 
-            for (let i = 0; i < result.vertices.length; i++) {
-                result.vertices[i].x *= transform.scale.x
-                result.vertices[i].y *= transform.scale.y
-                result.vertices[i].z *= transform.scale.z
+                for (let i = 0; i < result.vertices.length; i++) {
+                    result.vertices[i].x *= transform.scale.x
+                    result.vertices[i].y *= transform.scale.y
+                    result.vertices[i].z *= transform.scale.z
+                }
+
+                colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
+
+                collisionGroup = 2
+                collisionMask = 1
+            }else if(collider.shape.type == 'D12'){
+                let result = GeometryToData(D12Geometry)
+
+                for (let i = 0; i < result.vertices.length; i++) {
+                    result.vertices[i].x *= transform.scale.x
+                    result.vertices[i].y *= transform.scale.y
+                    result.vertices[i].z *= transform.scale.z
+                }
+
+                colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
+
+                collisionGroup = 2
+                collisionMask = 1
+            }else if(collider.shape.type == 'D10'){
+                let result = GeometryToData(D10Geometry)
+
+                for (let i = 0; i < result.vertices.length; i++) {
+                    result.vertices[i].x *= transform.scale.x
+                    result.vertices[i].y *= transform.scale.y
+                    result.vertices[i].z *= transform.scale.z
+                }
+
+                colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
+
+                collisionGroup = 2
+                collisionMask = 1
+            }else if(collider.shape.type == 'D8'){
+                let result = GeometryToData(D8Geometry)
+
+                for (let i = 0; i < result.vertices.length; i++) {
+                    result.vertices[i].x *= transform.scale.x
+                    result.vertices[i].y *= transform.scale.y
+                    result.vertices[i].z *= transform.scale.z
+                }
+
+                colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
+
+                collisionGroup = 2
+                collisionMask = 1
+            }else if(collider.shape.type == 'D6'){
+                colliderShape = new CANNON.Box(new CANNON.Vec3(.5 * transform.scale.x, .5 * transform.scale.y, .5 * transform.scale.z))
+
+                /*let result = GeometryToData(D6Geometry)
+
+                for (let i = 0; i < result.vertices.length; i++) {
+                    result.vertices[i].x *= transform.scale.x
+                    result.vertices[i].y *= transform.scale.y
+                    result.vertices[i].z *= transform.scale.z
+                }
+
+                colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)*/
+
+                collisionGroup = 2
+                collisionMask = 1
+            }else if(collider.shape.type == 'D4'){
+                let result = GeometryToData(D4Geometry)
+
+                for (let i = 0; i < result.vertices.length; i++) {
+                    result.vertices[i].x *= transform.scale.x
+                    result.vertices[i].y *= transform.scale.y
+                    result.vertices[i].z *= transform.scale.z
+                }
+
+                colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
+
+                collisionGroup = 2
+                collisionMask = 1
+            }else{
+                console.error('Collider type ' + collider.shape.type + ' not supported')
             }
-
-            colliderShape = new CANNON.ConvexPolyhedron(result.vertices, result.faces)
-
-            collisionGroup = 2
-            collisionMask = 1
-        }else{
-            console.error('Collider type ' + collider.shape.type + ' not supported')
         }
 
         let bodyMaterial = new CANNON.Material()    
@@ -381,7 +624,6 @@ class RigidBody{
 
         transform.position.set(this.rigidBody.position.x, this.rigidBody.position.y, this.rigidBody.position.z)
         transform.rotation.set(this.rigidBody.quaternion.x, this.rigidBody.quaternion.y, this.rigidBody.quaternion.z, this.rigidBody.quaternion.w)
-
         //TODO: update collider based on scale
     }
 
@@ -395,12 +637,12 @@ class RigidBody{
         this.rigidBody.velocity.set(data.velocity.x, data.velocity.y, data.velocity.z)
     }
 
-    PrePhysicsUpdate(deltaTime){
-        let transform = this.gameObject.GetComponent('Transform')
+    //PrePhysicsUpdate(deltaTime){
+        //let transform = this.gameObject.GetComponent('Transform')
 
-        this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
-        this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
-    }
+        //this.rigidBody.position.set(transform.position.x, transform.position.y, transform.position.z)
+        //this.rigidBody.quaternion.set(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w)
+    //}
 
     Destroy(){
         physicsWorld.remove(this.rigidBody)
@@ -558,6 +800,51 @@ class GameObject{
                             componentNetworked
                         )
                     )
+                }else if(componentValue.shape.type == 'D12'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new D12Collider(),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else if(componentValue.shape.type == 'D10'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new D10Collider(),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else if(componentValue.shape.type == 'D8'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new D8Collider(),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else if(componentValue.shape.type == 'D6'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new D6Collider(),
+                            ),
+                            componentNetworked
+                        )
+                    )
+                }else if(componentValue.shape.type == 'D4'){
+                    this.components.push(
+                        new Component(
+                            new Collider(
+                                new D4Collider(),
+                            ),
+                            componentNetworked
+                        )
+                    )
                 }else{
                     console.error('Collider type ' + componentValue.shape.type + ' not supported')
                 }
@@ -605,9 +892,9 @@ class GameObject{
     }
 }
 
-let socket = io('ws://76.86.240.158:25566')
+//let socket = io('ws://76.86.240.158:25566')
 //let socket = io('ws://192.168.1.101:25566')
-//let socket = io('ws://localhost:25566')
+let socket = io('ws://localhost:25566')
 
 const joiningRoomElement = document.getElementById('joining-room')
 
@@ -1952,6 +2239,8 @@ const textureLoader = new THREE.TextureLoader()
 //Init physics
 const physicsWorld = new CANNON.World()
 
+//const cannonDebugRenderer = new THREE.CannonDebugRenderer(scene, physicsWorld );
+
 const physicsDamping = 0.01
 let timeScale = 0
 
@@ -1975,12 +2264,42 @@ RGBELoader.setPath('models/textures/')
 textureLoader.setPath('models/textures/')
 
 let D20Texture = textureLoader.load('D20.png')
+let D12Texture = textureLoader.load('D12.png')
+let D10Texture = textureLoader.load('D10.png')
+let D8Texture = textureLoader.load('D8.png')
+let D6Texture = textureLoader.load('D6.png')
+let D4Texture = textureLoader.load('D4.png')
 
 //Load Collision Shapes
 let D20Geometry = null
+let D12Geometry = null
+let D10Geometry = null
+let D8Geometry = null
+let D6Geometry = null
+let D4Geometry = null
 
 loader.load('./models/D20.fbx', object =>{
     D20Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+})
+
+loader.load('./models/D12.fbx', object =>{
+    D12Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+})
+
+loader.load('./models/D10.fbx', object =>{
+    D10Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+})
+
+loader.load('./models/D8.fbx', object =>{
+    D8Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+})
+
+loader.load('./models/D6.fbx', object =>{
+    D6Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
+})
+
+loader.load('./models/D4.fbx', object =>{
+    D4Geometry = THREE.BufferGeometryUtils.mergeVertices(object.children[0].geometry)
 })
 
 //Load Scenery
@@ -2132,6 +2451,161 @@ document.addEventListener('keydown', event => {
 
         socket.emit('create-game-object', dice.toObject(true))
     }
+
+    if(event.key == '2'){
+        let dice = new GameObject([
+            new Component(
+                new Transform(camera.position.clone(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                true,
+            ),
+            new Component(
+                new Renderer('D12'),
+                false,
+            ),
+            new Component(
+                new Collider(new D12Collider()),
+                false,
+            ),
+            new Component(
+                new RigidBody(3),
+                true,
+            ),
+        ], true)
+
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.multiplyScalar(5)
+
+        dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
+
+        gameObjects.push(dice)
+
+        socket.emit('create-game-object', dice.toObject(true))
+    }
+
+    if(event.key == '3'){
+        let dice = new GameObject([
+            new Component(
+                new Transform(camera.position.clone(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                true,
+            ),
+            new Component(
+                new Renderer('D10'),
+                false,
+            ),
+            new Component(
+                new Collider(new D10Collider()),
+                false,
+            ),
+            new Component(
+                new RigidBody(3),
+                true,
+            ),
+        ], true)
+
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.multiplyScalar(5)
+
+        dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
+
+        gameObjects.push(dice)
+
+        socket.emit('create-game-object', dice.toObject(true))
+    }
+
+    if(event.key == '4'){
+        let dice = new GameObject([
+            new Component(
+                new Transform(camera.position.clone(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                true,
+            ),
+            new Component(
+                new Renderer('D8'),
+                false,
+            ),
+            new Component(
+                new Collider(new D8Collider()),
+                false,
+            ),
+            new Component(
+                new RigidBody(3),
+                true,
+            ),
+        ], true)
+
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.multiplyScalar(5)
+
+        dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
+
+        gameObjects.push(dice)
+
+        socket.emit('create-game-object', dice.toObject(true))
+    }
+
+    if(event.key == '5'){
+        let dice = new GameObject([
+            new Component(
+                new Transform(camera.position.clone(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                true,
+            ),
+            new Component(
+                new Renderer('D6'),
+                false,
+            ),
+            new Component(
+                new Collider(new D6Collider()),
+                false,
+            ),
+            new Component(
+                new RigidBody(3),
+                true,
+            ),
+        ], true)
+
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.multiplyScalar(5)
+
+        dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
+
+        gameObjects.push(dice)
+
+        socket.emit('create-game-object', dice.toObject(true))
+    }
+
+    if(event.key == '6'){
+        let dice = new GameObject([
+            new Component(
+                new Transform(camera.position.clone(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, Math.random() * Math.PI * 2 - Math.PI, 'XYZ')), new THREE.Vector3(.1, .1, .1)),
+                true,
+            ),
+            new Component(
+                new Renderer('D4'),
+                false,
+            ),
+            new Component(
+                new Collider(new D4Collider()),
+                false,
+            ),
+            new Component(
+                new RigidBody(3),
+                true,
+            ),
+        ], true)
+
+        let cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.multiplyScalar(5)
+
+        dice.GetComponent('RigidBody').rigidBody.velocity.set(cameraDir.x, cameraDir.y, cameraDir.z)
+
+        gameObjects.push(dice)
+
+        socket.emit('create-game-object', dice.toObject(true))
+    }
 })
 
 document.addEventListener('keyup', event => {
@@ -2229,6 +2703,8 @@ function render() {
     if(timeTillUpdate <= 0){
         timeTillUpdate = 1/updatePS
     }
+
+    //cannonDebugRenderer.update()
 
     requestAnimationFrame( render )
     renderer.render( scene, camera )
@@ -2379,6 +2855,9 @@ gameObjects.push(
         ),
     ])
 )
+
+//Test
+let testObject = null
 
 socket.on('request-auth', authID => {
     console.log('Requested auth')
