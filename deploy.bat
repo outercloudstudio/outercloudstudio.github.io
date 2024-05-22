@@ -1,1 +1,0 @@
-Xcopy D:\PersonalWebsite D:\outercloudstudio.github.io /E /H /C /I
