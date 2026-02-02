@@ -30,17 +30,17 @@ jobs:
               id: pages
               uses: actions/configure-pages@v5
 
-            - name: Setup Deno
-              uses: denoland/setup-deno@v2
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
               with:
-                  deno-version: v2.x
+                  bun-version: latest
 
             - name: Install and Build
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  deno install
-                  deno task build
+                  bun install
+                  bun task build
                   touch dist/.nojekyll
 
             - name: Upload artifact
