@@ -41,6 +41,7 @@ jobs:
               run: |
                   deno install
                   deno task build
+                  touch dist/.nojekyll
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
