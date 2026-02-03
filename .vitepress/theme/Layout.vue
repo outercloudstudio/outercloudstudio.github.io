@@ -14,11 +14,13 @@ const { site, frontmatter } = useData()
 
 			<a href="/projects">{{ frontmatter.title === 'Projects' ? '>' : '' }}Projects</a>
 		</div>
+
+		<a href="/contact">{{ frontmatter.title === 'Contact' ? '>' : '' }}Contact</a>
 	</nav>
 
-	<div v-if="frontmatter.home" class="home">
-		<img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
+	<img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
 
+	<div v-if="frontmatter.home" class="home">
 		<h1 class="headline">For the <span class="accent-headline">Love</span> of the game</h1>
 
 		<main>

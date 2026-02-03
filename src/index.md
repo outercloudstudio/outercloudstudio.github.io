@@ -4,7 +4,7 @@ home: true
 title: "Home"
 ---
 
-I'm Liam Hanrahan. I study Computer Science at MIT. This is my blog and personal portfolio. Welcome \\(^o^)/
+I'm Liam Hanrahan. I study Computer Science at MIT. This is my blog and personal portfolio. Welcome <span style="white-space: nowrap">\\(^o^)/</span>
 
 
 <div style="height: 40px;"></div>
@@ -33,9 +33,7 @@ I was contracted out as a developer to develop the behavior of addons for the Mi
 
 ## Projects
 
-### Massachusetts Institute of Technology
-
-I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
+Checkout my list of projects [here.](./projects) There's just too many to fit on this page <span style="white-space: nowrap">(0_0)</span>
 
 <div style="height: 20px;"></div>
 
@@ -49,6 +47,28 @@ I'm currently studying Computer Science and Engineering at MIT. I plan to gradua
 
 ## Awards
 
-### Massachusetts Institute of Technology
+### Battlecode 2026 Finalist
 
 I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
+
+-----
+
+### Best Hardware Goathacks
+
+I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
+
+-----
+
+### HackMIT Lica Sponsor Prize
+
+I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
+
+-----
+
+### GMTK Jam Finalist
+
+I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
+
+<div style="height: 40px;"></div>
+
+<span class="newsreader">"The world is as big as you want it to be. Where will you go next?" - Toby Fox</span>

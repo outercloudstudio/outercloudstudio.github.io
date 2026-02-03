@@ -104,6 +104,8 @@ nav {
     top: 0px;
 
     z-index: 2;
+
+    justify-content: space-between;
 }
 
 .nav-links {
