@@ -10,6 +10,11 @@
     --accent: #feca57;
 }
 
+*::selection {
+  color: var(--background-lt);
+  background-color: var(--accent);
+}
+
 html {
   font-family: 'DM Mono', Inter, Arial, Helvetica;
 
