@@ -2,8 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "The point is to play a beautiful game.",
-  description: "For the love of the game",
+  title: "outercloud.dev",
   srcDir: './src',
   outDir: './dist',
   head: [
