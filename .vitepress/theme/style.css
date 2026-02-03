@@ -36,6 +36,14 @@ a {
     color: var(--primary-lt);
     text-decoration-color: var(--accent);
     text-decoration-thickness: 2px;
+
+    transition: all 100ms ease-in-out;
+}
+
+a:hover {
+    color: var(--accent);
+
+    transition: none;
 }
 
 .jgs7 {
