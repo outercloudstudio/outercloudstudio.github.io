@@ -4,7 +4,7 @@ home: true
 title: "Home"
 ---
 
-I'm Liam Hanrahan. I study Computer Science at MIT. This is my blog and personal portfolio. Welcome <span style="white-space: nowrap">\\(^o^)/</span>
+I'm Liam Hanrahan. I study Computer Science at MIT. This is my [blog](./blog.md) and personal portfolio. Welcome <span style="white-space: nowrap">\\(^o^)/</span>
 
 
 <div style="height: 40px;"></div>
