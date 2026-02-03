@@ -106,6 +106,18 @@ nav {
     z-index: 2;
 
     justify-content: space-between;
+
+    transition: background 100ms ease-in-out, border 100ms ease-in-out;
+
+    border-bottom: solid 1px transparent;
+}
+
+@media (width <= 1300px) {
+  nav {
+    background: var(--background-lt);
+
+    border-bottom: solid 1px var(--detail-lt);
+  }
 }
 
 strong {
