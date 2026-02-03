@@ -7,17 +7,14 @@ const { site, frontmatter } = useData()
 
 <template>
 	<nav>
-		<a href="/">Home</a>
-		<a href="/blog">Blog</a>
-
-		<div class="inner-border-l" />
-		<div class="inner-border-r" />
+		<a v-if="frontmatter.home" href="/blog">Blog</a>
+		<a v-else href="/">Portfolio</a>
 	</nav>
 
 	<div v-if="frontmatter.home" class="home">
 		<img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
 
-		<h1 class="headline">It's time to bring <span class="accent-headline">Joy</span> back to the web.</h1>
+		<h1 class="headline">For the <span class="accent-headline">Love</span> of the game</h1>
 
 		<main>
 			<Content />
