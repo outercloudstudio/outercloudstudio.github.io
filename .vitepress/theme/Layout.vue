@@ -7,8 +7,13 @@ const { site, frontmatter } = useData()
 
 <template>
 	<nav>
-		<a v-if="frontmatter.home" href="/blog">Blog</a>
-		<a v-else href="/">Portfolio</a>
+		<div class="nav-links">
+			<a href="/">{{ frontmatter.title === 'Home' ? '>' : '' }}Home</a>
+
+			<a href="/blog">{{ frontmatter.title === 'Blog' ? '>' : '' }}Blog</a>
+
+			<a href="/projects">{{ frontmatter.title === 'Projects' ? '>' : '' }}Projects</a>
+		</div>
 	</nav>
 
 	<div v-if="frontmatter.home" class="home">
@@ -22,7 +27,10 @@ const { site, frontmatter } = useData()
 	</div>
 
 	<div v-else>
-		<a href="/">Home</a>
-		<Content />
+		<h1 class="title">{{ frontmatter.title }}</h1>
+
+		<main>
+			<Content />
+		</main>
 	</div>
 </template>

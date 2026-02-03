@@ -10,12 +10,6 @@
     --accent: #feca57;
 }
 
-h1 {
-    color: var(--primary-lt);
-    
-    line-height: 1.2;
-}
-
 html {
   font-family: 'DM Mono', Inter, Arial, Helvetica;
 
@@ -30,6 +24,26 @@ body {
 
     background-image: url("background-slash-light.png");
     background-repeat: repeat;
+}
+
+h1 {    
+    line-height: 1.2;
+}
+
+h2 {    
+    line-height: 1.2;
+}
+
+h3 {    
+    line-height: 1.2;
+
+    font-weight: 500;
+
+    margin-bottom: -0.5rem;
+}
+
+hr {
+    border-color: var(--primary-lt);
 }
 
 a {
@@ -62,6 +76,13 @@ a:hover {
     font-family: 'jgs', Arial, Helvetica;
 }
 
+.newsreader {
+    font-family: Newsreader, Arial, Helvetica;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+}
+
 .hero-text {
     font-size: 35px;
     color: var(--primary-lt);
@@ -81,6 +102,14 @@ nav {
 
     position: sticky;
     top: 0px;
+
+    z-index: 2;
+}
+
+.nav-links {
+    display: flex;
+
+    gap: 2rem;
 }
 
 .home {
@@ -135,4 +164,12 @@ main {
     margin-right: auto;
 
     padding: 0rem 2rem;
+}
+
+.title {
+    text-align: center;
+
+    margin: 2rem 0rem 4rem 0rem;
+
+    padding: 0px 20px;
 }
