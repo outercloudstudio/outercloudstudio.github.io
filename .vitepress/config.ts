@@ -13,5 +13,6 @@ export default defineConfig({
       rel: 'stylesheet'
     }],
     ['link', { rel: 'icon', href: '/favicon.png' }]
-  ]
+  ],
+  cleanUrls: true
 })
