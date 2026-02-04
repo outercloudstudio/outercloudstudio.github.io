@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "outercloud.dev",
+  description: 'Hi! I\'m Liam Hanrahan. I like to program.',
   srcDir: './src',
   outDir: './dist',
   head: [
