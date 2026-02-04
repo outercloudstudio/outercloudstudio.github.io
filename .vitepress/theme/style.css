@@ -226,3 +226,13 @@ main {
 .not-bold {
     font-weight: 500;
 }
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.project-header > h3 {
+    margin-bottom: 0.5rem;
+}
