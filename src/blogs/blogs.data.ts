@@ -10,7 +10,8 @@ export default createContentLoader(
             return {
                 title: page.frontmatter.title,
                 excerpt: page.excerpt,
-                date: new Date(page.frontmatter.date)
+                date: new Date(page.frontmatter.date),
+                url: page.url
             }
         })
     }
