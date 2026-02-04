@@ -10,11 +10,12 @@ Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@
 <div style="height: 20px;"></div>
 
 ## Socials
-- [Github](https://github.com/outercloudstudio)
-- [YouTube](https://www.youtube.com/@outercloud)
-- [Bluesky](https://bsky.app/profile/outercloud.dev)
-- [LinkedIn](https://www.linkedin.com/in/liam-hanrahan-317830237/)
-- [Itch.io](https://outercloudstudio.itch.io)
+- [Github](https://github.com/outercloudstudio) - Where I share all my open source projects
+- [YouTube](https://www.youtube.com/@outercloud) - Posting videos about game development and engineering
+- [Discord](https://discord.gg/z9GKKaJfhJ) - I hang out here the most
+- [Bluesky](https://bsky.app/profile/outercloud.dev) - Sometimes post progress updates and small thoughts
+- [LinkedIn](https://www.linkedin.com/in/liam-hanrahan-317830237/) - For the linked in warriors out there
+- [Itch.io](https://outercloudstudio.itch.io) - Where I upload most of my games
 
 <div style="height: 20px;"></div>
 
