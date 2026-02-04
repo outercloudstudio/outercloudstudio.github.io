@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
+import { computed } from 'vue'
 
-// https://vitepress.dev/reference/runtime-api#usedata
-const { site, frontmatter } = useData()
+const { site, frontmatter, page } = useData()
+
+const is404 = computed(() => page.value.isNotFound)
 </script>
 
 <template>
@@ -25,6 +27,14 @@ const { site, frontmatter } = useData()
 
 		<main>
 			<Content />
+		</main>
+	</div>
+
+	<div v-else-if="is404">
+		<h1 class="title accent-headline">How'd you get here?</h1>
+
+		<main>
+			<p>There's been a 404 error. Here let's go <a href="/">back home.</a></p>
 		</main>
 	</div>
 
