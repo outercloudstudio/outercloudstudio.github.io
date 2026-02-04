@@ -71,6 +71,6 @@ My entry placed within the top 1.5% of all the 6800+ submitted games in the GMTK
 
 <div style="height: 40px;"></div>
 
-<span class="newsreader">"The world is as big as you want it to be. Where will you go next?" - <a href="https://www.youtube.com/watch?v=tBdLO8u-0L8">Toby Fox</a></span>
+<span class="newsreader">"The world is as big as you want it to be. Where will you go next?" - <a href="https://www.youtube.com/watch?v=tBdLO8u-0L8" target="_blank">Toby Fox</a></span>
 
 <div style="height: 60px;"></div>

@@ -29,7 +29,7 @@ const { site, frontmatter } = useData()
 	</div>
 
 	<div v-else>
-		<h1 class="title">{{ frontmatter.title }}</h1>
+		<h1 class="title accent-headline">{{ frontmatter.title }}</h1>
 
 		<main>
 			<Content />
