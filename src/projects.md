@@ -31,7 +31,7 @@ Popular Minecraft Java Mod - 1.5 million downloads
 
 -----
 
-<div class="project-header"> <h3><a href="https://github.com/outercloudstudio/battlecode-2026" target="_blank"> Battlecode 2026 </a></h3></div>
+<div class="project-header"> <h3><a href="https://github.com/outercloudstudio/battlecode-2026" target="_blank"> Battlecode 2026 </a></h3> <a href="/blogs/battlecode-2026">Postmortem</a></div>
 Our entry to Battlecode 2026 as team 3MiceWalkIntoABar <br>
 (Finalists, 8th place university team)
 

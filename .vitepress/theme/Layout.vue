@@ -41,6 +41,8 @@ const is404 = computed(() => page.value.isNotFound)
 	<div v-else>
 		<h1 class="title accent-headline">{{ frontmatter.title }}</h1>
 
+		<h3 class="page-date">{{ new Date(frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</h3>
+
 		<main>
 			<Content />
 		</main>

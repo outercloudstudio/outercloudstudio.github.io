@@ -14,5 +14,10 @@ export default defineConfig({
     }],
     ['link', { rel: 'icon', href: '/favicon.png' }]
   ],
-  cleanUrls: true
+  cleanUrls: true,
+  markdown: {
+    config(md) {
+        md.disable('emoji')
+    },
+  }
 })
