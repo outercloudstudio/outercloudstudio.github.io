@@ -1,7 +1,7 @@
 ---
 title: "Battlecode 2026"
 description: "How we reached finals as first time participants with zero Battlecode knowledge."
-date: 2026-2-4
+date: 2026-2-5
 ---
 
 ## Introduction
