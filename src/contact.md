@@ -2,7 +2,11 @@
 title: "Contact"
 ---
 
+<div style="margin-top: -2rem;"></div>
+
 ![Photograph selfie of me outside](./assets/me.jpg)
+
+<div style="height: 2rem;"></div>
 
 ## How to Reach Me
 Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@mit.edu</a> or <a href="mailto:outercloudstudio@gmail.com" target="_blank">outercloudstudio@gmail.com</a>. You can also shoot me a text at (504)-339-4482. If you're a discord connoisseur, join [my server](https://discord.gg/z9GKKaJfhJ) and message me @outercloud. Tell me a joke, a thought, or even criticism. I want to hear it!

@@ -1,15 +1,8 @@
 ---
-blog: true
-
 title: "How It's Made"
+description: "A quick meta blog on how I developed this site."
 date: 2026-2-4
 ---
-
-A quick meta blog on how I developed this site.
-
------
-
-<div style="height: 40px;"></div>
 
 ## Why?
 First, a quick explanation for why I made this site. The inspiration was originally born out of the desire to publish a battlecode postmortem. Realizing I wouldn't have a good place to host a larger body of text, I set out to repurpose the *outercloud.dev* domain which I had owned for while but had remained mostly unused.
