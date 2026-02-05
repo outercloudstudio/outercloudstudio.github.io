@@ -49,7 +49,7 @@ I'm currently studying Computer Science and Engineering at MIT. I plan to gradua
 
 ### Battlecode 2026 Finalist
 JANUARY 2026 <br>
-I lead my team [3MiceWalkIntoABar](https://play.battlecode.org/bc26/team/2159) to the Battlecode 2026 finals all as first time participants. We received 8th places among university teams. You can read our postmortem [here](./blogs/battlecode-2026.md).
+I lead my team [3MiceWalkIntoABar](https://play.battlecode.org/bc26/team/2159) to the Battlecode 2026 finals all as first time participants. We received 8th places among university teams. You can read our postmortem [here](./blogs/battlecode-2026/index.md).
 
 -----
 
