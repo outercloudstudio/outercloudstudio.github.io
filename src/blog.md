@@ -6,11 +6,11 @@ title: "Blog"
 import { data as blogs } from './blogs/blogs.data.ts'
 </script>
 
-<p v-for="blog, index in blogs">
+<div v-for="blog, index in blogs">
     <div class="project-header"> <h3><a :href="blog.url">{{ blog.title }}</a></h3> <span> {{ new Date(blog.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }} </span> </div>
     <p style="margin-top: 0">{{ blog.description }}</p>
     <hr>
-</p>
+</div>
 
 <div style="height: 40px;"></div>
 
