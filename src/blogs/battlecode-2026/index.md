@@ -10,6 +10,8 @@ After discovering Battlecode just after getting admitted to MIT, I was extremely
 
 If you didn't particpate this year or want an explanation on this year's game, you should read this [brief introduction](./the-game.md).
 
+And if you can see our bot's source code [here](https://github.com/outercloudstudio/battlecode-2026).
+
 <div style="height: 40px;"></div>
 
 ![Photograph of Team 3MiceWalkIntoABar at the Battlecode 2026 Finals](./us.jpg)
