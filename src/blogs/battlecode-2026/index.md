@@ -6,27 +6,21 @@ date: 2026-2-5
 
 ## Introduction
 
-After discovering Battlecode just after getting admitted to MIT, I was extremely excited to finally get to compete. These type of programming competitions are some of my favorite activies to partake in. This year I put together our team, 3MiceWalkIntoABar consisting entirely of freshmen with zero Battlecode experience. Here's how we did it and how we almost drove our bot into the ground for tournament Sprint 2.
+Battlecode is a programming competition ran by students at MIT. Competitors compete to develop the best game playing algorithm over a month long period.
+
+This year, I lead my team 3MiceWalkIntoABar through U.S. Qualifiers into finals. Even though we were knocked out rather quickly in the finals tournament, I'm still extremely proud of where we managed to reach. Our time is made of entirely freshmen competing in Battlecode for the first time. (Paul doesn't even code)
+
+This is a postmortem about our experience, things we tried that worked well, and how to avoid mistakes we made in the future.
 
 If you didn't particpate this year or want an explanation on this year's game, you should read this [brief introduction](./the-game.md).
 
-And if you can see our bot's source code [here](https://github.com/outercloudstudio/battlecode-2026).
-
-<div style="height: 40px;"></div>
-
-![Photograph of Team 3MiceWalkIntoABar at the Battlecode 2026 Finals](./us.jpg)
-
-<div style="max-width: 30rem; margin: auto auto">This is our team at finals this year. It's not the best picture but you can't see me in any of the other pictures taken TᴖT</div>
+You can also check out our bot's source code [here](https://github.com/outercloudstudio/battlecode-2026).
 
 <div style="height: 30px;"></div>
 
-Our team had four members.
-1. Armaan Gomes - MIT
-2. Liam Hanrahan (Me) - MIT
-3. Paul Fang Li - WPI
-4. Richard Xun - Georgia Tech
+![Photograph of Team 3MiceWalkIntoABar at the Battlecode 2026 Finals](./us.jpg)
 
-I'm super proud of what we managed to accomplish this year, and it was really fun to have all of us in person for the finals. I lead the bot development. Armaan and Richard did additional programming. Paul doesn't program so he helped strategize, review games, and create maps for use to test on.
+<div style="max-width: 30rem; margin: auto auto">This is our team at finals this year. It's not the best picture but you can't see me in any of the other pictures taken TᴖT. In order from left to right: Richard Xun, Liam Hanrahan (Me), Paul Fang Li, Armaan Gomes</div>
 
 <div style="height: 40px;"></div>
 

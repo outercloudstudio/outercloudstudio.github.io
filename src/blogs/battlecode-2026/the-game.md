@@ -10,11 +10,15 @@ This year had two win conditions. Either kill all of the enemy's kings or have m
 The primary resource to manage was **cheese**. Many actions including spawning new units costed cheese. Other actions such as attacking could optionally consume cheese to be more effective.
 
 ## Units
-This year, there were only three unit types.
+### Rat King
+<img src="./king.png" alt="Image of Rat King" style="float: right; max-width: 12rem; margin-left: 2rem"></img>
+Here's a description about how the rat king works. Goo goo gaga.
+
 
 ### Baby Rats
-![Image of Rat King](./king.png)
 ![Image of Baby Rat](./baby.png)
+
+### Cat
 ![Image of Cat](./cat.png)
 
 
