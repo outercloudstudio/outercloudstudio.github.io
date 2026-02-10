@@ -256,3 +256,20 @@ main {
     font-weight: 500;
     font-style: italic;
 }
+
+div[class*="language-"] .lang,
+div[class*="language-"] button {
+  display: none;
+}
+
+div[class*="language-"] {
+    background: var(--background-dk);
+
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+div[class*="language-"] > pre {
+    margin-top: 0;
+    margin-bottom: 0;
+}
