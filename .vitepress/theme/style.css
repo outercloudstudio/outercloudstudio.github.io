@@ -22,7 +22,7 @@
 html {
   font-family: 'DM Mono', Inter, Arial, Helvetica;
 
-  line-height: 2;
+  line-height: 1.9;
 
   color: var(--primary-lt);
 }
@@ -239,6 +239,7 @@ main {
 
 .project-header > h3 {
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .no-wrap {
