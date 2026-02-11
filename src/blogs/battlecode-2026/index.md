@@ -91,14 +91,36 @@ public class BabyController {
 ```
 
 ### Economy
+We experimented with various different economy strategies during sprint 1. Initially rats would begin in the `explore` state. In this state they would pick random locations on the map to travel to. Once they saw a cheese mine, they would enter the `communicateCheeseMineState`. In this state, rats would run back to the king and squeak the cheese mine. (More on communications later) Then, the rat would then locate, collect, and return cheese using the `locateCheese`, `pickupCheese`, and `returnCheese` states. Rats would also try to collect multiple cheese before returning.
+
+Later after analyzing games we realized that we were losing out on cheese by keeping locating mines and collecting cheese as seperate behaviours. So, we combined them and it helped collect cheese a bit faster. We also observed that some of the top teams were not collecting multiple cheeses. We ended making this change and then never investigating it later.
 
 ### Pathfinding
 Pathfinding actually remained almost unchanged after sprint 1, except for tweaks to bugnav at the very end before U.S. qualifiers.
+
+Our pathfinding began by running a [Breadth First Search](https://en.wikipedia.org/wiki/Breadth-first_search) expansion on adjacent nodes originating at the rat. This was repeated 25 times, essentially expanding the search to 25 tiles. Every expansion marked the cell it expanded with an integer that increased for each iteration. We also tracked and updated which expanded cell was closes to the target location. Then, after expansion we found the path from this closest cell back to the rat by at every step, picking the tile with the lowest number until eventually we reached back to the rat.
+
+Normally expansion would cost an unreasonable amount of bytcode, however I came up with an optimization early on that allowed us to do this with no code generation. Essentially, whenever a rat sees a obstacle like a wall, it records this obstacle into a `Map` structure. This structure is an array of `chars`, but what's important is we have a list of essentially groups of bits which we can look up based on a tile's position. Instead of simply storing if the tile was passible, we can store passability to other tiles. Here's what each bit represents:
+0. Is this tile impassable
+1. Is the tile to the `North` impassable
+2. Is the tile to the `East` impassable
+3. Is the tile to the `West` impassable
+4. Is the tile to the `South` impassable
+
+Then, in expansion we can do a switch over this `char`. This saves a lot of bytcode because it doesn't check the map during expansion, and we don't need to do seperate if statements or map reads for the different directions.
+
+If this `Breadth First Search` failed because it couldn't find a better move, the rat would fall back to a stupid weird bugnav pathfinding I wrote on the first day. This was eventually changed out for `bugnav 0` before U.S. Qualifiers.
+
+<span class="newsreader">A note on king pathfinding:</span> At first glance pathfinding a 3x3 unit might seem significantly more complex, however we can use the same exact pathfinding code for the king. The only thing we need to change is how we store obstacles. Whenver the king sensed an impassable obstacle, it would mark down a 3x3 location centered on the obstacle as impassable into the map structure.
+
+<span class="newsreader">Temporary obstacles:</span> More on how we dealt with nonpermanent obstacles such as dirt and units later.
 
 ### Cats
 During sprint 1, cats were extremely broken. They were super aggressive, but would also often brick next to a wall and get stuck there. We used two strategies to mitigate cats. First, if a rat saw a cat, it would run at half speed in the opposite direction of the king while squeaking. The idea here was to attempt to lead the cat to the other team's king and hope that it would disrupt their side. In retrospect I don't think this ever worked very well since the cats were too unpredictable and rats were easily disrupted by enemies. 
 
 Our second strategy was to try and detect if a cat had gotten stuck on a wall. If a rat noticed that it was fleeing multiple times from the same cat who had not moved, it would treat the cat and it's neighboring tiles as an impassable wall and then otherwise ignore the cat. This did help a bit to mitigate economic disruption from a cat bricking on your side and preventing rats from returning to the king.
+
+### Communications
 
 ## Sprint 2
 
