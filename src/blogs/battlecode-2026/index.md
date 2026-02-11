@@ -135,6 +135,8 @@ Rats would squeak to signify mine location to the king, cat locations to fellow 
 
 Most of communications dealt with sharing information from the king to rats through the global array. Everything we wanted to store in the global array essentially had a bit index in the global array and could be read or written to at that bit index. We had handlers to read and write arbitrary bits so that we could store information continously across the elements. Withing the global array we stored the kings position, mine locations, and a panic mode flag. (Panic mode would trigger if a cat was right next to the king and cause rats to either run or try and attack the cat). We would later expand the king position to allow for multiple positions to support multiple king. We also added a `priority mine`. More about these later. Mine locations were stored continously and enough space was reserved to store up to 8 mine locations. A part of the global array also stored the amount of mine locations currently in the global array. We ended up not using even half of the global array's capacity. We could have done a lot more here or simply added support for storing more mines.
 
+We actually had support within our global array to allow for `unit types` designated by the king when new rats were built, however we never ended up implementing any distinct rat types for the baby rats.
+
 -----
 
 ## Sprint 2
@@ -240,10 +242,22 @@ One aspect I added later to pathfinding was handling units as `temporary` obstac
 -----
 
 ## US Qualifiers
+The prepartion for U.S. qualifier consisted almost entirely of trying to improve our combat micro. Which sadly for us, did not actually improve. However, I did improve our fallback pathfinding by swapping out my day 1 pathfinding for an actualy bugnav 0 implementation. We also managed to implement some handling to allow for multiple kings, although it was extremely basic. If we had enough global cheese, then all baby rats would always try and form a new king every tick. Communications also had support for storing multiple king locations so rats could choose a king to return cheese to. Our code to attack cats was also extremely buggy so we made a lot of improvements in that area so that our rats would actually team up to kill cats if favorable conditions were met.
+
+I actually got to commentate in person at U.S. Qualifiers. (Perks of showing up in person) I even commentated our own game that qualified us for finals!
+
+![Me commentating at finals during our qualifying game](./qualifiers-commentating.png)
+
+<div style="height: 20px;"></div>
 
 -----
 
 ## Final Tournament
+The final tournament was really fun. We got to celebrate Paul's birthday together in person since Richard had flown here from Georgia for the tournament. (We played a few magic drafts) We also got to meet a lot of really cool people, both competitors and representatives from sponsors.
+
+![Battlecode Award](./award.jpg)
+
+<div style="height: 20px;"></div>
 
 -----
 
