@@ -38,6 +38,8 @@ You can also check out our bot's source code [here](https://github.com/outerclou
 11. [Dealing With Cats](./#dealing-with-cats)
 12. [Reflection](./#reflection)
 
+-----
+
 ## Sprint 1
 During sprint 1 we worked on establishing a good foundation for our bot. This included setting up the important systems like pathfinding, communication, combat micro, and basic economy. Throughout the competition, we worked on improving these primatives, but our bot remained very similar foundationally to how we structured it during sprint 1.
 
@@ -133,6 +135,8 @@ Rats would squeak to signify mine location to the king, cat locations to fellow 
 
 Most of communications dealt with sharing information from the king to rats through the global array. Everything we wanted to store in the global array essentially had a bit index in the global array and could be read or written to at that bit index. We had handlers to read and write arbitrary bits so that we could store information continously across the elements. Withing the global array we stored the kings position, mine locations, and a panic mode flag. (Panic mode would trigger if a cat was right next to the king and cause rats to either run or try and attack the cat). We would later expand the king position to allow for multiple positions to support multiple king. We also added a `priority mine`. More about these later. Mine locations were stored continously and enough space was reserved to store up to 8 mine locations. A part of the global array also stored the amount of mine locations currently in the global array. We ended up not using even half of the global array's capacity. We could have done a lot more here or simply added support for storing more mines.
 
+-----
+
 ## Sprint 2
 Sprint 2 was sort of a mess for us. Early in sprint 2 we found some good improvements. Watching some of `Super Cow Power`'s games, we noticed some interesting techniques. First, rats could collect cheese that was adjacent, not just under them. We also noticed rats could return cheese to the king from a few blocks away. Most importantly though, we noticed a interesting movement technique.
 
@@ -214,12 +218,33 @@ After Nudge was ready for proper use, I went ahead and made it open source and a
 I do want to make an imporant point about game runners though. Using a game runner is NOT necesary, at all. Most of the teams in the finals did not use a game runner. Using a game runner to help improve your bot can be helpful, like it helped us discover bugs in our bot, but making actual fundamental improvements to your bot outstrips any benefit you gain by using a runner. I've heard that `Teh Devs` are a bit worried that game runners might create a situation where those who can afford the most compute are benefitted. However, this is certainly not a problem yet. I believe we might have been the only team in the finals that used a game runner.
 
 ### Combat Micro
+Our combat micro was essentially split up into 3 stages. First, if our rat was holding an enemy rat, we would calculate the best direction to throw. This was done by giving a weight to each possible throwing direction and picking the highest one. The weights were based on wether an enemy was in the line of the throw, the thrown rat would hit a wall, and if allies were in the way. If a rat could throw, it always would. Next, we would decide a direction to move. This was also determined by picking the highest value direction (including not moving). The values of each move were calculated by factors such as:
+- being next to an enemy
+- in vision of enemy
+- behind enemy
+- spacing rules to prevent `reactions`
+- moving towards enemies
+- moving towards allies
+
+Then the rat would move. After moving, the rat would begin to act. First, it would pick an enemy based on a score. Closer enemies were always weighted higher, otherwise we simply pick the enemy with the lowest health. Once an enemy is picked, the rat would try and pick up this enemy. If it couldn't it would then try and attack the enemy.
+
+During combat, our rats would squeak out a `micro` squeak. This would signify enemy positions to nearby rats. If rats heard this squeak they would attempt to join the combat and also factor in the positions learned from squeaks in their movement.
+
+One issue we noticed is that sometimes rats could get stuck in micro trying to attack rats through walls that they would never be able to reach. To combat this, we added an `exhaust` timer where if a rat had not acted for a certain number of rounds, it would leave combat and go on cooldown for a few turns.
+
+Our combat micro was okay, but it clearly wasn't strong enough. I think this was the main limiting factor preventing us from reaching a higher place in the finals. We saw especially later on that we would often simply lose fights to teams with better micro. I actually noticed this rather early on and spent a lot of time trying to improve our code. I rewrote it multiple times and even took a look at some past teams combat code. Nothing I tried worked. Next year, this is definitely one of the things I want to prioritize.
 
 ### Temporary Obstacles
 
+-----
+
 ## US Qualifiers
 
+-----
+
 ## Final Tournament
+
+-----
 
 ## Reflections
 
