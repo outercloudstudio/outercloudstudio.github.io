@@ -109,6 +109,12 @@ Normally expansion would cost an unreasonable amount of bytcode, however I came 
 
 Then, in expansion we can do a switch over this `char`. This saves a lot of bytcode because it doesn't check the map during expansion, and we don't need to do seperate if statements or map reads for the different directions.
 
+<div style="height: 10px;"></div>
+
+![A rat doing pathfinding](./pathfinding.png)
+
+<div style="height: 10px;"></div>
+
 If this `Breadth First Search` failed because it couldn't find a better move, the rat would fall back to a stupid weird bugnav pathfinding I wrote on the first day. This was eventually changed out for `bugnav 0` before U.S. Qualifiers.
 
 <span class="newsreader">A note on king pathfinding:</span> At first glance pathfinding a 3x3 unit might seem significantly more complex, however we can use the same exact pathfinding code for the king. The only thing we need to change is how we store obstacles. Whenver the king sensed an impassable obstacle, it would mark down a 3x3 location centered on the obstacle as impassable into the map structure.
@@ -121,6 +127,11 @@ During sprint 1, cats were extremely broken. They were super aggressive, but wou
 Our second strategy was to try and detect if a cat had gotten stuck on a wall. If a rat noticed that it was fleeing multiple times from the same cat who had not moved, it would treat the cat and it's neighboring tiles as an impassable wall and then otherwise ignore the cat. This did help a bit to mitigate economic disruption from a cat bricking on your side and preventing rats from returning to the king.
 
 ### Communications
+Richard wrote the original communications implementation although Me and Armaan all had a hand in expanding and improving on it later.
+
+Rats would squeak to signify mine location to the king, cat locations to fellow rats (although this was later removed), and enemy/ally locations during combat. We experimented with the idea of creating a mesh network where messages would have a `ttl` and information about the map would be constantly passed around, however this was scrapped since it made the cats more aggressive against us. Before U.S. qualifiers, the cat's behaviour was changed to be less agressive so squeaking more became viable. Unfortunately we didn't have to time to reimplement and test our network idea.
+
+Most of communications dealt with sharing information from the king to rats through the global array. Everything we wanted to store in the global array essentially had a bit index in the global array and could be read or written to at that bit index. We had handlers to read and write arbitrary bits so that we could store information continously across the elements. Withing the global array we stored the kings position, mine locations, and a panic mode flag. (Panic mode would trigger if a cat was right next to the king and cause rats to either run or try and attack the cat). We would later expand the king position to allow for multiple positions to support multiple king. We also added a `priority mine`. More about these later. Mine locations were stored continously and enough space was reserved to store up to 8 mine locations. A part of the global array also stored the amount of mine locations currently in the global array. We ended up not using even half of the global array's capacity. We could have done a lot more here or simply added support for storing more mines.
 
 ## Sprint 2
 
