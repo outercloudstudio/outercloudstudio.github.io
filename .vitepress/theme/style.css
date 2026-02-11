@@ -294,3 +294,7 @@ code {
     font-size: 12px;
     font-weight: 400;
 }
+
+ol { counter-reset: item }
+li{ display: block }
+li:before { content: counters(item, ".") " "; counter-increment: item }

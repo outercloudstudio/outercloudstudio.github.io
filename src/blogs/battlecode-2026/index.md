@@ -26,17 +26,23 @@ You can also check out our bot's source code [here](https://github.com/outerclou
 
 ## Table of Contents
 1. [Sprint 1](./#sprint-1)
+    1. [State Machine](./#state-machine)
+    2. [Economy](./#economy)
+    3. [Pathfinding](./#pathfinding)
+    4. [Cats](./#cats)
+    5. [Communications](./#communications)
 2. [Sprint 2](./#sprint-2)
+    1. [Careful Movement Strafing](./#careful-movement-strafing)
+    2. [Dealing with Dirt](./#dealing-with-dirt)
+    3. [Taking a Break and Goat Hacks](./#taking-a-break-and-goat-hacks)
+    4. [Disaster](./#disaster)
+    5. [Developing Nudge](./#developing-nudge)
+    6. [Combat Micro](./#combat-micro)
+    7. [Temporary Obstacles](./#temporary-obstacles)
 3. [US Qualifiers](./#us-qualifiers)
 4. [Final Tournament](./#final-tournament)
-5. [Pathfinding](./#pathfinding)
-6. [Combat Micro](./#combat-micro)
-7. [Communication](./#communication)
-8. [Economy](./#economy)
-9. [King Macro](./#king-macro)
-10. [King Micro](./#king-micro)
-11. [Dealing With Cats](./#dealing-with-cats)
-12. [Reflection](./#reflection)
+5. [On String Builders and Code Generation](./#on-string-builders-and-code-generation)
+6. [Reflections](./#reflections)
 
 -----
 
@@ -192,8 +198,8 @@ We now own way too many speakers.
 ### Disaster
 Once Goat Hacks ended, we realized we were in a dire situation. First, our bot seemed to almost be doing worse against some of it's previous benchmarks. Second, we were not in a good spot rating wise. I figured that somewhere in the last few days, we had introduced multiple bugs into the bot that were significantly impacting performance. Part of the reason this happened is that when testing locally, there was often enough local variation to make a bad change look as if it improved the bot. This is what motivated me to start developing our own game runner and tester.
 
-### Developing a Tester
-The first prototype for [Nudge](https://github.com/outercloudstudio/nudge) was developed in a single night. Using the prototype tester, we went through all the recent commits and isolated those that reduced the win rates. Analyzing these commits revealed a number of bugs. After fixing these, the win rate went from under 50% against our benchmark to close to 70%. We submitted this fixed version just in time to make it into sprint 2.
+### Developing Nudge
+The first prototype for [Nudge](https://github.com/outercloudstudio/nudge) was developed in a single night. Using the prototype, we went through all the recent commits and isolated those that reduced the win rates. Analyzing these commits revealed a number of bugs. After fixing these, the win rate went from under 50% against our benchmark to close to 70%. We submitted this fixed version just in time to make it into sprint 2.
 
 I then spent the next few days learning Go to create a friendly interface for the runner. 
 
