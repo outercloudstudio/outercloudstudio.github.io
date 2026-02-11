@@ -2,6 +2,20 @@
 title: "Battlecode 2026"
 description: "How we reached finals as first time participants with zero Battlecode knowledge."
 date: 2026-2-5
+
+meta:
+  - name: description
+    content: How we reached finals as first time participants with zero Battlecode knowledge.
+  - name: og:title
+    content: Battlecode 2026 Postmortem
+  - name: og:description
+    content: How we reached finals as first time participants with zero Battlecode knowledge.
+  - name: og:image
+    content: https://outercloud.dev
+  - name: twitter:card
+    content: summary_large_image
+  - name: twitter:image
+    content: https://outercloud.dev
 ---
 
 ## Introduction
