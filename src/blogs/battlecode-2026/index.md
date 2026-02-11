@@ -99,21 +99,22 @@ public class BabyController {
 ```
 
 ### Economy
-We experimented with various different economy strategies during sprint 1. Initially, rats would begin in the `explore` state. In this state they would pick random locations on the map to travel to. Once they saw a cheese mine, they would enter the `communicateCheeseMineState`. In this state, rats would run back to the king and squeak the cheese mine. (More on communications later) Then, the rat would then locate, collect, and return cheese using the `locateCheese`, `pickupCheese`, and `returnCheese` states. Rats would also try to collect multiple cheeses before returning.
+We experimented with various different economy strategies during sprint 1. Initially, rats would begin in the `explore` state. In this state they would pick random locations on the map to travel to. Once they saw a cheese mine, they would enter the `communicateCheeseMineState`. In this state, rats would run back to the king and squeak the cheese mine. (More on communications later) Then, the rat would locate, collect, and return cheese using the `locateCheese`, `pickupCheese`, and `returnCheese` states. Rats would also try to collect multiple cheeses before returning.
 
-Later, after analyzing games, we realized that we were losing out on cheese by keeping locating mines and collecting cheese as separate behaviours. So, we combined them, and it helped collect cheese a bit faster. We also observed that some of the top teams were not collecting multiple cheeses. We ended up making this change and then never investigating it later.
+Later, after analyzing games, we realized that we were losing out on cheese by keeping locating mines and collecting cheese as separate behaviours. So, we combined them. This helped collect cheese a bit faster. We also observed that some of the top teams were not collecting multiple cheeses. We ended up making this change and then never investigating it later.
 
 ### Pathfinding
 Pathfinding actually remained almost unchanged after sprint 1, except for tweaks to bugnav at the very end before U.S. qualifiers.
 
 Our pathfinding began by running a [Breadth First Search](https://en.wikipedia.org/wiki/Breadth-first_search) expansion on adjacent nodes originating at the rat. This was repeated 25 times, essentially expanding the search to 25 tiles. Every expansion marked the cell it expanded with an integer that increased for each iteration. We also tracked and updated which expanded cell was closest to the target location. Then, after expansion, we found the path from this closest cell back to the rat by at every step, picking the tile with the lowest number until eventually we reached back to the rat.
 
-Normally, expansion would cost an unreasonable amount of bytecode. However, I came up with an optimization early on that allowed us to do this with no code generation. Essentially, whenever a rat sees an obstacle like a wall, it records this obstacle into a `Map` structure. This structure is an array of `chars`, but what's important is that we have a list of essentially groups of bits which we can look up based on a tile's position. Instead of simply storing whether the tile was passable, we can store passability to other tiles. Here's what each bit represents:
-0. Is this tile impassable
-1. Is the tile to the `North` impassable
-2. Is the tile to the `East` impassable
-3. Is the tile to the `West` impassable
-4. Is the tile to the `South` impassable
+Normally, expansion would cost an unreasonable amount of bytecode. However, I came up with an optimization early on that allowed us to do this with no code generation. Essentially, whenever a rat sees an obstacle like a wall, it records this obstacle into a `Map` structure. This structure is an array of `chars`, but what's important is that we have a list of essentially groups of bits which we can look up based on a tile's position. Instead of simply storing whether the tile was passable, we can store passability to other tiles. Here's what each bit represents: (`1` is true, `0` is false)
+
+`0` - Is this tile impassable <br>
+`1` - Is the tile to the `North` impassable <br>
+`2` - Is the tile to the `East` impassable <br>
+`3` - Is the tile to the `West` impassable <br>
+`4` - Is the tile to the `South` impassable <br>
 
 Then, in expansion, we can do a switch over this `char`. This saves a lot of bytecode because it doesn't check the map during expansion, and we don't need to do separate if statements or map reads for the different directions.
 
@@ -137,7 +138,7 @@ Our second strategy was to try to detect if a cat had gotten stuck on a wall. If
 ### Communications
 Richard wrote the original communications implementation although, Armaan and I had a hand in expanding and improving on it later.
 
-Rats would squeak to signify mine location to the king, cat locations to fellow rats (although this was later removed), and enemy/ally locations during combat. We experimented with the idea of creating a mesh network where messages would have a `ttl` and information about the map would be constantly passed around, however this was scrapped since it made the cats more aggressive against us. Before U.S. qualifiers, the cat's behaviour was changed to be less agressive so squeaking more became viable. Unfortunately, we didn't have the time to reimplement and test our network idea.
+Rats would squeak to signify mine locations to the king, cat locations to fellow rats (although this was later removed), and enemy/ally locations during combat. We experimented with the idea of creating a mesh network where messages would have a `ttl` and information about the map would be constantly passed around, however this was scrapped since it made the cats more aggressive against us. Before U.S. qualifiers, the cat's behaviour was changed to be less agressive so squeaking more became viable. Unfortunately, we didn't have the time to reimplement and test our network idea.
 
 Most of communications dealt with sharing information from the king to rats through the global array. Everything we wanted to store in the global array essentially had a bit index in the global array and could be read or written to at that bit index. We had handlers to read and write arbitrary bits so that we could store information continuously across the elements. Within the global array, we stored the king's position, mine locations, and a panic mode flag. (Panic mode would trigger if a cat were right next to the king and cause rats to either run or try to attack the cat). We would later expand the king position to allow for multiple positions to support multiple king. We also added a `priority mine`. More about these later. Mine locations were stored continously and enough space was reserved to store up to 8 mine locations. A part of the global array also stored the number of mine locations currently in the global array. We ended up not using even half of the global array's capacity. We could have done a lot more here or simply added support for storing more mines.
 
@@ -211,7 +212,7 @@ I then spent the next few days learning Go to create a friendly interface for th
 
 I also rewrote the runner to run distributed across multiple machines and make it more user friendly by making it resistant to connection issues. (The moment we tried testing together, Richard and Armaan tried queueing tests at the same time, breaking everything)
 
-Running with our entire cluster got us up to a speed of 1.2 games per second. We were able to run test of 300-500 games in 5-15 minutes, depending on how many devices were connected.
+Running with our entire cluster got us up to a speed of 1.2 games per second. We were able to run tests of 300-500 games in 5-15 minutes, depending on how many devices were connected.
 
 <div style="height: 10px;"></div>
 
@@ -219,7 +220,7 @@ Running with our entire cluster got us up to a speed of 1.2 games per second. We
 
 <div style="height: 10px;"></div>
 
-Once we were able to use Nudge, our policy for making modifications to the bot changed. We implemented the policy where all changes had to be made on a seperate branch with accompanied with a pull request. We made sure that before we merged any changes, the tester gave us confidence that the change improved the win rate. We used a 95% confidence interval on the win rates to make this decision.
+Once we were able to use Nudge, our policy for making modifications to the bot changed. We implemented the policy where all changes had to be made on a seperate branch accompanied with a pull request. We made sure that before we merged any changes, the tester gave us confidence that the change improved the win rate. We used a 95% confidence interval on the win rates to make this decision.
 
 After Nudge was ready for proper use, I went ahead and made it open source and available to everyone. Here's the [repository](https://github.com/outercloudstudio/nudge). I had seen other teams mentioning using game runners and thought that it would hopefully level the playing field a bit if everyone got access to a runner. I know of at least two other teams that ended up using or trying out Nudge, which is pretty awesome.
 
@@ -273,7 +274,7 @@ So during this contest, I set a few goals for our team. First, all of the code w
 -----
 
 ## Reflections
-I am super proud of the team and where we managed to place. We had so much fun. Thanks to **Teh Devs** for making this experience possible. One day I hope to become a dev as well, but I'm going to have to participate a few more times. I wouldn't want to miss out on the opportunity to compete a few more times.
+I am super proud of the team and where we managed to place. We had so much fun. Thanks to **Teh Devs** for making this experience possible. One day I hope to become a dev as well, but I'm going to have to participate a few more times. I wouldn't want to miss out on the opportunity to compete a bit more.
 
 <div style="height: 10px;"></div>
 
