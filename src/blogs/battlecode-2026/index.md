@@ -8,7 +8,7 @@ date: 2026-2-5
 
 Battlecode is a programming competition ran by students at MIT. Competitors compete to develop the best game playing algorithm over a month long period.
 
-This year, I lead my team `3MiceWalkIntoABar` through U.S. Qualifiers into finals. Even though we were knocked out rather quickly in the finals tournament, I'm still extremely proud of where we managed to reach. Our time is made of entirely freshmen competing in Battlecode for the first time. (Paul doesn't even code)
+This year, I lead my team `3MiceWalkIntoABar` through U.S. Qualifiers into finals. Even though we were knocked out rather quickly in the finals tournament, I'm still extremely proud of where we managed to reach. Our team is made of entirely freshmen competing in Battlecode for the first time. (Paul doesn't even code)
 
 This is a postmortem about our experience, things we tried that worked well, and how to avoid mistakes we made in the future.
 
