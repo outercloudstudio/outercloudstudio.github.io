@@ -235,6 +235,7 @@ One issue we noticed is that sometimes rats could get stuck in micro trying to a
 Our combat micro was okay, but it clearly wasn't strong enough. I think this was the main limiting factor preventing us from reaching a higher place in the finals. We saw especially later on that we would often simply lose fights to teams with better micro. I actually noticed this rather early on and spent a lot of time trying to improve our code. I rewrote it multiple times and even took a look at some past teams combat code. Nothing I tried worked. Next year, this is definitely one of the things I want to prioritize.
 
 ### Temporary Obstacles
+One aspect I added later to pathfinding was handling units as `temporary` obstacles. Essentially in our representation of the map, I added a cyclic queue structure where locations could be pushed onto the queue. Every tick, all the locations pushed on the queue during the same tick at the end of the queue were popped off and cleared from the map. This delay was set to 5 ticks. So any location a unit was occupying was considered occupied for 5 ticks. This helped reduce congestion in our pathfinding.
 
 -----
 
@@ -243,6 +244,11 @@ Our combat micro was okay, but it clearly wasn't strong enough. I think this was
 -----
 
 ## Final Tournament
+
+-----
+
+## On String Builders and Code Generation
+So during this contest I set a few goals for our team. First, all of the code we wrote would be completely our own. Up until the very end when I briefly looked at past particpant's combat micro, everything we had written was made completely uninformed by past battlecode years. Second, none of our code was written by AI. Third, we used no string builders. I do worry eventually string builders will be banned. I think they are a bit unfairly overpowered at the moment. This wouldn't be an issue if they weren't also extremely slow. Part of the reason we could even run game tests was because our bot didn't abuse string builders. I also don't want to rely on them heavily because we might see string builders banned or at least reworked in the future. (If they aren't by the time I become a dev I will do something about them) Fourth, we used no code generation. I don't think code generation is really an issue, I just didn't want to deal with setting up code generation. It's very possible we'll use some code generation in the future though.
 
 -----
 
