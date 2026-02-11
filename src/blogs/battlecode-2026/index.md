@@ -181,11 +181,37 @@ Partway into sprint 2, I had my flight from California to Massachusetts to partc
 
 <div style="height: 10px;"></div>
 
-We know own way too many speakers.
+We now own way too many speakers.
 
 ### Disaster
+Once Goat Hacks ended, we realized we were in a dire situation. First, our bot seemed to almost be doing worse against some of it's previous benchmarks. Second, we were not in a good spot rating wise. I figured that somewhere in the last few days we had introduced multiple bugs into the bot that were significantly impacting performance. Part of the reason this happened is that when testing locally, there was often enough local variation to make a bad change look as if it improved the bot. This is what motivated me to start developing our own game runner and tester.
 
 ### Developing a Tester
+The first prototype for [Nudge](https://github.com/outercloudstudio/nudge) was developed in a single night. Using the prototype tester, we went through all the recent commits and isolated which ones reduced the win rates. Analyzing these commits revealed a number of bugs. After fixing these the win rate went from under 50% against our benchmark to close to 70%. We submitted this fixed version just in time to make it into sprint 2.
+
+I then spent the next few days learning Go to create a friendly interface for the runner. 
+
+<div style="height: 10px;"></div>
+
+![The Nudge Client TUI](./nudge.png)
+
+<div style="height: 10px;"></div>
+
+I also rewrote the runner to run distributed across multiple machines and make it more user friendly by making it resistant to connections issues. (The moment we tried testing together Richard and Armaan tried queueing tests at the same time, breaking everything)
+
+Running with our entire cluster got us up to a speed of 1.2 games per second. We were able to run test of 300-500 games in 5-15 minutes depending on how many devices were connected.
+
+<div style="height: 10px;"></div>
+
+![Some devices running the Nudge client](./nudge-devices.jpg)
+
+<div style="height: 10px;"></div>
+
+Once we were able to use Nudge, our policy for making modifications to the bot changed. We implemented the policy where all changes had to be made on a seperate branch with accompanied with a pull request. We made sure that before we merged any changes, the tester gave us confidence that the change improved the win rate. We used a 95% confidence interval on the win rates to make this decision.
+
+After Nudge was ready for proper use, I went ahead and made it open source and available to everyone. Here's the [repository](https://github.com/outercloudstudio/nudge). I had seen other teams mentioning using game runners and thought that it would hopefully level the playing field a bit if everyone got access to a runner. I know of at least two other teams that ended up using or trying out Nudge, which is pretty awesome.
+
+I do want to make an imporant point about game runners though. Using a game runner is NOT necesary, at all. Most of the teams in the finals did not use a game runner. Using a game runner to help improve your bot can be helpful, like it helped us discover bugs in our bot, but making actual fundamental improvements to your bot outstrips any benefit you gain by using a runner. I've heard that `Teh Devs` are a bit worried that game runners might create a situation where those who can afford the most compute are benefitted. However, this is certainly not a problem yet. I believe we might have been the only team in the finals that used a game runner.
 
 ### Combat Micro
 
