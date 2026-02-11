@@ -54,47 +54,40 @@ One strategy that was especially powerful during sprint 1 was a full rush. Many 
 ### State Machine
 Behaviour within our bot was handled with an extremely simple state machine. Essentially, every tick a rat would check which state was stored within the `state` variable and execute code for that state. We also stored a `previousState` which could allow the bot to remember and later resume a state if it got interrupted by the `fleeingCat` state. Looking back while writing this I realize we could have very easily made this a switch statement and saved some bytecode.
 
+Here's what it looks like:
+
 ```java
-public static String state = "locateCheese";
-public static String previousState = "locateCheese";
+public class BabyController {
+    public static String state = "locateCheese";
+    public static String previousState = "locateCheese";
 
-private static void goToState(String newState) throws GameActionException {
-    state = newState;
-    previousState = newState;
+    private static void goToState(String newState) throws GameActionException {
+        state = newState;
+        previousState = newState;
 
-    // run any code that should happen when newState is entered
-    // ...
-}
-
-private static void goToStateTemporary(String newState) throws GameActionException {
-    state = newState;
-
-    // run any code that should happen when newState is entered
-    // ...
-}
-
-public static void run(RobotController rc) throws GameActionException {
-    // ...
-
-    while(true) {
-        // ...
-
-        if (state.equals("locateCheese")) {
-            // ...
-
-            if(rc.getRawCheese() > 0) {
-                    goToState("returnCheese");
-            }
-
-            // ...
-        }
-
+        // run any code that should happen when newState is entered
         // ...
     }
 
-    // ...
-}
+    private static void goToStateTemporary(String newState) throws GameActionException {
+        state = newState;
 
+        // run any code that should happen when newState is entered
+        // ...
+    }
+
+    public static void run(RobotController rc) throws GameActionException {
+        while(true) {
+            if (state.equals("locateCheese")) {
+                if(rc.getRawCheese() > 0) {
+                        goToState("returnCheese");
+                }
+
+                // ...
+            }
+        }
+    }
+}
 ```
 
 ### Economy
