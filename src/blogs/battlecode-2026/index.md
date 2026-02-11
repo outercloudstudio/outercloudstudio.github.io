@@ -134,22 +134,53 @@ Rats would squeak to signify mine location to the king, cat locations to fellow 
 Most of communications dealt with sharing information from the king to rats through the global array. Everything we wanted to store in the global array essentially had a bit index in the global array and could be read or written to at that bit index. We had handlers to read and write arbitrary bits so that we could store information continously across the elements. Withing the global array we stored the kings position, mine locations, and a panic mode flag. (Panic mode would trigger if a cat was right next to the king and cause rats to either run or try and attack the cat). We would later expand the king position to allow for multiple positions to support multiple king. We also added a `priority mine`. More about these later. Mine locations were stored continously and enough space was reserved to store up to 8 mine locations. A part of the global array also stored the amount of mine locations currently in the global array. We ended up not using even half of the global array's capacity. We could have done a lot more here or simply added support for storing more mines.
 
 ## Sprint 2
+Sprint 2 was sort of a mess for us. Early in sprint 2 we found some good improvements. Watching some of `Super Cow Power`'s games, we noticed some interesting techniques. First, rats could collect cheese that was adjacent, not just under them. We also noticed rats could return cheese to the king from a few blocks away. Most importantly though, we noticed a interesting movement technique.
+
+### Careful Movement Strafing
+Rats had a mechanic where if they moved in a direction they were not facing, they would incur an additional movement penalty. However, this only occured when attempting to move. Since we can control the order of our actions, we could alternate rotating or moving first to essentially get extra vision range, without a movement penalty.
+
+```java
+public class BabyController {
+    public static boolean lookLeft = false;
+
+    public static void moveSmart(Direction direction) throws GameActionException {
+        if(rc.getDirection() != direction && rc.canTurn(direction)) {
+            rc.turn(direction);
+        }
+
+        if (rc.canMove(direction)) {
+            rc.move(direction);
+        }
+
+        if(rc.canTurn()) {
+            if(lookLeft) {
+                rc.turn(direction.rotateLeft().rotateLeft());
+            } else {
+                rc.turn(direction.rotateRight().rotateRight());
+            }
+
+            lookLeft = !lookLeft;
+        }
+    }
+}
+```
+
+### Dealing with Dirt
+We also made it a priority to handle dirt on the map. Previously we had simply treated dirt as a permanent impassable obstacle. First we changed pathfinding to treat dirt as passable. Then rats would simply dig dirt if they had to. We also gave the king the ability to place dirt when moving away from a cat. This turned out to be extremely effective with protecting the king.
+
+### Taking a Break and Goat Hacks
+
+### Combat Micro
+
+### Temporary Obstacles
+
+### Disaster
+
+### Developing a Tester
 
 ## US Qualifiers
 
 ## Final Tournament
-
-## Combat Micro
-
-## Communication
-
-## Economy
-
-## King Macro
-
-## King Micro
-
-## Dealing With Cats
 
 ## Reflections
 
