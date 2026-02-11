@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig, HeadConfig } from 'vitepress'
 
 export default defineConfig({
   title: "outercloud.dev",
@@ -23,5 +23,13 @@ export default defineConfig({
       light: 'material-theme-darker',
       dark: 'material-theme-darker',
     }
+  },
+  transformHead: ({ pageData }) => {
+    const head: HeadConfig[] = []
+
+    head.push(['meta', { property: 'og:title', content: pageData.frontmatter.title }])
+    head.push(['meta', { property: 'og:description', content: pageData.frontmatter.description }])
+
+    return head
   }
 })
