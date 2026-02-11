@@ -267,5 +267,18 @@ So during this contest I set a few goals for our team. First, all of the code we
 -----
 
 ## Reflections
+I am super proud of the team and where we managed to place. We had so much fun. Thanks to **Teh Devs** for making this experience possible. One day I hope to become a dev as well, but I'm going to have to participate a few more times. I wouldn't want to miss out on the oppurtunity to compete a few more times.
+
+<div style="height: 10px;"></div>
+
+![Team 3MiceWalkIntoABar](./team.jpg)
+
+<div style="height: 10px;"></div>
+
+Thank you to Richard, Armaan, and Paul for being on my team. It was a lot of fun working with you guys.
+
+<div style="height: 10px;"></div>
+
+<span class="newsreader">And to the future teams of next year, watch out. We're gunning for #1.</span>
 
 <div style="height: 60px;"></div>
