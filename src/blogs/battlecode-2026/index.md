@@ -169,14 +169,27 @@ public class BabyController {
 We also made it a priority to handle dirt on the map. Previously we had simply treated dirt as a permanent impassable obstacle. First we changed pathfinding to treat dirt as passable. Then rats would simply dig dirt if they had to. We also gave the king the ability to place dirt when moving away from a cat. This turned out to be extremely effective with protecting the king.
 
 ### Taking a Break and Goat Hacks
+Partway into sprint 2, I had my flight from California to Massachusetts to partcipate in WPI's hackathon called Goat Hacks. This meant I wasn't able to work on the bot for about 4-5 days. During this time, we dropped from top 10 in ranked to somewhere around 60th place. One the bright side, Me and Paul had a lot of fun creating a DIY live streaming camera doorbell and winning JBL Charge 6 speakers for `Best Hardware`.
 
-### Combat Micro
+<div style="height: 10px;"></div>
 
-### Temporary Obstacles
+![A side looke at our DIY camera doorbell](./goat-hacks.jpg)
+
+<div style="height: 10px;"></div>
+
+![We have way too many JBL speakers](./jbls.jpg)
+
+<div style="height: 10px;"></div>
+
+We know own way too many speakers.
 
 ### Disaster
 
 ### Developing a Tester
+
+### Combat Micro
+
+### Temporary Obstacles
 
 ## US Qualifiers
 
