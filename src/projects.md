@@ -47,6 +47,11 @@ Compiler for the Mew programming language. Builds playable Scratch projects from
 
 -----
 
+<div class="project-header"> <h3><a href="https://devpost.com/software/gravel-2ltjkd" target="_blank"> Gravel </a></h3></div>
+Completely private, homomorphically encrypted AI model inference distributed across parallel compute nodes. Built for TreeHacks 2026.
+
+-----
+
 <div class="project-header"> <h3><a href="https://github.com/outercloudstudio/Firework" target="_blank"> Firework </a></h3></div>
 Compiler for the Firework programming language. Combines command and molang logic on entities in Minecraft Bedrock Add-Ons
 

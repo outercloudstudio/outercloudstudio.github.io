@@ -298,3 +298,10 @@ code {
 ol { counter-reset: item }
 ol > li { display: block }
 ol > li:before { content: counters(item, ".") ". "; counter-increment: item }
+
+blockquote {
+    font-family: Newsreader, Arial, Helvetica;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+}
