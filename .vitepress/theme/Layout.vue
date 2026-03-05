@@ -17,7 +17,11 @@ const is404 = computed(() => page.value.isNotFound)
 			<a href="/projects">{{ frontmatter.title === 'Projects' ? '>' : '' }}Projects</a>
 		</div>
 
-		<a href="/contact">{{ frontmatter.title === 'Contact' ? '>' : '' }}Contact</a>
+		<div class="nav-links">
+			<a href="/experience">{{ frontmatter.title === 'Experience' ? '>' : '' }}Experience</a>
+
+			<a href="/contact">{{ frontmatter.title === 'Contact' ? '>' : '' }}Contact</a>
+		</div>
 	</nav>
 
 	<img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
