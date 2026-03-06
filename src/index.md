@@ -4,15 +4,15 @@ home: true
 title: "Home"
 ---
 
-I'm Liam Hanrahan. I study Computer Science at MIT. This is my [blog](./blog.md) and personal portfolio. Welcome <span style="white-space: nowrap">\\(^o^)/</span>
+I'm Liam Hanrahan. I study Computer Science at MIT. Welcome to my spot on the internet <span style="white-space: nowrap">\\(^o^)/</span>
 
-<div style="height: 10px;"></div>
+<div style="height: 5px;"></div>
 
-I care about creating better software and making it free and open source. I'm also interested in machine learning, homomorphic encryption, and I have a lot of experience in game development.
+Most of the time I'm working on cool [projects](./projects.md), the other half of the time I'm skiing or messing around with friends.
 
-<div style="height: 10px;"></div>
+<div style="height: 5px;"></div>
 
-I've written some SCPs. Frieren and Adventure Time compete for my favorite shows. Blade Runner 2049 is my favorite movie. The Way of Kings is the best book of all time. Play Outer Wilds. That's the crash course on me.
+I'm trying to figure out how to make the web a better place, and also how to design a computer from scratch.
 
 <div style="height: 40px;"></div>
 

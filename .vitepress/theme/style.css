@@ -295,6 +295,10 @@ code {
     font-weight: 400;
 }
 
+.shiki {
+    overflow-x: auto;
+}
+
 ol { counter-reset: item }
 ol > li { display: block }
 ol > li:before { content: counters(item, ".") ". "; counter-increment: item }
