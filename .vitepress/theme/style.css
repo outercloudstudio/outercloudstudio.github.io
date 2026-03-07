@@ -140,6 +140,29 @@ strong {
     gap: 2rem;
 }
 
+@media screen and (max-width: 480px) {
+    .nav-links {
+        gap: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .nav-links {
+        gap: 1.2rem;
+    }
+
+    nav {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 415px) {
+    .nav-links {
+        gap: 0.5rem;
+    }
+}
+
 .home {
     position: relative;
 }
