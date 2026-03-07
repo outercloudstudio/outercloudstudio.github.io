@@ -4,7 +4,9 @@ home: true
 title: "Home"
 ---
 
-I'm Liam Hanrahan. I study Computer Science at MIT. Welcome to my spot on the internet <span style="white-space: nowrap">\\(^o^)/</span>
+<img src="./assets/avatar.png" alt="My robot styled avatar" style="float: right; max-width: 10rem; margin-left: 1rem; margin-bottom: 1rem" class="no-border"></img>
+
+I'm Liam Hanrahan. I study Computer Science at MIT. <span class="newsreader">Welcome to my spot on the internet!</span> <span style="white-space: nowrap">\\(^o^)/</span>
 
 <div style="height: 5px;"></div>
 
@@ -12,7 +14,11 @@ Most of the time I'm working on cool [projects](./projects.md), the other half o
 
 <div style="height: 5px;"></div>
 
-I'm trying to figure out how to make the web a better place, and also how to design a computer from scratch.
+My dream is the browse the web on a computer designed completely by me; chip, operating system, and all. 
+
+<div style="height: 5px;"></div>
+
+\> Go check out my [thoughts](./blog.md) or some of my [projects](./projects.md). <
 
 <div style="height: 40px;"></div>
 

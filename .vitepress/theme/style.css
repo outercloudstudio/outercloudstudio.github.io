@@ -208,6 +208,11 @@ img {
     border: 2px solid var(--primary-lt);
 }
 
+img.no-border {
+    filter: none;
+    border: 0px;
+}
+
 .hero-image {
     z-index: -1;
 
