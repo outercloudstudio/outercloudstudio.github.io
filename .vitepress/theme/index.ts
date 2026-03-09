@@ -8,9 +8,12 @@ import './fonts/style.css'
 import 'vitepress/dist/client/theme-default/styles/vars.css'
 import 'vitepress/dist/client/theme-default/styles/components/vp-code.css'
 
-export default {
-  Layout,
-  
-  enhanceApp({ app, router, siteData }) {}
-} satisfies Theme
+import InlineImage from './components/InlineImage.vue'
 
+export default {
+	Layout,
+
+	enhanceApp({ app, router, siteData }) {
+		app.component('InlineImage', InlineImage)
+	},
+} satisfies Theme
