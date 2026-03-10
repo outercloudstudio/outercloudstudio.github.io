@@ -10,7 +10,7 @@ export default createContentLoader('blogs/*/index.md', {
 				return {
 					title: page.frontmatter.title,
 					description: page.frontmatter.description,
-					date: new Date(page.frontmatter.date),
+					date: page.frontmatter.date,
 					url: page.url,
 				}
 			})
