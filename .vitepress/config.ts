@@ -1,4 +1,9 @@
-import { defineConfig } from 'vitepress'
+import { createContentLoader, defineConfig, SiteConfig } from 'vitepress'
+import { Feed } from 'feed'
+import { writeFileSync } from "node:fs";
+import path from "node:path/posix";
+
+const hostname = 'https://outercloud.dev'
 
 export default defineConfig({
   title: "outercloud.dev",
@@ -23,5 +28,46 @@ export default defineConfig({
       light: 'material-theme-darker',
       dark: 'material-theme-darker',
     }
+  },
+  buildEnd: async (config: SiteConfig) => {
+    const feed = new Feed({
+      title: 'Liam Hanrahan',
+      description: 'Welcome to my feed from the internet \\(^o^)/',
+      id: hostname,
+      link: hostname,
+      language: 'en',
+      image: 'https://www.outercloud.dev/favicon.png',
+      favicon: `${hostname}/favicon.png`,
+    })
+
+    const posts = await createContentLoader('blogs/*/index.md', {
+      transform(rawData) {
+        return rawData
+          .sort((a, b) => {
+            return +new Date(b.frontmatter.date) - +new Date(a.frontmatter.date)
+          })
+          .filter(page => !page.frontmatter.hidden)
+          .map(page => {
+            return {
+              title: page.frontmatter.title,
+              description: page.frontmatter.description,
+              date: page.frontmatter.date,
+              url: page.url,
+            }
+          })
+      },
+    }).load()
+  
+    for (const { url, description, title, date } of posts) {
+      feed.addItem({
+        title: title,
+        id: `${hostname}${url}`,
+        link: `${hostname}${url}`,
+        description: description,
+        date: new Date(date)
+      })
+    }
+  
+    writeFileSync(path.join(config.outDir, 'feed.rss'), feed.rss2())
   }
 })
