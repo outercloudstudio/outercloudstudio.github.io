@@ -18,9 +18,9 @@ My dream is the browse the web on a computer designed completely by me; chip, op
 
 <div style="height: 5px;"></div>
 
-\> Go check out my [thoughts](./blog.md) or some of my [projects](./projects.md). <
+\> Go check out my [thoughts](./blog.md). I even have an [RSS feed!](https://outercloud.dev/rss.xml) <
 
-<div style="height: 40px;"></div>
+<div style="height: 60px;"></div>
 
 <span class="newsreader">"The world is as big as you want it to be. Where will you go next?" - <a href="https://youtu.be/QZ03-aaO4sA?si=iVIeU-qO1RT65t-t" target="_blank">Toby Fox</a></span>
 

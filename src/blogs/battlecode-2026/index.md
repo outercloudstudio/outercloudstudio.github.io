@@ -1,7 +1,7 @@
 ---
 title: "Battlecode 2026"
 description: "How we reached finals as first time participants with zero Battlecode knowledge."
-longDescription: "Recently I lead my team of first time participants to finals in the MIT Battlecode programming competition. Along the way I built the first opensource, fast, distributed game runner. Here's how we did it."
+longDescription: "Recently I lead my team of first time participants to finals in the MIT Battlecode programming competition. Along the way I built the first opensource, fast, distributed game runner for battlecode. Here's how we did it."
 date: 2026-2-5
 ---
 

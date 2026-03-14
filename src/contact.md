@@ -7,17 +7,17 @@ title: "Contact"
 <img src="./assets/me.jpg" alt="Photograph selfie of me outside" style="float: right; max-width: 12rem; margin-left: 2rem; margin-bottom: 1rem"></img>
 
 ## How to Reach Me
-Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@mit.edu</a> or <a href="mailto:outercloudstudio@gmail.com" target="_blank">outercloudstudio@gmail.com</a>. If you're a discord connoisseur, join [my server](https://discord.gg/z9GKKaJfhJ) and message me @outercloud. Tell me a joke or a thought. I want to hear it!
-
+Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@mit.edu</a> or <a href="mailto:outercloudstudio@gmail.com" target="_blank">outercloudstudio@gmail.com</a>. If you're a discord connoisseur, join [my server](https://discord.gg/z9GKKaJfhJ) and message me @outercloud. This site also has an [RSS feed!](https://outercloud.dev/rss.xml) If you want to see future stuff I write.
 <div style="height: 10px;"></div>
 
 ## Socials
 - [Github](https://github.com/outercloudstudio) - Where I share all my open source projects
+- [RSS Feed](https://outercloud.dev/rss.xml) - RSS feeds are [really cool](https://indieweb.org/RSS)
+- [Bluesky](https://bsky.app/profile/outercloud.dev) - Sometimes post progress updates and small thoughts
 - [YouTube](https://www.youtube.com/@outercloud) - Posting videos about game development and engineering
 - [Discord](https://discord.gg/z9GKKaJfhJ) - I hang out here the most
-- [Bluesky](https://bsky.app/profile/outercloud.dev) - Sometimes post progress updates and small thoughts
-- [LinkedIn](https://www.linkedin.com/in/liam-hanrahan-317830237/) - For the linked in warriors out there
 - [Itch.io](https://outercloudstudio.itch.io) - Where I upload most of my games
+- [LinkedIn](https://www.linkedin.com/in/liam-hanrahan-317830237/) - For the linked in warriors out there
 
 <div style="height: 10px;"></div>
 
