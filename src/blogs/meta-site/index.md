@@ -1,6 +1,7 @@
 ---
 title: "How It's Made"
 description: "A quick meta blog on how I developed this site."
+longDescription: "Everyone who can, should make a personal website. So here's how I made mine."
 date: 2026-2-4
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "Designing a CPU from Scratch"
 description: "How I made a RISC-V processor from scratch with no experience."
+longDescription: "My dream is to build a computer from scratch. Literally. And the first step is the processor. Here's a little overview of how I managed to design my first RSIC-V processor with no experience, and then run pong on it."
 date: 2026-3-9
 ---
 

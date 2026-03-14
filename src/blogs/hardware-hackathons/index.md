@@ -1,6 +1,7 @@
 ---
 title: "The Vibe Coded Death of Softare Hackathons"
 description: "My experience winning hardware hackathons and why software hackathons no longer carry the hackathon spirit"
+longDescription: "None yet."
 date: 2026-2-24
 hidden: true
 ---

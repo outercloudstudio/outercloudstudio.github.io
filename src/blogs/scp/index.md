@@ -1,6 +1,7 @@
 ---
 title: "My SCP Writings"
 description: "A list of my SCP writings and some thoughts for the future"
+longDescription: "I like reading SCP articles and recently I've tried writing some. Here's a list of what I've written so far as well as thoughts on my view of the Foundation."
 date: 2026-2-5
 ---
 

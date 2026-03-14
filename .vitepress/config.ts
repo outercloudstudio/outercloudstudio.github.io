@@ -50,7 +50,7 @@ export default defineConfig({
           .map(page => {
             return {
               title: page.frontmatter.title,
-              description: page.frontmatter.description,
+              description: page.frontmatter.longDescription ?? page.frontmatter.description,
               date: page.frontmatter.date,
               url: page.url,
             }
