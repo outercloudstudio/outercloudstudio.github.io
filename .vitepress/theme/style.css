@@ -20,7 +20,7 @@
 }
 
 html {
-  font-family: 'DM Mono', Inter, Arial, Helvetica;
+  font-family: 'UncutSans', 'DM Mono', Inter, Arial, Helvetica;
 
   line-height: 1.9;
 
@@ -105,62 +105,9 @@ a:hover {
     font-size: 40px;
 }
 
-nav {
-    display: flex;
-    padding: 1rem;
-
-    position: sticky;
-    top: 0px;
-
-    z-index: 2;
-
-    justify-content: space-between;
-
-    transition: background 100ms ease-in-out, border 100ms ease-in-out;
-
-    border-bottom: solid 1px transparent;
-}
-
-@media (width <= 1300px) {
-  nav {
-    background: var(--background-lt);
-
-    border-bottom: solid 1px var(--detail-lt);
-  }
-}
-
 strong {
     font-weight: 600;
     letter-spacing: 0.05rem;
-}
-
-.nav-links {
-    display: flex;
-
-    gap: 2rem;
-}
-
-@media screen and (max-width: 480px) {
-    .nav-links {
-        gap: 1.5rem;
-    }
-}
-
-@media screen and (max-width: 450px) {
-    .nav-links {
-        gap: 1.2rem;
-    }
-
-    nav {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
-}
-
-@media screen and (max-width: 415px) {
-    .nav-links {
-        gap: 0.5rem;
-    }
 }
 
 .home {
