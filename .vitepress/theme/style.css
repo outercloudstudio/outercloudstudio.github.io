@@ -22,8 +22,6 @@
 html {
   font-family: 'UncutSans', 'DM Mono', Inter, Arial, Helvetica;
 
-  line-height: 1.9;
-
   color: var(--primary-lt);
 }
 
@@ -33,6 +31,13 @@ body {
 
     background-image: url("background-slash-light.png");
     background-repeat: repeat;
+}
+
+p {
+    line-height: 1.4rem;
+    font-size: 0.9375rem;
+    
+    margin: 0px 0px 1.4rem 0px;
 }
 
 h1 {    
@@ -89,7 +94,8 @@ a:hover {
     font-family: Newsreader, Arial, Helvetica;
     font-style: italic;
     font-weight: 700;
-    letter-spacing: 0.1rem;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
 }
 
 .hero-text {
@@ -108,38 +114,6 @@ a:hover {
 strong {
     font-weight: 600;
     letter-spacing: 0.05rem;
-}
-
-.home {
-    position: relative;
-}
-
-.headline {
-    text-align: center;
-
-    margin: 6rem 0rem 4rem 0rem;
-
-    padding: 0px 20px;
-}
-
-.headline.mobile { 
-    margin: 1rem 0rem;
-}
-
-.accent-headline {
-    font-family: 'jgs7', Arial, Helvetica;
-    font-style: italic;
-
-    color: var(--accent);
-
-    font-size: 50px;
-
-    position: relative;
-
-    text-shadow: -2px 2px 0px var(--primary-lt);
-
-    position: relative;
-    top: 1px;
 }
 
 img {
