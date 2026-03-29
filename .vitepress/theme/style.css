@@ -40,8 +40,42 @@ p {
     margin: 0px 0px 1.4rem 0px;
 }
 
-h1 {    
-    line-height: 1.2;
+.headline {
+    text-align: center;
+
+    font-family: 'Departure';
+	font-size: 2.0625rem;
+
+    padding: 0px 20px;
+
+    margin: 96px 0px 64px 0px;
+
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.headline.mobile {
+    margin: 16px 0px;
+}
+
+.headline > .accent {
+    color: var(--accent);
+
+    text-shadow: -2px 2px 0px var(--primary-lt);
+
+	font-size: 2.75rem
+}
+
+h1 {
+    text-align: center;
+
+    font-family: 'Departure';
+	font-size: 2.0625rem;
+
+    padding: 0px 20px;
+
+    margin: 96px 0px 64px 0px;
 }
 
 h2 {    
@@ -159,14 +193,6 @@ main {
     margin-right: auto;
 
     padding: 0rem 2rem;
-}
-
-.title {
-    text-align: center;
-
-    margin: 2rem 0rem 4rem 0rem;
-
-    padding: 0px 20px;
 }
 
 .subtext {

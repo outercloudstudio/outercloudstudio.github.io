@@ -22,7 +22,7 @@ const is404 = computed(() => page.value.isNotFound)
 	<NotFound v-else-if="is404" />
 
 	<div v-else>
-		<h1 class="title accent-headline" style="max-width: 40rem; margin-left: auto; margin-right: auto">{{ frontmatter.title }}</h1>
+		<h1 class="headline">{{ frontmatter.title }}</h1>
 
 		<h3 v-if="frontmatter.date !== undefined" class="page-date">
 			{{ new Date(frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) }}
