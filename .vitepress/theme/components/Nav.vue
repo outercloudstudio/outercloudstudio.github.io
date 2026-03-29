@@ -25,7 +25,8 @@ const { site, frontmatter, page } = useData()
 <style scoped>
 nav {
     display: flex;
-    padding: 1rem;
+    
+    padding: 16px;
 
     position: sticky;
     top: 0px;
@@ -41,29 +42,16 @@ nav {
 .nav-links {
     display: flex;
 
-    gap: 2rem;
+    gap: 32px;
 }
 
-@media screen and (max-width: 480px) {
-    .nav-links {
-        gap: 1.5rem;
-    }
-}
-
-@media screen and (max-width: 450px) {
-    .nav-links {
-        gap: 1.2rem;
+@media screen and (max-width: 430px) {
+    .nav {
+        padding: 8px;
     }
 
-    nav {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
-}
-
-@media screen and (max-width: 415px) {
     .nav-links {
-        gap: 0.5rem;
+        gap: 16px;
     }
 }
 </style>
