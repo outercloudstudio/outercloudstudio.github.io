@@ -221,17 +221,6 @@ main {
     white-space: nowrap;
 }
 
-.page-date {
-    display: block;
-
-    text-align: center;
-
-    margin: -4rem 0 4rem 0;
-
-    font-weight: 500;
-    font-style: italic;
-}
-
 div[class*="language-"] .lang,
 div[class*="language-"] button {
   display: none;

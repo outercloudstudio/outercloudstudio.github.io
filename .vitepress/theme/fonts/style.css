@@ -35,8 +35,8 @@
 
 @font-face {
     font-family: 'UncutSans';
-    src: url('uncut-sans/UncutSans-Regular.woff2');
-    font-weight: normal;
+    src: url('uncut-sans/UncutSans-Variable.woff2') format('woff2');
+    font-weight: 300 700;
     font-style: normal;
     font-display: swap;
 }

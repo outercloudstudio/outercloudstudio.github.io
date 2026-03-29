@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Home from './views/Home.vue'
 import NotFound from './views/NotFound.vue'
+import Blog from './views/Blog.vue'
 
 import Nav from './components/Nav.vue'
 
@@ -21,15 +22,5 @@ const is404 = computed(() => page.value.isNotFound)
 
 	<NotFound v-else-if="is404" />
 
-	<div v-else>
-		<h1 class="headline">{{ frontmatter.title }}</h1>
-
-		<h3 v-if="frontmatter.date !== undefined" class="page-date">
-			{{ new Date(frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) }}
-		</h3>
-
-		<main>
-			<Content />
-		</main>
-	</div>
+	<Blog v-else />
 </template>
