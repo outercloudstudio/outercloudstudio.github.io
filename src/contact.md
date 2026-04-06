@@ -22,7 +22,7 @@ Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@
 <div style="height: 10px;"></div>
 
 ## About Me
-I think <a href="https://youtu.be/CccHBlGrOu8?si=gf0rhzSqr50JL8QZ" target="_blank" class="newsreader">the world of full of beautiful things.</a> The way light shines, cozy fireplaces, interesting problems, and friendly laughs. <span style="white-space: nowrap">(˶ᵔ ᵕ ᵔ˶)</span>
+I think <a href="https://youtu.be/CccHBlGrOu8?si=gf0rhzSqr50JL8QZ" target="_blank" class="newsreader">the world is full of beautiful things.</a> The way light shines, cozy fireplaces, interesting problems, and friendly laughs. <span style="white-space: nowrap">(˶ᵔ ᵕ ᵔ˶)</span>
 
 I've been programming since 2015. I'm interested in game development, programming language design, machine learning, and building a better internet.
 
