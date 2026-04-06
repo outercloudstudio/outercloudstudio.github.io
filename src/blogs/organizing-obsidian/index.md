@@ -1,6 +1,6 @@
 ---
-title: "Organizing Notes without Thinking in Obsidian"
-description: "When I create a note, I don't want to have to spend a lot of brain power deciding where to put it."
+title: "Obsidian: Organizing without Breaking a Sweat"
+description: "This is how I organize my notes by embracing the mess a little bit, making organization natural and low effort."
 longDescription: "I use Obsidian a lot now, and when I first started using it, I had a hard time creating notes and organizing them. Deciding what folders to put a note in and what tags to give a note was genuinely a difficult challenge making it more difficult for me to record things down for later. If you search for tutorials about organizing your notes in Obsidian, there's many out there, but this one is mine. This is how I organize my notes by embracing the mess a little bit, making organization natural and low effort."
 date: 2026-4-5
 ---
