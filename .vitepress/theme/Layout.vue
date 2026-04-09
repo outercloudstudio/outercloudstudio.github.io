@@ -56,5 +56,5 @@ const is404 = computed(() => page.value.isNotFound)
 		</main>
 	</div>
     
-    <Footer />
+    <Footer v-if="frontmatter.title === 'Home'" />
 </template>
