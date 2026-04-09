@@ -61,7 +61,7 @@ async function fetchWebring() {
         if(webringLink.value?.matches(':hover')) return
 
         updateWebringLink()
-    }, 3000);
+    }, 5000);
 }
 
 function updateWebringLink(){
