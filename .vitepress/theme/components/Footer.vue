@@ -44,9 +44,9 @@ async function fetchWebring() {
     const rawData = await fetch('https://raw.githubusercontent.com/outercloudstudio/webring-friends/refs/heads/main/sites.json')
     data = await rawData.json() as { name: string, site: string }[]
 
+    data = data.filter(item => item.name !== 'Liam Hanrahan').map(item => ({ name: 'Friend Site → ' + item.name, site: item.site}))
+    
     maxLength = Math.max(...data.map(item => item.name.length))
-
-    data = data.filter(item => item.name !== 'Liam Hanrahan')
 
     text.value = ' '.repeat(maxLength)
 
