@@ -1,26 +1,7 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef, ref, computed } from 'vue';
 
-const data = [
-    {
-        "name": "Liam Hanrahan",
-        "site": "outercloud.dev"
-    },
-    {
-        "name": "Armaan Gomes",
-        "site": "armaangomes.com"
-    },
-    {
-        "name": "Kevin Chang",
-        "site": "changchang.me"
-    },
-    {
-        "name": "Super Awesome Site WOW COOL",
-        "site": "changchang.me"
-    }
-].filter(item => item.name !== 'Liam Hanrahan')
-
-const maxLength = Math.max(...data.map(item => item.name.length))
+const webringLink = useTemplateRef('webring-link')
 
 const corruptionCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\\/{}[]#$%&()?<>1234567890█▓▒░║╣╠©½¼=+-*■'
 const commonCorruptionCharacters = '\\/{}[]#$%&()?<>█▓▒░║╣╠'
@@ -33,7 +14,8 @@ function randomCorruptionCharacter() {
 
 let nameIndex = 0
 
-const text = ref(' '.repeat(maxLength - data[nameIndex].name.length) + data[nameIndex].name)
+const text = ref('')
+const url = ref('')
 
 async function corrupt(newValue: string, index: number, delay: number, empty: boolean) {
     await new Promise(res => setTimeout(res, delay))
@@ -53,26 +35,61 @@ async function corrupt(newValue: string, index: number, delay: number, empty: bo
     text.value = text.value.substring(0, index) + newValue + text.value.substring(index + 1, text.value.length)
 }
 
-onMounted(() => {
-    nameIndex++
+let data: { name: string, site: string }[] = []
+let maxLength = Math.max(...data.map(item => item.name.length))
+
+async function fetchWebring() {
+    const now = Date.now()
+
+    const rawData = await fetch('https://raw.githubusercontent.com/outercloudstudio/webring-friends/refs/heads/main/sites.json')
+    data = await rawData.json() as { name: string, site: string }[]
+
+    maxLength = Math.max(...data.map(item => item.name.length))
+
+    data = data.filter(item => item.name !== 'Liam Hanrahan')
+
+    text.value = ' '.repeat(maxLength)
+
+    const after = Date.now()
+    const delay = after - now
+
+    await new Promise(res => setTimeout(res, Math.max(0, 500 - delay)))
+
+    updateWebringLink()
 
     setInterval(() => {
-        let firstStartingCharacter = false
-        let firstTargetCharacter = false
+        if(webringLink.value?.matches(':hover')) return
 
-        const newText = ' '.repeat(maxLength - data[nameIndex].name.length) + data[nameIndex].name
+        updateWebringLink()
+    }, 3000);
+}
 
-        for(let i = 0; i < text.value.length; i++) {
-            if(text.value[i] !== ' ') firstStartingCharacter = true 
-            if(newText[i] !== ' ') firstTargetCharacter = true 
+function updateWebringLink(){
+    let firstStartingCharacter = false
+    let firstTargetCharacter = false
 
-            corrupt(newText[i], i, i * 20, !firstStartingCharacter && !firstTargetCharacter)
-        }
+    const newText = ' '.repeat(maxLength - data[nameIndex].name.length) + data[nameIndex].name
 
-        nameIndex++
+    for(let i = 0; i < text.value.length; i++) {
+        if(text.value[i] !== ' ') firstStartingCharacter = true 
+        if(newText[i] !== ' ') firstTargetCharacter = true 
 
-        if(nameIndex >= data.length) nameIndex = 0
-    }, 2000);
+        corrupt(newText[i], i, i * 20, !firstStartingCharacter && !firstTargetCharacter)
+    }
+
+    const pastIndex = nameIndex
+
+    setTimeout(() => {
+        url.value = 'https://' + data[pastIndex].site
+    }, 400);
+
+    nameIndex++
+
+    if(nameIndex >= data.length) nameIndex = 0
+}
+
+onMounted(() => {
+    fetchWebring()
 })
 
 const namePadding = computed(() => {
@@ -80,7 +97,7 @@ const namePadding = computed(() => {
         if(text.value[i] != ' ') return i - 1
     }
 
-    return - 1
+    return text.value.length
 })
 
 </script>
@@ -89,7 +106,7 @@ const namePadding = computed(() => {
     <div style="height: 60px;"></div>
     
     <div class="footer">
-        <span><span style="white-space: pre;">{{  ' '.repeat(namePadding + 1)  }}</span><a class="webring">{{ text.substring( namePadding + 1 ) }}</a></span>
+        <span><span style="white-space: pre;">{{  ' '.repeat(namePadding + 1)  }}</span><a class="webring" :href="url" ref="webring-link" target="_blank">{{ text.substring( namePadding + 1 ) }}</a></span>
     </div>
 </template>
 
@@ -113,6 +130,7 @@ const namePadding = computed(() => {
 
     white-space: pre;
 
-    font-family: 'jgs5';
+    font-family: 'Departure';
+    font-size: 16.5px;
 }
 </style>
