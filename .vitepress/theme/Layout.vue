@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Footer from './components/Footer.vue'
+
 import { useData } from 'vitepress'
 import { computed } from 'vue'
 
@@ -53,4 +55,6 @@ const is404 = computed(() => page.value.isNotFound)
 			<Content />
 		</main>
 	</div>
+    
+    <Footer />
 </template>

@@ -35,6 +35,11 @@ body {
     background-repeat: repeat;
 }
 
+#app {
+    min-height: 100vh;
+    position: relative;
+}
+
 h1 {    
     line-height: 1.2;
 }
@@ -57,10 +62,11 @@ hr {
 
 a {
     color: var(--primary-lt);
+    text-decoration: underline;
     text-decoration-color: var(--accent);
     text-decoration-thickness: 2px;
 
-    transition: all 100ms ease-in-out;
+    transition: color 100ms ease-in-out;
 }
 
 a:hover {
