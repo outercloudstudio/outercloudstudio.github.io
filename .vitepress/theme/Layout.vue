@@ -23,4 +23,6 @@ const is404 = computed(() => page.value.isNotFound)
 	<NotFound v-else-if="is404" />
 
 	<Blog v-else />
+    
+    <div style="height: 60px;"></div>
 </template>
