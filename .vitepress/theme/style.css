@@ -80,6 +80,8 @@ h1 {
 
 h2 {    
     line-height: 1.2;
+
+    margin-top: 40px;
 }
 
 h3 {    
@@ -106,6 +108,10 @@ a:hover {
     color: var(--accent);
 
     transition: none;
+}
+
+ul, ol {
+  line-height: 1.8;
 }
 
 .jgs7 {
