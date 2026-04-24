@@ -2,13 +2,10 @@
 title: "Contact"
 ---
 
-<div style="margin-top: -2rem;"></div>
-
 <img src="./assets/me.jpg" alt="Photograph selfie of me outside" style="float: right; max-width: 12rem; margin-left: 2rem; margin-bottom: 1rem"></img>
 
 ## How to Reach Me
 Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@mit.edu</a> or <a href="mailto:outercloudstudio@gmail.com" target="_blank">outercloudstudio@gmail.com</a>. If you're a discord connoisseur, join [my server](https://discord.gg/z9GKKaJfhJ) and message me @outercloud. This site also has an [RSS feed!](https://outercloud.dev/rss.xml) If you want to see future stuff I write.
-<div style="height: 10px;"></div>
 
 ## Socials
 - [Github](https://github.com/outercloudstudio) - Where I share all my open source projects
@@ -19,10 +16,8 @@ Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@
 - [Itch.io](https://outercloudstudio.itch.io) - Where I upload most of my games
 - [LinkedIn](https://www.linkedin.com/in/liam-hanrahan-317830237/) - For the linked in warriors out there
 
-<div style="height: 10px;"></div>
-
 ## About Me
-I think <a href="https://youtu.be/CccHBlGrOu8?si=gf0rhzSqr50JL8QZ" target="_blank" class="newsreader">the world of full of beautiful things.</a> The way light shines, cozy fireplaces, interesting problems, and friendly laughs. <span style="white-space: nowrap">(˶ᵔ ᵕ ᵔ˶)</span>
+I think <a href="https://youtu.be/CccHBlGrOu8?si=gf0rhzSqr50JL8QZ" target="_blank" class="newsreader">the world is full of beautiful things.</a> The way light shines, cozy fireplaces, interesting problems, and friendly laughs. <span style="white-space: nowrap">(˶ᵔ ᵕ ᵔ˶)</span>
 
 I've been programming since 2015. I'm interested in game development, programming language design, machine learning, and building a better internet.
 
@@ -33,5 +28,3 @@ You should send me an email just to say hello!
 <div style="height: 40px;"></div>
 
 <span class="newsreader">"He stopped and smiled. For the point was to play a beautiful game. Why would I want to win anything other than a beautiful game?"</span>
-
-<div style="height: 60px;"></div>
