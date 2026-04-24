@@ -20,7 +20,7 @@
 }
 
 html {
-  font-family: 'UncutSans', 'DM Mono', Inter, Arial, Helvetica;
+  font-family: 'JetBrains Mono', 'DM Mono', Inter, Arial, Helvetica;
 
   color: var(--primary-lt);
 }
@@ -34,8 +34,8 @@ body {
 }
 
 p {
-    line-height: 1.4rem;
-    font-size: 0.9375rem;
+    line-height: 2rem;
+    font-size: 1rem;
     
     margin: 0px 0px 1.4rem 0px;
 }
@@ -128,8 +128,9 @@ a:hover {
     font-family: Newsreader, Arial, Helvetica;
     font-style: italic;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.1rem;
     letter-spacing: 0.08em;
+    line-height: 1.8rem;
 }
 
 .hero-text {
