@@ -4,7 +4,7 @@ title: "Projects"
 
 ## Notable Projects
 
-<div style="margin-bottom: -1rem"></div>
+<div style="margin-bottom: -16px"></div>
 
 <div class="project-header"> <h3><a href="https://github.com/bridge-core/editor" target="_blank"> bridge.</a></h3> <a href="https://bridge-core.app/" target="_blank">Live Website</a> </div>
 Lead developer on "bridge." the Minecraft Add-On editor 
@@ -55,9 +55,9 @@ Completely private, homomorphically encrypted AI model inference distributed acr
 <div class="project-header"> <h3><a href="https://github.com/outercloudstudio/Firework" target="_blank"> Firework </a></h3></div>
 Compiler for the Firework programming language. Combines command and molang logic on entities in Minecraft Bedrock Add-Ons
 
-<div style="height: 40px;"></div>
-
 ## Work Experience
+<div style="margin-bottom: -16px"></div>
+
 These are projects I have worked on for Starfish Studios / Spark Universe
 - [Official Minecraft x Moana 2 DLC](https://www.minecraft.net/en-us/article/moana-sails-into-minecraft)
 - [Official Minecraft x Spongebob DLC](https://www.minecraft.net/en-us/article/spongebob-squarepants-biomes)
@@ -65,11 +65,9 @@ These are projects I have worked on for Starfish Studios / Spark Universe
 - [Huggy & Friends Add-On](https://sparkuniverse.com/en/get/huggy-and-friends)
 - [Craftymon Add-On](https://www.minecraft.net/en-us/marketplace/pdp/starfish-studios/craftymon-add--on/6f8dd993-295b-4697-a309-1ff33b611b6d)
 
-<div style="height: 40px;"></div>
-
 ## Other Projects
 
-<div style="margin-bottom: -1rem"></div>
+<div style="margin-bottom: -16px"></div>
 
 <div class="project-header"> <h3><a href="https://github.com/outercloudstudio/Chess-Challenge" target="_blank"> Chess Challenge </a></h3></div>
 A collection of small chess bots developed for Sebastian Lague's chess challenge
@@ -97,5 +95,3 @@ Contributor to the Amethyst modding project
 <div style="height: 40px;"></div>
 
 <span class="newsreader">“Per aspera ad astra“ — Through hardships, to the stars.</span>
-
-<div style="height: 60px;"></div>
