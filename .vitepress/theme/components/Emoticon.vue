@@ -11,6 +11,6 @@
     white-space: nowrap;
     margin: 0px 2px;
 
-    font-family: 'jgs', Arial, Helvetica;
+    font-family: 'JetBrains Mono', Arial, Helvetica;
 }
 </style>
