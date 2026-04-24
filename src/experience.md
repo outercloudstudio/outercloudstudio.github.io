@@ -2,6 +2,12 @@
 title: "Experience"
 ---
 
+## Education
+
+### Massachusetts Institute of Technology
+
+I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
+
 ## Work
 
 ### Starfish Studios
@@ -22,13 +28,11 @@ Starting as a contributor to this open source project, I’ve recently begun lea
 DEVELOPER, REMOTE — OCTOBER 2022 - DECEMBER 2022 <br>
 I was contracted out as a developer to develop the behavior of addons for the Minecraft marketplace utilizing Python, Molang, and JSON.
 
-<div style="height: 20px;"></div>
+-----
 
 ## Projects
 
-Checkout my list of projects [here.](./projects) It's long so I put it on its own page <span style="white-space: nowrap">(0_0)</span>
-
-<div style="height: 20px;"></div>
+Checkout my list of projects [here.](./projects) It's pretty long so I put it on its own page <span style="white-space: nowrap">(0_0)</span>
 
 ## Awards
 
@@ -60,12 +64,4 @@ We created [Bonsai](https://plume.hackmit.org/project/gvzgx-oxbrk-njyhn-dqeap). 
 JULY 2023 <br>
 My entry placed within the top 1.5% of all the 6800+ submitted games in the GMTK 2023 Game Jam.
 
-<div style="height: 20px;"></div>
-
-## Education
-
-### Massachusetts Institute of Technology
-
-I'm currently studying Computer Science and Engineering at MIT. I plan to graduate in May 2029.
-
-<div style="height: 60px;"></div>
+-----
