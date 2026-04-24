@@ -14,6 +14,6 @@ import { data as blogs } from './blogs/blogs.data.ts'
 
 <div style="height: 40px;"></div>
 
-<span class="newsreader">"One day, you're going to see it, that happiness was always about the discovery, the hope, the listening to your heart and following it wherever it chose to go."<span style="white-space: nowrap"> - <a href="https://youtube.com/shorts/uPfk1-xeFdE?si=jGi8kqt7NyDBxZnS">Bianca Sparacino</a></span></span>
+<span class="newsreader">"One day, you're going to see it, that happiness was always about the discovery, the hope, the listening to your heart and following it wherever it chose to go."<span style="white-space: nowrap"> <br> - <a href="https://youtube.com/shorts/uPfk1-xeFdE?si=jGi8kqt7NyDBxZnS">Bianca Sparacino</a></span></span>
 
 <div style="height: 60px;"></div>

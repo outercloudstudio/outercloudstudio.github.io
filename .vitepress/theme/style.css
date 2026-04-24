@@ -20,9 +20,7 @@
 }
 
 html {
-  font-family: 'DM Mono', Inter, Arial, Helvetica;
-
-  line-height: 1.9;
+  font-family: 'JetBrains Mono', 'DM Mono', Inter, Arial, Helvetica;
 
   color: var(--primary-lt);
 }
@@ -35,17 +33,55 @@ body {
     background-repeat: repeat;
 }
 
-#app {
-    min-height: 100vh;
-    position: relative;
+p {
+    line-height: 2rem;
+    font-size: 1rem;
+    
+    margin: 0px 0px 1.4rem 0px;
 }
 
-h1 {    
-    line-height: 1.2;
+.headline {
+    text-align: center;
+
+    font-family: 'Departure';
+	font-size: 2.0625rem;
+
+    padding: 0px 20px;
+
+    margin: 96px 0px 64px 0px;
+
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.headline.mobile {
+    margin: 16px 0px;
+}
+
+.headline > .accent {
+    color: var(--accent);
+
+    text-shadow: -2px 2px 0px var(--primary-lt);
+
+	font-size: 2.75rem
+}
+
+h1 {
+    text-align: center;
+
+    font-family: 'Departure';
+	font-size: 2.0625rem;
+
+    padding: 0px 20px;
+
+    margin: 96px 0px 64px 0px;
 }
 
 h2 {    
     line-height: 1.2;
+
+    margin-top: 40px;
 }
 
 h3 {    
@@ -53,7 +89,7 @@ h3 {
 
     font-weight: 500;
 
-    margin-bottom: -0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 hr {
@@ -73,6 +109,10 @@ a:hover {
     color: var(--accent);
 
     transition: none;
+}
+
+ul, ol {
+  line-height: 1.8;
 }
 
 .jgs7 {
@@ -95,7 +135,9 @@ a:hover {
     font-family: Newsreader, Arial, Helvetica;
     font-style: italic;
     font-weight: 700;
-    letter-spacing: 0.1rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    line-height: 1.8rem;
 }
 
 .hero-text {
@@ -111,94 +153,9 @@ a:hover {
     font-size: 40px;
 }
 
-nav {
-    display: flex;
-    padding: 1rem;
-
-    position: sticky;
-    top: 0px;
-
-    z-index: 2;
-
-    justify-content: space-between;
-
-    transition: background 100ms ease-in-out, border 100ms ease-in-out;
-
-    border-bottom: solid 1px transparent;
-}
-
-@media (width <= 1300px) {
-  nav {
-    background: var(--background-lt);
-
-    border-bottom: solid 1px var(--detail-lt);
-  }
-}
-
 strong {
     font-weight: 600;
     letter-spacing: 0.05rem;
-}
-
-.nav-links {
-    display: flex;
-
-    gap: 2rem;
-}
-
-@media screen and (max-width: 480px) {
-    .nav-links {
-        gap: 1.5rem;
-    }
-}
-
-@media screen and (max-width: 450px) {
-    .nav-links {
-        gap: 1.2rem;
-    }
-
-    nav {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
-}
-
-@media screen and (max-width: 415px) {
-    .nav-links {
-        gap: 0.5rem;
-    }
-}
-
-.home {
-    position: relative;
-}
-
-.headline {
-    text-align: center;
-
-    margin: 6rem 0rem 4rem 0rem;
-
-    padding: 0px 20px;
-}
-
-.headline.mobile { 
-    margin: 1rem 0rem;
-}
-
-.accent-headline {
-    font-family: 'jgs7', Arial, Helvetica;
-    font-style: italic;
-
-    color: var(--accent);
-
-    font-size: 50px;
-
-    position: relative;
-
-    text-shadow: -2px 2px 0px var(--primary-lt);
-
-    position: relative;
-    top: 1px;
 }
 
 img {
@@ -246,14 +203,6 @@ main {
     padding: 0rem 2rem;
 }
 
-.title {
-    text-align: center;
-
-    margin: 2rem 0rem 4rem 0rem;
-
-    padding: 0px 20px;
-}
-
 .subtext {
     opacity: 0.7;
     font-style: italic;
@@ -278,17 +227,6 @@ main {
 
 .no-wrap {
     white-space: nowrap;
-}
-
-.page-date {
-    display: block;
-
-    text-align: center;
-
-    margin: -4rem 0 4rem 0;
-
-    font-weight: 500;
-    font-style: italic;
 }
 
 div[class*="language-"] .lang,

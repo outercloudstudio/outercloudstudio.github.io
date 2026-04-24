@@ -17,13 +17,15 @@ If you didn't participate this year or want an explanation on this year's game, 
 
 You can also check out our bot's source code [here](https://github.com/outercloudstudio/battlecode-2026).
 
-<div style="height: 30px;"></div>
+<br>
 
 ![Photograph of Team 3MiceWalkIntoABar at the Battlecode 2026 Finals](./us.jpg)
 
-<div style="max-width: 30rem; margin: auto auto">This is our team at finals this year. It's not the best picture, but you can't see me in any of the other pictures taken TᴖT. In order from left to right: Richard Xun, Liam Hanrahan (Me), Paul Fang Li, Armaan Gomes</div>
+<p style="max-width: 30rem; margin: auto auto">This is our team at finals this year. It's not the best picture, but you can't see me in any of the other pictures taken TᴖT. In order from left to right: Richard Xun, Liam Hanrahan (Me), Paul Fang Li, Armaan Gomes</p>
 
-<div style="height: 40px;"></div>
+<br>
+
+-----
 
 ## Table of Contents
 1. [Sprint 1](./#sprint-1)
@@ -45,6 +47,8 @@ You can also check out our bot's source code [here](https://github.com/outerclou
 5. [On String Builders and Code Generation](./#on-string-builders-and-code-generation)
 6. [Reflections](./#reflections)
 
+<br>
+
 -----
 
 ## Sprint 1
@@ -52,11 +56,11 @@ During sprint 1 we worked on establishing a good foundation for our bot. This in
 
 Once the ranked leaderboard opened after a few days, we remained consistently in or near the top 10 teams. For a while at the beginning, we hovered from 4th to 7th place.
 
-<div style="height: 10px;"></div>
+<br>
 
 ![3MiceWalkIntoABar at 8th place on the ranked leaderboard](./sprint-1-leaderboard.png)
 
-<div style="height: 10px;"></div>
+<br>
 
 One strategy that was especially powerful during sprint 1 was a full rush. Many teams did not have strong enough micro to counter and the sprint 1 maps were all rather open and rotationally symmetric. This was curbed later with more complicated maps and better defense.
 
@@ -119,11 +123,11 @@ Normally, expansion would cost an unreasonable amount of bytecode. However, I ca
 
 Then, in expansion, we can do a switch over this `char`. This saves a lot of bytecode because it doesn't check the map during expansion, and we don't need to do separate if statements or map reads for the different directions.
 
-<div style="height: 10px;"></div>
+<br>
 
 ![A rat doing pathfinding](./pathfinding.png)
 
-<div style="height: 10px;"></div>
+<br>
 
 If this `Breadth First Search` failed because it couldn't find a better move, the rat would fall back to a weird, fake bugnav pathfinding I wrote on the first day. This was eventually changed to `bugnav 0` before U.S. Qualifiers.
 
@@ -185,15 +189,15 @@ We also made it a priority to handle dirt on the map. Previously, we had simply 
 ### Taking a Break and Goat Hacks
 Partway into sprint 2, I had my flight from California to Massachusetts to partcipate in WPI's hackathon called Goat Hacks. This meant I wasn't able to work on the bot for about 4-5 days. During this time, we dropped from the top 10 in ranked to somewhere around 60th place. On the bright side, Paul and I had a lot of fun creating a DIY live streaming camera doorbell and winning JBL Charge 6 speakers for `Best Hardware`.
 
-<div style="height: 10px;"></div>
+<br>
 
 ![A side looke at our DIY camera doorbell](./goat-hacks.jpg)
 
-<div style="height: 10px;"></div>
+<br>
 
 ![We have way too many JBL speakers](./jbls.jpg)
 
-<div style="height: 10px;"></div>
+<br>
 
 We now own way too many speakers.
 
@@ -205,21 +209,21 @@ The first prototype for [Nudge](https://github.com/outercloudstudio/nudge) was d
 
 I then spent the next few days learning Go to create a friendly interface for the runner. 
 
-<div style="height: 10px;"></div>
+<br>
 
 ![The Nudge Client TUI](./nudge.png)
 
-<div style="height: 10px;"></div>
+<br>
 
 I also rewrote the runner to run distributed across multiple machines and make it more user friendly by making it resistant to connection issues. (The moment we tried testing together, Richard and Armaan tried queueing tests at the same time, breaking everything)
 
 Running with our entire cluster got us up to a speed of 1.2 games per second. We were able to run tests of 300-500 games in 5-15 minutes, depending on how many devices were connected.
 
-<div style="height: 10px;"></div>
+<br>
 
 ![Some devices running the Nudge client](./nudge-devices.jpg)
 
-<div style="height: 10px;"></div>
+<br>
 
 Once we were able to use Nudge, our policy for making modifications to the bot changed. We implemented the policy where all changes had to be made on a seperate branch accompanied with a pull request. We made sure that before we merged any changes, the tester gave us confidence that the change improved the win rate. We used a 95% confidence interval on the win rates to make this decision.
 
@@ -256,7 +260,7 @@ I actually got to commentate in person at U.S. Qualifiers. (Perks of showing up 
 
 ![Me commentating at finals during our qualifying game](./qualifiers-commentating.png)
 
-<div style="height: 20px;"></div>
+<br>
 
 -----
 
@@ -265,7 +269,7 @@ The final tournament was really fun. We got to celebrate Paul's birthday togethe
 
 ![Battlecode Award](./award.jpg)
 
-<div style="height: 20px;"></div>
+<br>
 
 -----
 
@@ -277,16 +281,14 @@ So during this contest, I set a few goals for our team. First, all of the code w
 ## Reflections
 I am super proud of the team and where we managed to place. We had so much fun. Thanks to **Teh Devs** for making this experience possible. One day I hope to become a dev as well, but I'm going to have to participate a few more times. I wouldn't want to miss out on the opportunity to compete a bit more.
 
-<div style="height: 10px;"></div>
+<br>
 
 ![Team 3MiceWalkIntoABar](./team.jpg)
 
-<div style="height: 10px;"></div>
+<br>
 
 Thank you to Richard, Armaan, and Paul for being on my team. It was a lot of fun working with you guys.
 
-<div style="height: 10px;"></div>
+<br>
 
 <span class="newsreader">And to the future teams of next year, watch out. We're gunning for #1.</span>
-
-<div style="height: 60px;"></div>

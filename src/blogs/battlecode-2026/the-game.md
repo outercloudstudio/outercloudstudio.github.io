@@ -59,20 +59,18 @@ Dirt tile could be mined and placed by rats. Dirt is extremely useful to protect
 ## Map Examples
 Here's some examples of maps used currently in the ranked scrimmages.
 
-<div style="height: 10px;"></div>
+<br>
 
 ![Map 1](./map-1.png)
 
-<div style="height: 20px;"></div>
+<br>
 
 ![Map 2](./map-2.png)
 
-<div style="height: 20px;"></div>
+<br>
 
 ![Map 3](./map-3.png)
 
-<div style="height: 20px;"></div>
+<br>
 
 Okay now back to our [postmortem](./index.md).
-
-<div style="height: 60px;"></div>

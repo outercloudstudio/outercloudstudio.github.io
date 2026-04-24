@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'jgs7';
-    src: url('jgs7.woff2') format('woff2'),
-        url('jgs7.woff') format('woff');
+    src: url('jgs/jgs7.woff2') format('woff2'),
+        url('jgs/jgs7.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -9,8 +9,8 @@
 
 @font-face {
     font-family: 'jgs5';
-    src: url('jgs5.woff2') format('woff2'),
-        url('jgs5.woff') format('woff');
+    src: url('jgs/jgs5.woff2') format('woff2'),
+        url('jgs/jgs5.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -18,8 +18,8 @@
 
 @font-face {
     font-family: 'jgs9';
-    src: url('jgs9.woff2') format('woff2'),
-        url('jgs9.woff') format('woff');
+    src: url('jgs/jgs9.woff2') format('woff2'),
+        url('jgs/jgs9.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -27,8 +27,16 @@
 
 @font-face {
     font-family: 'jgs';
-    src: url('jgs_Font.ttf');
+    src: url('jgs/jgs_Font.ttf');
     font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'UncutSans';
+    src: url('uncut-sans/UncutSans-Variable.woff2') format('woff2');
+    font-weight: 300 700;
     font-style: normal;
     font-display: swap;
 }
@@ -37,6 +45,62 @@
     font-family: 'Departure';
     src: url('departure/DepartureMono-Regular.woff2');
     font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-ExtraLight.woff2') format('woff2');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('jetbrains/JetBrainsMono-Bold.woff2') format('woff2');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
 }

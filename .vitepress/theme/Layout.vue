@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import Home from './views/Home.vue'
+import NotFound from './views/NotFound.vue'
+import Blog from './views/Blog.vue'
+import Nav from './components/Nav.vue'
 import Footer from './components/Footer.vue'
 
 import { useData } from 'vitepress'
@@ -10,51 +14,17 @@ const is404 = computed(() => page.value.isNotFound)
 </script>
 
 <template>
-	<nav>
-		<div class="nav-links">
-			<a href="/">{{ frontmatter.title === 'Home' ? '>' : '' }}Home</a>
-
-			<a href="/blog">{{ frontmatter.title === 'Blog' ? '>' : '' }}Blog</a>
-
-			<a href="/projects">{{ frontmatter.title === 'Projects' ? '>' : '' }}Projects</a>
-		</div>
-
-		<div class="nav-links">
-			<a href="/experience">{{ frontmatter.title === 'Experience' ? '>' : '' }}Experience</a>
-
-			<a href="/contact">{{ frontmatter.title === 'Contact' ? '>' : '' }}Contact</a>
-		</div>
-	</nav>
+	<Nav />
 
 	<img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
 
-	<div v-if="frontmatter.home" class="home">
-		<h1 class="headline">For the <span class="accent-headline">Love</span> of the game</h1>
+	<Home v-if="frontmatter.home" />
 
-		<main>
-			<Content />
-		</main>
-	</div>
+	<NotFound v-else-if="is404" />
 
-	<div v-else-if="is404">
-		<h1 class="title accent-headline">How'd you get here?</h1>
-
-		<main>
-			<p>There's been a 404 error. Here let's go <a href="/">back home.</a></p>
-		</main>
-	</div>
-
-	<div v-else>
-		<h1 class="title accent-headline" style="max-width: 40rem; margin-left: auto; margin-right: auto">{{ frontmatter.title }}</h1>
-
-		<h3 v-if="frontmatter.date !== undefined" class="page-date">
-			{{ new Date(frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) }}
-		</h3>
-
-		<main>
-			<Content />
-		</main>
-	</div>
+	<Blog v-else />
     
+    <div style="height: 60px;"></div>
+
     <Footer v-if="frontmatter.title === 'Home'" />
 </template>
