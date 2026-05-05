@@ -14,17 +14,15 @@ const is404 = computed(() => page.value.isNotFound)
 </script>
 
 <template>
-	<Nav />
-
-	<img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
-
-	<Home v-if="frontmatter.home" />
-
-	<NotFound v-else-if="is404" />
-
-	<Blog v-else />
+    <Nav />
     
-    <div style="height: 60px;"></div>
+    <img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
+    
+    <Home v-if="frontmatter.home" />
 
+    <NotFound v-else-if="is404" />
+
+    <Blog v-else />
+        
     <Footer v-if="frontmatter.title === 'Home'" />
 </template>
