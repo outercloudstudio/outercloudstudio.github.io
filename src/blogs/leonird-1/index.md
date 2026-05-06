@@ -2,7 +2,7 @@
 title: "We Launched a Duct Taped Foam Box 90,000ft"
 description: "I lead software for LEONIRD-I, the high altitude baloon MIT Satelite team launched this weekend. We got some great footage above the earth."
 longDescription: "I lead software for LEONIRD-I, the high altitude baloon MIT Satelite team launched this weekend. We got some great footage above the earth, and I got to work with radio coms to track the baloon live as we chased it down."
-date: 2026-4-5
+date: 2026-5-5
 hidden: false
 ---
 
