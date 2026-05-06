@@ -24,5 +24,5 @@ const is404 = computed(() => page.value.isNotFound)
 
     <Blog v-else />
         
-    <Footer v-if="frontmatter.title === 'Home'" />
+    <Footer />
 </template>

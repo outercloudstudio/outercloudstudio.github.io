@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef, ref, computed } from 'vue';
+import { useData } from 'vitepress'
+
+const { frontmatter } = useData()
 
 const webringLink = useTemplateRef('webring-link')
 
@@ -105,7 +108,7 @@ const namePadding = computed(() => {
 <template>
     <div style="height: 60px;"></div>
     
-    <div class="footer">
+    <div class="footer" v-if="frontmatter.title === 'Home'" >
         <span><span style="white-space: pre;">{{  ' '.repeat(namePadding + 1)  }}</span><a class="webring" :href="url" ref="webring-link" target="_blank">{{ text.substring( namePadding + 1 ) }}</a></span>
     </div>
 </template>
