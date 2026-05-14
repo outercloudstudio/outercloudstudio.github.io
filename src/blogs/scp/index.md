@@ -13,7 +13,7 @@ An old decripit super computer is found abandoned. A program has been running on
 
 -----
 
-### ~~[SCP-8168](https://scp-wiki.wikidot.com/scp-8168)~~
+### ~~[SCP-8168](https://scp-sandbox-3.wikidot.com/outer-cloud-brainworm)~~
 This one actually got delted for reaching -10 rating. Always room to improve!
 
 A researcher discovers lost work from a colleague no one remembers. It's too late. The memetic effects have already kicked in.
