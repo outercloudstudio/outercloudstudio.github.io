@@ -12,7 +12,7 @@ I'm Liam Hanrahan. I'm studying Computer Science at MIT. <Emoticon>\\(^o^)/</Emo
 
 I'm interested in designing better, open software. I've worked on official content for Minecraft, Disney, and Universal. The other half of the time I'm skiing or messing around with friends.
 
-My dream is the browse the web on a computer designed completely by me; chip, operating system, and all. 
+My dream is to browse the web on a computer designed completely by me; chip, operating system, and all. 
 
 \> Go check out my [projects](./projects.md) or [thoughts](./blog.md). I even have an [RSS feed!](https://outercloud.dev/rss.xml) <
 
