@@ -41,4 +41,4 @@ late.sh has channels, similar to Discord or IRC, where people can chat about dif
 
 On top of the text channels, there's also a ton of fun additional features. There's a ton of small games and a bonsai tree among other things. But, my favorite is the music radio that everyone shares. I like listening to the lofi on it.
 
-Maybe I've convinced you to go give it a try <Emoticon>:)</Emoticon> Go visit [late.sh](https://late.sh). Alternatively, you can just run the shell command `ssh late.sh`, but it might give you an error cause you haven't set up an ssh key.
+Maybe I've convinced you to go give it a try <Emoticon>:)</Emoticon> Go visit [late.sh](https://late.sh).
