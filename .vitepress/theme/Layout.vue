@@ -16,7 +16,7 @@ const is404 = computed(() => page.value.isNotFound)
 <template>
     <Nav />
     
-    <img class="hero-image" src="./outer-cloud-art-light.png" draggable="false" />
+    <img class="hero-image no-border" src="./outer-cloud-art-light.png" draggable="false" />
     
     <Home v-if="frontmatter.home" />
 

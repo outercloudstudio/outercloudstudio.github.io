@@ -8,6 +8,7 @@
     --shadow-lt: #00000020;
 
     --accent: #feca57;
+    --accent-transparent: #feca5766;
 }
 
 * {
@@ -15,8 +16,7 @@
 }
 
 *::selection {
-  color: var(--background-lt);
-  background-color: var(--accent);
+  background-color: var(--accent-transparent);
 }
 
 html {
@@ -174,11 +174,15 @@ img {
 
     filter: drop-shadow(-6px 6px 0px var(--accent));
     border: 2px solid var(--primary-lt);
+
+    background: var(--accent);
 }
 
 img.no-border {
     filter: none;
     border: 0px;
+
+    background: transparent;
 }
 
 .hero-image {
