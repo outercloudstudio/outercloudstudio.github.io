@@ -1,4 +1,5 @@
 import { createContentLoader, defineConfig, SiteConfig } from 'vitepress'
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { Feed } from 'feed'
 import { writeFileSync } from "node:fs";
 import path from "node:path/posix";
@@ -28,6 +29,27 @@ export default defineConfig({
       light: 'material-theme-darker',
       dark: 'material-theme-darker',
     }
+  },
+  vite: {
+    plugins: [
+        ViteImageOptimizer({
+            jpg: {
+                quality: 80,
+                progressive: true,
+                mozjpeg: true,
+            },
+            png: {
+                quality: 80,
+                compressionLevel: 9,
+            },
+            webp: {
+                lossless: false, 
+                quality: 80,
+                effort: 6,
+            },
+            logStats: true,
+        }),
+    ],
   },
   buildEnd: async (config: SiteConfig) => {
     const feed = new Feed({
