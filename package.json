@@ -1,6 +1,7 @@
 {
 	"type": "module",
 	"dependencies": {
+		"sharp": "^0.35.1",
 		"vue": "^3.5.27"
 	},
 	"devDependencies": {
