@@ -10,6 +10,9 @@ hidden: true
 import AnimooHeroImg from './assets/animoo-hero.gif'
 import GlyphImg from './assets/glyph.png'
 import LerpImg from './assets/lerp.gif'
+import SplineTrianglesImg from './assets/spline-triangles.png'
+import BImg from './assets/b.png'
+import LettersImg from './assets/letters.gif'
 </script>
 
 <img :src="AnimooHeroImg" />
@@ -25,7 +28,7 @@ According to Google,
 [this work](https://patents.google.com/patent/US7564459B2/en) was patented by
 Microsoft in 2005, and just expired in March this year.
 
-The technique is actually suprisingly elegant for the GPU and I think it's
+The technique is actually surprisingly elegant for the GPU and I think it's
 really cool. In order to understand this technique from scratch, I'm going to
 break down a little bit of everything, from fonts to graphics rendering and
 splines.
@@ -89,7 +92,7 @@ if (area > 0) {
 
 This is just some pseudocode since dealing with the path properly is a bit
 messy. You can see the actual source
-[here](https://github.com/outercloudstudio/animoo/blob/f3b28d1beab5a046679d10166d96eefce5bb421b/src/elements/letter.ts#L293). We'll eventually use this to decide wether to use the contour of the shape as a cutout when we generate the triangualted mesh.
+[here](https://github.com/outercloudstudio/animoo/blob/f3b28d1beab5a046679d10166d96eefce5bb421b/src/elements/letter.ts#L293). We'll eventually use this to decide wether to use the contour of the shape as a cutout when we generate the triangulated mesh.
 
 ## It's a Spliny Slope
 
@@ -127,9 +130,51 @@ function splinePoint(start: Vector2, end: Vector2, control: Vector2, t: number) 
 
 Insert spline image here.
 
-This construction is known as Casteljau's Algorithm. While this method is really nice for tracing out a spline's shape, it doesn't help us fill in a curve like we need to render our fonts. Instad, we need to talk about triangles for second.
+This construction is known as Casteljau's Algorithm. While this method is really nice for tracing out a spline's shape, it doesn't help us fill in a curve like we need to render our fonts. Instead, we need to talk about triangles for second.
 
 ## GPUs Only Want One Thing, and It's Triangles
-A good mental model for thinking about the work that GPUs do when rendering graphics is to think in triangles and pixels. First create a bunch of triangles, and then you shade in each pixel on the triangle. When shading in each pxiel on a triangle, each pixel runs it's own tiny function in isolation. 
+A good mental model for thinking about how GPUs render graphics is to think in triangles and pixels. First we create a bunch of triangles on our CPU. Then, we tell the GPU to shade in each pixel on the triangles. When the GPU shades in these pixels, each pixel runs it's own tiny function in isolation. 
 
-Since every pixel runs on it's own in isolation, we can't exactly use Casteljau's Algorithm. Casteljau's Algorithm gives 
+ADD EXPLANATION GIF
+
+Since every pixel runs on it's own in isolation, we can't use Casteljau's Algorithm. Casteljau's Algorithm gives us a position on the spline given a progress number from `0` to `1`. One idea might be to calculate where the closes point on the spline is to a pixel. This isn't ideal. If you try to use approximate methods, your shader will break down for certain spline configurations and look strange. An analytical solution does actually exist for quadratic splines, but it's slow. We have to think differently about our rendering to use the GPU effectively.
+
+What Loop and Blinn show us is that if we create a triangle for the three points of a spline (start, end, and control), this will stretch the spline in just the right way, such that to a pixel on that triangle, the spline looks like a perfect simple quadratic: `y=x^2`. This works especially nicely because the GPU automatically interpolates something called the UV space on the triangle for us in hardware, and all the shader has to do is use those UV coordinates as the `x` and `y`. That might sound complicated, but it makes sense when visualized:
+
+ADD EXPLANATION GIF
+
+The shader code for shading on the inside of the spline looks like this:
+```glsl
+if(input.uv.x * input.uv.x < input.uv.y) {
+    discard;
+}
+```
+
+<br>
+
+We now know how to render a single curve, but we still need to render a full character. First we use the earclipping algorithm to triangulate a mesh of the glyph, making sure to adjust our vertices to not overlap where we'll later add curves. Each of these triangles can be simply shaded flat.
+
+ADD GIF HERE
+
+Now we can add in a triangle at the corners rendered with our new spline rendering code. Notice that some curves are on the "inside" of corners while others are on the "outside".
+
+<img :src="SplineTrianglesImg">
+
+<br>
+
+In this image red triangles are the "outside" curves and cyan triangles are the "inside" curves.
+
+<img :src="BImg">
+
+<br>
+
+Replace the colors with our spline rendering code gives us crispy curves.
+
+## Rendering Super Crispy Glyphs
+One thing I've skipped over here is that fonts often contain extra information (potentially a whole VM) to help fonts render legibly at very low resolutions. Since, my use case is rendering texts at high resolutions for motion graphics, I thankfully don't need to attempt to get this working on the GPU.
+
+<img :src="LettersImg">
+
+<br>
+
+Now you know how to render crispy TTF fonts at high resolutions! Thanks for reading. Stay curious! <Emoticon>:D</Emoticon>
