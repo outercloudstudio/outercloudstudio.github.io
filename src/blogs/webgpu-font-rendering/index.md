@@ -13,6 +13,7 @@ import LerpImg from './assets/lerp.gif'
 import SplineTrianglesImg from './assets/spline-triangles.png'
 import BImg from './assets/b.png'
 import LettersImg from './assets/letters.gif'
+import SplineVideo from './assets/spline.mp4'
 </script>
 
 <img :src="AnimooHeroImg" />
@@ -128,7 +129,9 @@ function splinePoint(start: Vector2, end: Vector2, control: Vector2, t: number) 
 
 <br>
 
-Insert spline image here.
+<video :src="SplineVideo" muted autoplay loop />
+
+<br>
 
 This construction is known as Casteljau's Algorithm. While this method is really nice for tracing out a spline's shape, it doesn't help us fill in a curve like we need to render our fonts. Instead, we need to talk about triangles for second.
 
