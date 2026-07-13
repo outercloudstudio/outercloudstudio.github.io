@@ -9,11 +9,13 @@ hidden: true
 <script setup>
 import AnimooHeroImg from './assets/animoo-hero.gif'
 import GlyphImg from './assets/glyph.png'
-import LerpImg from './assets/lerp.gif'
 import SplineTrianglesImg from './assets/spline-triangles.png'
 import BImg from './assets/b.png'
 import LettersImg from './assets/letters.gif'
+import LerpVideo from './assets/lerp.mp4'
 import SplineVideo from './assets/spline.mp4'
+import TriangleVideo from './assets/triangle.mp4'
+import LoopBlinnVideo from './assets/loopblinn.mp4'
 </script>
 
 <img :src="AnimooHeroImg" />
@@ -112,7 +114,7 @@ function lerp(a: number, b: number, t: number): number {
 
 Lerp is a super useful and common function in video games and graphics that **L**inearly int**ERP**olates between two values based on a `t` from `0` to `1`. That looks like this:
 
-<img :src="LerpImg" />
+<video :src="LerpVideo" muted autoplay loop />
 
 <br>
 
@@ -130,7 +132,6 @@ function splinePoint(start: Vector2, end: Vector2, control: Vector2, t: number) 
 <br>
 
 <video :src="SplineVideo" muted autoplay loop />
-
 <br>
 
 This construction is known as Casteljau's Algorithm. While this method is really nice for tracing out a spline's shape, it doesn't help us fill in a curve like we need to render our fonts. Instead, we need to talk about triangles for second.
@@ -138,13 +139,15 @@ This construction is known as Casteljau's Algorithm. While this method is really
 ## GPUs Only Want One Thing, and It's Triangles
 A good mental model for thinking about how GPUs render graphics is to think in triangles and pixels. First we create a bunch of triangles on our CPU. Then, we tell the GPU to shade in each pixel on the triangles. When the GPU shades in these pixels, each pixel runs it's own tiny function in isolation. 
 
-ADD EXPLANATION GIF
+<video :src="TriangleVideo" muted autoplay loop />
+<br>
 
 Since every pixel runs on it's own in isolation, we can't use Casteljau's Algorithm. Casteljau's Algorithm gives us a position on the spline given a progress number from `0` to `1`. One idea might be to calculate where the closes point on the spline is to a pixel. This isn't ideal. If you try to use approximate methods, your shader will break down for certain spline configurations and look strange. An analytical solution does actually exist for quadratic splines, but it's slow. We have to think differently about our rendering to use the GPU effectively.
 
 What Loop and Blinn show us is that if we create a triangle for the three points of a spline (start, end, and control), this will stretch the spline in just the right way, such that to a pixel on that triangle, the spline looks like a perfect simple quadratic: `y=x^2`. This works especially nicely because the GPU automatically interpolates something called the UV space on the triangle for us in hardware, and all the shader has to do is use those UV coordinates as the `x` and `y`. That might sound complicated, but it makes sense when visualized:
 
-ADD EXPLANATION GIF
+<video :src="LoopBlinnVideo" muted autoplay loop />
+<br>
 
 The shader code for shading on the inside of the spline looks like this:
 ```glsl
