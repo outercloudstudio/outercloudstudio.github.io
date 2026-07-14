@@ -1,9 +1,9 @@
 ---
 title: "Rendering Fonts Quickly in WebGPU"
 description: "A cool technique from a recently expired Microsoft patent lets us render TTF fonts quickly on the GPU."
-longDescription: ""
-date: 2026-7-6
-hidden: true
+longDescription: "I've been working on a WebGPU animation renderer and at some point I needed to implement font rendering. Wanting the technical challenge I elected to try implementing a new method I had heard about which actually comes from a recently expired Microsoft patent! I get a bit into spline rendering and a super cool idea about how to render curves efficiently on the GPU."
+date: 2026-7-13
+hidden: false
 ---
 
 <script setup>
@@ -22,14 +22,14 @@ import LoopBlinnVideo from './assets/loopblinn.mp4'
 
 <div style="height:60px" />
 
-Last month I started working on a WebGPU animation renderer so that I could
-render animations directly in the web for the blog. It's not quite done yet, but
+Last month I started working on a WebGPU animation renderer so I could
+render animations directly in the web for this blog. It's not quite done yet, but
 along the way I've managed to implement a very cool technique for rendering TTF
 fonts. The technique comes from work by Loop and Blinn,
 [Resolution independent curve rendering using programmable graphics hardware](https://dl.acm.org/doi/pdf/10.1145/1073204.1073303).
 According to Google,
 [this work](https://patents.google.com/patent/US7564459B2/en) was patented by
-Microsoft in 2005, and just expired in March this year.
+Microsoft in 2005, and just expired in March this year!
 
 The technique is actually surprisingly elegant for the GPU and I think it's
 really cool. In order to understand this technique from scratch, I'm going to
@@ -55,7 +55,7 @@ very boring so I'm going to just completely skip that. You can check out
 on TTF file parsing if your interested.
 
 Characters in TTF fonts are made of glyphs. Each glyph is made up of paths,
-which are in turn each made up of curves.
+which are in turn each made up of curves. The hierarchy sort of looks like this:
 
 1. Font
 2. Character
@@ -136,7 +136,7 @@ function splinePoint(start: Vector2, end: Vector2, control: Vector2, t: number) 
 <video :src="SplineVideo" muted autoplay loop />
 <br>
 
-This construction is known as Casteljau's Algorithm. While this method is really nice for tracing out a spline's shape, it doesn't help us fill in a curve like we need to render our fonts. Instead, we need to talk about triangles for second.
+This construction is known as Casteljau's Algorithm. While this method is really nice for tracing out a spline's shape, it doesn't help us fill in a curve which we'll need to render our fonts. Instead, we need to talk about triangles and pixelss for second.
 
 ## GPUs Only Want One Thing, and It's Triangles
 A good mental model for thinking about how GPUs render graphics is to think in triangles and pixels. First we create a bunch of triangles on our CPU. Then, we tell the GPU to shade in each pixel on the triangles. When the GPU shades in these pixels, each pixel runs it's own tiny function in isolation. 
@@ -144,9 +144,17 @@ A good mental model for thinking about how GPUs render graphics is to think in t
 <video :src="TriangleVideo" muted autoplay loop />
 <br>
 
-Since every pixel runs on it's own in isolation, we can't use Casteljau's Algorithm. Casteljau's Algorithm gives us a position on the spline given a progress number from `0` to `1`. One idea might be to calculate where the closes point on the spline is to a pixel. This isn't ideal. If you try to use approximate methods, your shader will break down for certain spline configurations and look strange. An analytical solution does actually exist for quadratic splines, but it's slow. We have to think differently about our rendering to use the GPU effectively.
+The function for this triangle might look like:
+```glsl
+fn fragment() {
+    return black;
+}
+```
+<br>
 
-What Loop and Blinn show us is that if we create a triangle for the three points of a spline (start, end, and control), this will stretch the spline in just the right way, such that to a pixel on that triangle, the spline looks like a perfect simple quadratic: `y=x^2`. This works especially nicely because the GPU automatically interpolates something called the UV space on the triangle for us in hardware, and all the shader has to do is use those UV coordinates as the `x` and `y`. That might sound complicated, but it makes sense when visualized:
+Since every pixel runs on it's own in isolation, we can't use Casteljau's Algorithm. Casteljau's Algorithm only gives us a position on the spline given a progress number from `0` to `1`. One idea might be to calculate where the closes point on the spline is to a pixel. This isn't ideal. If you try to use approximate methods, your shader will break down for certain spline configurations and look strange. An analytical solution does actually exist for quadratic splines, but it's slow. We have to think differently to use the GPU effectively.
+
+What Loop and Blinn show us is that if we create a triangle of the three points of a spline (start, end, and control), this will stretch the spline in just the right way, such that to a pixel on that triangle, the spline looks like a perfectly simple quadratic: `y = x^2`. This works especially nicely because the GPU automatically interpolates something called the UV space on the triangle for us in hardware, and all the shader has to do is use those UV coordinates as the `x` and `y`. That might sound complicated, but it makes sense when visualized:
 
 <video :src="LoopBlinnVideo" muted autoplay loop />
 <br>
@@ -183,4 +191,4 @@ One thing I've skipped over here is that fonts often contain extra information (
 
 <br>
 
-Now you know how to render crispy TTF fonts at high resolutions! Thanks for reading. Stay curious! <Emoticon>:D</Emoticon>
+Now you know how to render crispy TTF fonts at high resolutions! Thanks for reading. Stay curious! <Emoticon>:D</Emoticon> Also, if you're interested in how I made all of the animations for this blog, check out the web animation library I'm working on: [animoo](https://github.com/outercloudstudio/animoo)!
