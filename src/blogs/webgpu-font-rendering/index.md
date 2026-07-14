@@ -39,6 +39,8 @@ splines.
 <span class="newsreader">By the way, the animated GIF at the top was rendered
 using this technique!</span>
 
+I also spent a ton of time making little explainer animations for further on in this blog. Let me know if they help!
+
 ## My True Type Font is Telling Lies Again
 
 Let's start with True Type fonts (`.ttf`) because they are the one true font
@@ -159,8 +161,6 @@ if(input.uv.x * input.uv.x < input.uv.y) {
 <br>
 
 We now know how to render a single curve, but we still need to render a full character. First we use the earclipping algorithm to triangulate a mesh of the glyph, making sure to adjust our vertices to not overlap where we'll later add curves. Each of these triangles can be simply shaded flat.
-
-ADD GIF HERE
 
 Now we can add in a triangle at the corners rendered with our new spline rendering code. Notice that some curves are on the "inside" of corners while others are on the "outside".
 
