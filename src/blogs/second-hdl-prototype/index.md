@@ -1,7 +1,7 @@
 ---
 title: "Introducing My Second Assault on Hardware Design"
-description: "Bleh"
-longDescription: "Blah"
+description: "Looking at what a placement oriented HDL might look like"
+longDescription: "This blog is to help me describe a potential hardware description language. It's written mostly as if the language COOL NAME already existed, however it does not exist yet!"
 date: 2026-8-17
 hidden: true
 ---
@@ -51,6 +51,34 @@ This actually allows the programmer to control a bit of the layout of the design
 Other work like the paper I linked previously already attempts to tackle the issue of improving hard block utilization, however **COOL NAME** attempts to also explore what is capable when we can also control placement, not just synthesis. However, when we also specify placement, we run into the important restriction that not only are hard block grids not regular on the FPGA fabric, we must specify every hard block onto exactly one unique location. This makes using modules a bit more tricky. We might want to define modules that are instantiated multiple times and also specify placement. This means that placement becomes a parameter of module instances and not just the module specification itself. This just means we might have to process some modules multiple times to generate individual version specifying different hard block placements.
 
 I think it still remains to be seen if it's possible to create some nice way of representing placements in a modular way. I haven't be able to come up with one yet, but who knows!
+
+## Pin vs. Direct Instantiation
+At the beginning of this blog, I showed two different code snippets. One which used a `pin` function to specify the DSP and another which instantiates the DSP directly.
+
+```ts
+// Pin
+const multiply = a.mul(b)
+const result = Register.pipeline(multiply, 3, io.in.clock, io.in.clear)
+
+result.pin({ type: 'DSP48', x: 4, y: 380})
+
+// Direct Instantiation
+const result = DSP48.pipelined3Multiply(a, b, io.in.clock, io.in.clear, { x: 4, y: 380 })
+```
+<br>
+
+There's a slight difference in the how each is used here that I think is important to note. Using `pin` is nice because it allows you to easily incrementally specify placement. Pinning the operation to a DSP is separated from the logical computation. However, I'm not sure how we can make sure the register pipeline and multiply all get combined into a single DSP. I don't want to have to try and infer what to include within the DSP, because this is just replicating the same problem the FPGA synthesis tools have but at a higher level. That's why I also proposed the direct instantiation syntax. We don't have to worry about inferring what is included in the pin because the DSP is the object itself we are instantiating.
+
+A third possible solution, is to reframe pinning from something done on a single operation, to something done to a group of operations:
+```ts
+const multiply = a.mul(b)
+const result = Register.pipeline(multiply, 3, io.in.clock, io.in.clear)
+
+pin([ multiply, result ], { type: 'DSP48', x: 4, y: 380})
+```
+<br>
+
+There's still a problem here though. We'd likely have to do some form of graph analysis if we want to keep the nice ability to use metaprogramming to generate circuits like we see here with `Register.pipeline`. Under the hood this generates a chain of registers and returns the output signal of the last register, so simply passing in result to pin wouldn't capture the other registers unless we do some additional analysis.
 
 ## What's Next?
 Importantly it remains to be seen what level of improved performance we can achieve over normal synthesis flows with this new found control over synthesis and placement. I'll likely continue working on an optimized systolic array design to help make this comparison.
