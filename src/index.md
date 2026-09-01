@@ -10,7 +10,7 @@ I'm Liam Hanrahan. I'm studying Computer Science at MIT. <Emoticon>\\(^o^)/</Emo
 
 <span class="newsreader">Welcome to my spot on the internet!</span>
 
-Currently researching compilers for [FLAME Lab @ MIT](https://flame.csail.mit.edu/). I'm also interested in designing better, open software. I've worked on official content for Minecraft, Disney, and Universal.
+Currently researching FPGAs for [FLAME Lab @ MIT](https://flame.csail.mit.edu/). I'm also interested in designing better, open hardware and software. I've worked on official content for Minecraft, Disney, and Universal.
 
 My dream is to browse the web on a computer designed completely by me; chip, operating system, and all. 
 
