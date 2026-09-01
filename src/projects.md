@@ -6,6 +6,11 @@ title: "Projects"
 
 <div style="margin-bottom: -16px"></div>
 
+<div class="project-header"> <h3><a href="https://github.com/MIT-OpenCompute/dawn-cpu" target="_blank"> Dawn CPU </a></h3> <a href="./blogs/riscv-3/" target="_blank">Latest Blog</a> </div>
+In development high performance, out of order, open source, RISC-V processor design
+
+---
+
 <div class="project-header"> <h3><a href="https://github.com/outercloudstudio/animoo" target="_blank"> Animoo</a></h3></div>
 The WebGPU procedural motion graphics library
 
@@ -18,11 +23,6 @@ Lead developer on "bridge." the Minecraft Add-On editor
 
 <div class="project-header"> <h3><a href="https://github.com/outercloudstudio/nudge" target="_blank"> Nudge </a></h3></div>
 Fast distributed game runner for MIT Battlecode
-
----
-
-<div class="project-header"> <h3><a href="https://github.com/MIT-OpenCompute/RISC-V" target="_blank"> RISC-V </a></h3></div>
-In development RISC-V chip design for the MIT Open-Compute Team
 
 ---
 
@@ -60,7 +60,7 @@ Completely private, homomorphically encrypted AI model inference distributed acr
 <div class="project-header"> <h3><a href="https://github.com/outercloudstudio/Firework" target="_blank"> Firework </a></h3></div>
 Compiler for the Firework programming language. Combines command and molang logic on entities in Minecraft Bedrock Add-Ons
 
-## Work Experience
+## Other Work Experience
 
 <div style="margin-bottom: -16px"></div>
 
