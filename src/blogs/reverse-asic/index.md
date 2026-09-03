@@ -292,9 +292,9 @@ const dfrtp_2_73 = new Register(((dfrtp_2_68 || !(io && dfrtp_2_73 && counterIs1
  
 I also noticed there happened to be exactly 22 registers that followed this pattern closely. This made me suspicious it be something to do with the rows or columns of the grid I predicted earlier.
 
-By analyzing the logic on paper, I figured out that these registers each corresponded to one column and tracked that exactly two true values were placed on that column. If any less or more than two true values existed on a single column of the 11x11 grid, then success would not be able to pass. This essentially confirmed to me that we were working with some kind of grid.
+By analyzing the logic on paper, I figured out that these registers each corresponded to one column and tracked that exactly two true values were placed on that column. If any less or more than two true values existed on a single column of the 11x11 grid, then success would not be able to pass. This essentially confirmed to me that we were working with some kind of grid. On top of the column constraint, the registers would fail if any two stars were directly adjacent to another, diagonal or orthogonal.
 
-As a quick guess I asked Armaan to try and see if the circuit would pass success if we passed in a grid where there were exactly 22 true values, and every row and column contained exactly two true cells. Unfortunately this didn't work, we still had some ways to go.
+As a quick guess I asked Armaan to try and see if the circuit would pass success if we passed in a grid where there were exactly 22 true values, every row and column contained exactly two true cells, and no adjacent true cells. Unfortunately this didn't work, we still had some ways to go.
 
 ## Brute Force
 Along with some miscellaneous additional logic, there was one last major block of registers we hadn't figured out yet. The combination logic feeding into these registers was much larger than the other ones. It seemed rather infeasible to figure out the logic by hand. In an attempt to make it more understandable I started working on a circuit graph pass that would convert all of the complex sky130 gates into just a few base gates:
@@ -319,6 +319,7 @@ After a tiny bit more work figuring out a final three registers, which turned ou
 - Each row must have exactly 2 true cells
 - Each column must have exactly 2 true cells
 - Each colored group in the image must have exactly 2 true cells
+- No adjacent true cells
 
 Armaan came up with this solution:
 
@@ -342,7 +343,7 @@ Which corresponds to the input string:
 ```
 <br>
 
-Piping this input into the circuit in simulation not only triggers success but outputs `(* TWO STARS *)`! One other easter egg we found was that entering all trues outputs ` BIG BANG `.
+Piping this input into the circuit in simulation not only triggers success but outputs `(* TWO STARS *)`! One other easter egg we found was that entering all trues outputs ` BIG BANG `. Also, I bet the ASIC was programmed in HardCaml. `(* *)` is the comment syntax in OCaml.
 
 ## Conclusion
 And with that we solved the ASIC. I think one of the most fun aspects of reverse engineering is that every time you figure out some new part of the program, it feels like a super awesome insight you discovered. There were certainly a number of those moments as we worked through everything.
