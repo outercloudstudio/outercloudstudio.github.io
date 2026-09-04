@@ -222,7 +222,7 @@ const dfrtp_2_73 = new Register(((dfrtp_2_68 || !(io && dfrtp_2_73 && counterIs1
 <br>
 <br>
  
-I also noticed there happened to be exactly 22 registers that followed this pattern closely. This made me suspicious it be something to do with the rows or columns of the grid I predicted earlier.
+I also noticed there happened to be exactly 22 registers that followed this pattern closely. This made me suspicious it might be something to do with the rows or columns of the grid I predicted earlier.
 
 By analyzing the logic on paper, I figured out that these registers each corresponded to one column and tracked that exactly two true values were placed on that column. If any less or more than two true values existed on a single column of the 11x11 grid, then success would not be able to pass. This essentially confirmed to me that we were working with some kind of grid. On top of the column constraint, the registers would fail if any two stars were directly adjacent to another, diagonal or orthogonal.
 
