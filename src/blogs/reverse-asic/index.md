@@ -3,7 +3,6 @@ title: "Reverse Engineering an ASIC"
 description: "We solved Jane Street's challenge to reverse engineer an ASIC!"
 longDescription: "Jane Street announced a puzzle that tasked you to reverse an ASIC from it's GDS file. With the power of JavaScript we solved the puzzle just in time for my birthday! Here's how we did it."
 date: 2026-9-4
-hidden: true
 ---
 
 <script setup>
