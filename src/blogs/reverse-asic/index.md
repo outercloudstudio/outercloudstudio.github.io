@@ -17,8 +17,6 @@ import Solution from './assets/solution.png'
 <br>
 <br>
 
-> NOTE: This blog is currently unlisted from the site until the puzzle submissions close tomorrow!
-
 Jane Street put out a challenge to reverse engineer an ASIC from it's GDS file. This was quite the fun reverse engineering problem, going from logic gates to understanding a full chip. I worked with my good friend [Armaan Gomes](https://armaangomes.com/) on this project. Here's how we did it, and the solution to the puzzle.
 
 Oh and by the way, it's my birthday! <Emoticon>\\(^o^)/</Emoticon>
