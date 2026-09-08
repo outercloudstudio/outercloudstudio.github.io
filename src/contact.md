@@ -2,7 +2,7 @@
 title: "Contact"
 ---
 
-<img src="./assets/me.jpg" alt="Photograph selfie of me outside" style="float: right; max-width: 12rem; margin-left: 2rem; margin-bottom: 1rem"></img>
+<img src="./assets/me-3.jpg" alt="Photograph selfie of me outside" style="float: right; max-width: 12rem; margin-left: 2rem; margin-bottom: 1rem"></img>
 
 ## How to Reach Me
 Email me about anything at <a href="mailto:liamh@mit.edu" target="_blank">liamh@mit.edu</a> or <a href="mailto:outercloudstudio@gmail.com" target="_blank">outercloudstudio@gmail.com</a>. If you're a discord connoisseur, join [my server](https://discord.gg/z9GKKaJfhJ) and message me @outercloud. This site also has an [RSS feed!](https://outercloud.dev/rss.xml) If you want to see future stuff I write.
