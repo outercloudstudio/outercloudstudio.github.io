@@ -150,6 +150,15 @@ ul, ol {
     line-height: 1.8rem;
 }
 
+em {
+    font-family: Newsreader, Arial, Helvetica;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    line-height: 1.8rem;
+}
+
 .hero-text {
     font-size: 35px;
     color: var(--primary-lt);
