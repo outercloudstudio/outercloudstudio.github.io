@@ -71,7 +71,7 @@ Of course, we had to do 3D rendering on our GPU. In the image you can see a mesh
 
 And of course, we couldn't design a procesor without trying to run DOOM on it.
 
-<img :src="DoomImg" />was that w
+<img :src="DoomImg" />
 
 <div style="height:40px" />
 
