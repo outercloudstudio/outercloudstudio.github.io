@@ -12,6 +12,7 @@ import VectorLanesDiagram from './assets/vector-lanes-diagram.png'
 import WarpDiagram from './assets/warp-diagram.png'
 import InferenceImg from './assets/inference.png'
 import DoomImg from './assets/doom.png'
+import ConcertImg from './assets/concert.jpg'
 </script>
 
 <img :src="StageImg" />
@@ -72,6 +73,14 @@ Of course, we had to do 3D rendering on our GPU. In the image you can see a mesh
 And of course, we couldn't design a procesor without trying to run DOOM on it.
 
 <img :src="DoomImg" />
+
+<div style="height:40px" />
+
+## Fun Side Quest
+
+About halfway through HackMIT I went to a showing of the Undertale Determination Symphony at the Wang Theatre. It was so beautiful, I hope we get good recordings online so I can listen to it again later! 
+
+<img :src="ConcertImg" />
 
 <div style="height:40px" />
 
