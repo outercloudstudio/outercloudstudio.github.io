@@ -22,7 +22,7 @@ import ConcertImg from './assets/concert.jpg'
 Over the weekend I participated in HackMIT 2026. We ended up winning 2nd overall by designing and implementing a GPU in only 24 hours. A number of people have asked how we did it, so here we go!
 
 ## GPU Architecture
-My PI likes to say that GPUs are machines made to generate a lot of work. He means that the parallelism GPUs are help us do a lot of work. Why just add one number, when I can add thousands at once? This is where we get *vector lanes.*
+My PI likes to say that GPUs are machines made to generate a lot of work. He means that the parallelism in GPUs is there to help us do a lot of work. Why just add one number, when I can add thousands at once? This is where we get *vector lanes.*
 
 <img :src="VectorLanesDiagram" />
 
