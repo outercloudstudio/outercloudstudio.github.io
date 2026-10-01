@@ -84,6 +84,6 @@ About halfway through HackMIT I went to a showing of the Undertale Determination
 
 <div style="height:40px" />
 
-There you have it. That's how our GPU works, and some of the programs we were able to run on it. Thanks for being curious! And thank you to my amazing team: [Armaan Gomes](https://armaangomes.com/), Yoland Hu, and Kshemaahna Nagi.
+There you have it. That's how our GPU works, and some of the programs we were able to run on it. Thanks for being curious! And thank you to my amazing team: [Armaan Gomes](https://armaangomes.com/), Yolanda Hu, and Kshemaahna Nagi.
 
 <Quote>You didn't get this far by giving up, did you? - Toby Fox</Quote>
